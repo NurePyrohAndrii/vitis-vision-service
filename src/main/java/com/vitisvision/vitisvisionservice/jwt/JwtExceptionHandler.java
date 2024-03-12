@@ -1,39 +1,38 @@
 package com.vitisvision.vitisvisionservice.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.exception.ApiError;
 import com.vitisvision.vitisvisionservice.exception.ApiResponse;
-import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ControllerAdvice
 @Slf4j
-public class JwtExceptionHandler extends ResponseEntityExceptionHandler {
+@Component
+public class JwtExceptionHandler {
 
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiResponse<?>> handleJwtException(JwtException e) {
-        log.warn("JWT token is invalid");
-        return new ResponseEntity<>(
-                ApiResponse.error(
-                        List.of(
-                                new ApiError(
-                                        HttpStatus.UNAUTHORIZED,
-                                        "invalid token",
-                                        e.getMessage(),
-                                        LocalDateTime.now()
-                                )
-                        ),
-                        HttpStatus.UNAUTHORIZED.value()
-                ),
-                HttpStatus.UNAUTHORIZED
+    public void handleJwtException(HttpServletResponse response, Exception e) throws IOException {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message("JWT token is invalid")
+                .details(e.getMessage())
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        ApiResponse<?> apiResponse = ApiResponse.error(
+                List.of(apiError),
+                HttpStatus.UNAUTHORIZED.value()
         );
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getWriter(), apiResponse);
     }
 
 }

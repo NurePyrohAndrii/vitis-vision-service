@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
+import org.springframework.http.HttpStatus;;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +14,5 @@ public class ApiError {
         HttpStatus status;
         String message;
         String details;
-        LocalDateTime timestamp;
+        String timestamp;
 }

@@ -2,6 +2,7 @@ package com.vitisvision.vitisvisionservice;
 
 import com.vitisvision.vitisvisionservice.exception.ApiResponse;
 import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,6 @@ public class DemoController {
 
     @GetMapping("/hello")
     public ResponseEntity<ApiResponse<?>> hello() {
-        throw new JwtException("Invalid token");
+        return ResponseEntity.ok(ApiResponse.success("Hello, World!", HttpStatus.OK.value()));
     }
 }
