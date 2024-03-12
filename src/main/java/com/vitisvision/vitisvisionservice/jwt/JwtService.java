@@ -1,4 +1,4 @@
-package com.vitisvision.vitisvisionservice.auth;
+package com.vitisvision.vitisvisionservice.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
