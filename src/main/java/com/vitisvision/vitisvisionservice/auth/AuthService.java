@@ -1,6 +1,9 @@
 package com.vitisvision.vitisvisionservice.auth;
 
 import com.vitisvision.vitisvisionservice.jwt.JwtService;
+import com.vitisvision.vitisvisionservice.token.Token;
+import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.token.TokenType;
 import com.vitisvision.vitisvisionservice.user.Role;
 import com.vitisvision.vitisvisionservice.user.User;
 import com.vitisvision.vitisvisionservice.user.UserRepository;
@@ -11,11 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -28,9 +34,10 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        repository.save(user);
+        userRepository.save(user);
 
         String jwt = jwtService.generateToken(user);
+        saveUserToken(user, jwt);
         return AuthResponse.builder()
                 .token(jwt)
                 .build();
@@ -46,8 +53,32 @@ public class AuthService {
 
         User user = (User) authentication.getPrincipal();
         String jwt = jwtService.generateToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwt);
+
         return AuthResponse.builder()
                 .token(jwt)
                 .build();
     }
+
+    private void saveUserToken(User user, String jwt) {
+        Token token = Token.builder()
+                .user(user)
+                .token(jwt)
+                .tokenType(TokenType.BEARER)
+                .revoked(false)
+                .expired(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
+        if (validUserTokens.isEmpty()) return;
+        validUserTokens.forEach(t -> {
+            t.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
+
 }

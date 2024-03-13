@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.exception.ApiError;
 import com.vitisvision.vitisvisionservice.exception.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
 @Component
 public class JwtExceptionHandler {
 

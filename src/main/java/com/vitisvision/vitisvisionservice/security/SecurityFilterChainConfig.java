@@ -10,7 +10,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -36,6 +38,7 @@ public class SecurityFilterChainConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final LogoutHandler logoutHandler;
     //private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
@@ -53,6 +56,13 @@ public class SecurityFilterChainConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> {
+                    logout.logoutUrl("/api/v1/auth/logout");
+                    logout.addLogoutHandler(logoutHandler);
+                    logout.logoutSuccessHandler(
+                            (request, response, authentication) ->
+                                    SecurityContextHolder.clearContext());
+                })
                 .build();
     }
 
