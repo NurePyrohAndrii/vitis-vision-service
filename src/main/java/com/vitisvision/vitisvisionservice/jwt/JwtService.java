@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,9 +20,10 @@ public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
-
-    @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
+    @Value("${application.security.jwt.access.expiration}")
+    private long accessExpiration;
+    @Value("${application.security.jwt.refresh.expiration}")
+    private long refreshExpiration;
 
     public String extractEmail(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
@@ -36,26 +38,36 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(Map.of(), userDetails);
-    }
-
-    public String generateToken(
+    public String generateAccessToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return buildToken(extraClaims, userDetails, accessExpiration);
+    }
+
+    public String generateRefreshToken(
+            UserDetails userDetails
+    ) {
+        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
         final String email = extractEmail(jwt);
         return email.equals(userDetails.getUsername()) && !isTokenExpired(jwt);
+    }
+
+    private String buildToken (
+            Map<String, Object> extraClaims,
+            UserDetails userDetails,
+            long expiration
+    ) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Claims extractAllClaims(String jwt) {

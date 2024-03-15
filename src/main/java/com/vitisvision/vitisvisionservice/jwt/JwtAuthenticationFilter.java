@@ -1,6 +1,8 @@
 package com.vitisvision.vitisvisionservice.jwt;
 
+import com.vitisvision.vitisvisionservice.token.Token;
 import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.token.TokenType;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -36,9 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-
         log.info("In doFilterInternal method");
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
         final String userEmail;
 
@@ -56,17 +59,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (Objects.nonNull(userEmail)
                     && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-                boolean isTokenValid = tokenRepository.findByToken(jwt)
-                        .map(t -> !t.isExpired() && !t.isRevoked())
+                Optional<Token> token = tokenRepository.findByToken(jwt);
+
+                boolean isDbRefreshTokenValid = token
+                        .map(t -> !t.isExpired() && !t.isRevoked() && t.getTokenType() == TokenType.REFRESH)
                         .orElse(false);
-                if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+
+                boolean isProvidedRefreshTokenValid = jwtService.isTokenValid(jwt, userDetails);
+
+                // if token is refresh, then let it pass
+                if (isDbRefreshTokenValid && isProvidedRefreshTokenValid) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                boolean isAccessTokenValid = token
+                        .map(t -> !t.isExpired() && !t.isRevoked() && t.getTokenType() == TokenType.ACCESS)
+                        .orElse(false);
+
+                if (isProvidedRefreshTokenValid && isAccessTokenValid) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities()
                             );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    log.warn("This JWT token is not valid or has been revoked");
+                    jwtExceptionHandler.handleJwtException(response, new JwtException("This JWT token is not valid or has been revoked"));
                 }
+
             }
 
             log.info("Out doFilterInternal method");

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.exception.ApiError;
 import com.vitisvision.vitisvisionservice.exception.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.ResourceNotFoundException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class LogoutExceptionHandler {
 
         if (e instanceof ResourceNotFoundException) {
             status = HttpStatus.BAD_REQUEST;
-        } else if (e instanceof MalformedJwtException){
-            status = HttpStatus.UNAUTHORIZED;
+        } else if (e instanceof JwtException){
+            status = HttpStatus.BAD_REQUEST;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             message = "An error occurred while processing the request";

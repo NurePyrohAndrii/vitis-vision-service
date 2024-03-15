@@ -8,10 +8,10 @@ import java.util.List;
 public class ApiResponse<T> {
     private final String status;
     private final int statusCode;
-    private final List<ApiError> errors;
+    private final T errors;
     private final T data;
 
-    private ApiResponse(String status, int statusCode, List<ApiError> errors, T data) {
+    private ApiResponse(String status, int statusCode, T errors, T data) {
         this.status = status;
         this.statusCode = statusCode;
         this.errors = errors;
@@ -22,7 +22,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>("success", statusCode, null, data);
     }
 
-    public static ApiResponse<?> error(List<ApiError> errors, int statusCode) {
+    public static ApiResponse<List<ApiError>> error(List<ApiError> errors, int statusCode) {
         return new ApiResponse<>("error", statusCode, errors, null);
     }
 }
