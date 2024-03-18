@@ -1,7 +1,7 @@
 package com.vitisvision.vitisvisionservice.auth;
 
-import com.vitisvision.vitisvisionservice.exception.ApiError;
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
+import com.vitisvision.vitisvisionservice.api.ApiError;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.DuplicateResourceException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.vitisvision.vitisvisionservice.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitisvision.vitisvisionservice.exception.ApiError;
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
+import com.vitisvision.vitisvisionservice.api.ApiError;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

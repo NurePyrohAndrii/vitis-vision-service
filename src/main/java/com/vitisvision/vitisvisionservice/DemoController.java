@@ -1,7 +1,6 @@
 package com.vitisvision.vitisvisionservice;
 
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
-import io.jsonwebtoken.JwtException;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

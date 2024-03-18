@@ -1,7 +1,7 @@
 package com.vitisvision.vitisvisionservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

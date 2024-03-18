@@ -1,7 +1,7 @@
 package com.vitisvision.vitisvisionservice.util;
 
-import com.vitisvision.vitisvisionservice.exception.ApiError;
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
+import com.vitisvision.vitisvisionservice.api.ApiError;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

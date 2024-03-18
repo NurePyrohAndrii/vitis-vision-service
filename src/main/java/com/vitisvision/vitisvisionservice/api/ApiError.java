@@ -1,4 +1,4 @@
-package com.vitisvision.vitisvisionservice.exception;
+package com.vitisvision.vitisvisionservice.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

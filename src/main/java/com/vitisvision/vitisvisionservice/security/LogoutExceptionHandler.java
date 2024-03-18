@@ -1,11 +1,10 @@
 package com.vitisvision.vitisvisionservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitisvision.vitisvisionservice.exception.ApiError;
-import com.vitisvision.vitisvisionservice.exception.ApiResponse;
+import com.vitisvision.vitisvisionservice.api.ApiError;
+import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.ResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,5 +1,6 @@
-package com.vitisvision.vitisvisionservice.exception;
+package com.vitisvision.vitisvisionservice.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.List;
@@ -8,10 +9,13 @@ import java.util.List;
 public class ApiResponse<T> {
     private final String status;
     private final int statusCode;
-    private final T errors;
+    private final List<ApiError> errors;
     private final T data;
 
-    private ApiResponse(String status, int statusCode, T errors, T data) {
+    private ApiResponse(@JsonProperty("status") String status,
+                        @JsonProperty("statusCode") int statusCode,
+                        @JsonProperty("errors") List<ApiError> errors,
+                        @JsonProperty("data") T data) {
         this.status = status;
         this.statusCode = statusCode;
         this.errors = errors;

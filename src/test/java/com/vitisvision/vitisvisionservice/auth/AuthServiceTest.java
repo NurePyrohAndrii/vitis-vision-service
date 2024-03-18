@@ -65,6 +65,7 @@ class AuthServiceTest {
                 .role(Role.USER)
                 .build();
 
+        // Mock
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(request.getPassword())).thenReturn(user.getPassword());
         when(jwtService.generateAccessToken(anyMap(), eq(user))).thenReturn("accessToken");
@@ -87,6 +88,7 @@ class AuthServiceTest {
         // Given
         RegisterRequest request = new RegisterRequest("John", "Doe", "john.doe@example.com", "password");
 
+        // Mock
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
         // When & Then
@@ -102,7 +104,7 @@ class AuthServiceTest {
         Authentication auth = mock(Authentication.class);
         List<Token> existingTokens = Arrays.asList(new Token(), new Token()); // Mock existing tokens
 
-        // Mocking
+        // Mock
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
         when(auth.getPrincipal()).thenReturn(user);
         when(jwtService.generateAccessToken(anyMap(), eq(user))).thenReturn("accessToken");
@@ -132,6 +134,7 @@ class AuthServiceTest {
                 .build();
         List<Token> userTokens = List.of(new Token(), new Token()); // Mock existing tokens
 
+        // Mock
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + refreshToken);
         when(jwtService.extractEmail(refreshToken)).thenReturn(userEmail);
@@ -157,7 +160,7 @@ class AuthServiceTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + invalidToken);
 
-        // The mock for jwtService.extractEmail should throw the MalformedJwtException for the invalid token
+        // Mock
         when(jwtService.extractEmail(invalidToken)).thenThrow(new MalformedJwtException("Invalid refresh token, principal not found"));
 
         // When & Then
@@ -175,6 +178,7 @@ class AuthServiceTest {
                 .email(userEmail)
                 .build();
 
+        // Mock
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + expiredToken);
         when(jwtService.extractEmail(expiredToken)).thenReturn(userEmail);
