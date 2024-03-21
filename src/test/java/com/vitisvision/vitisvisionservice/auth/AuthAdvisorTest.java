@@ -9,12 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class AuthAdvisorTest {
 
@@ -28,10 +26,13 @@ public class AuthAdvisorTest {
 
     @Test
     public void handleDuplicateResourceException_ReturnsBadRequestResponse() {
+        // Given
         DuplicateResourceException exception = new DuplicateResourceException("Resource already exists");
 
+        // When
         ResponseEntity<ApiResponse<List<ApiError>>> response = authAdvisor.handleDuplicateResourceException(exception);
 
+        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         ApiResponse<List<ApiError>> apiResponse = response.getBody();
@@ -41,10 +42,13 @@ public class AuthAdvisorTest {
 
     @Test
     public void handleJwtException_ReturnsUnauthorizedResponse() {
+        // Given
         JwtException exception = new JwtException("Invalid JWT token");
 
+        // When
         ResponseEntity<ApiResponse<List<ApiError>>> response = authAdvisor.handleJwtException(exception);
 
+        // Then
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         ApiResponse<List<ApiError>> apiResponse = response.getBody();

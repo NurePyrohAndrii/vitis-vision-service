@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
+import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.getAnnotationResponseStatusCode;
 
 @ControllerAdvice(assignableTypes = AuthController.class)
 @Slf4j
@@ -22,7 +23,7 @@ public class AuthAdvisor {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
-        HttpStatus status = getStatus(e);
+        HttpStatus status = getAnnotationResponseStatusCode(e.getClass());
 
         List<ApiError> errors = List.of(
                 new ApiError(
@@ -50,12 +51,4 @@ public class AuthAdvisor {
 
         return createErrorResponseEntity(errors, status);
     }
-
-    private HttpStatus getStatus(Exception e) {
-
-        HttpStatus code = e.getClass().getAnnotation(ResponseStatus.class).code();
-        log.info("AuthAdvisor class, in getStatus(Exception e) method, extracted status code: {}", code);
-        return code;
-    }
-
 }

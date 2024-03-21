@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -33,6 +33,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtExceptionHandler jwtExceptionHandler;
     private final TokenRepository tokenRepository;
+
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+            JwtExceptionHandler jwtExceptionHandler,
+            TokenRepository tokenRepository
+    ) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.jwtExceptionHandler = jwtExceptionHandler;
+        this.tokenRepository = tokenRepository;
+    }
 
     @Override
     public void doFilterInternal(
