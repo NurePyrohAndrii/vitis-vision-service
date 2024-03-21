@@ -84,7 +84,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private boolean isTokenExpired(String jwt) {
+    boolean isTokenExpired(String jwt) {
         return extractExpiration(jwt).before(new Date());
     }
 

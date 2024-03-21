@@ -135,8 +135,6 @@ class AuthServiceTest {
         List<Token> userTokens = List.of(new Token(), new Token()); // Mock existing tokens
 
         // Mock
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + refreshToken);
         when(jwtService.extractEmail(refreshToken)).thenReturn(userEmail);
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
         when(jwtService.isTokenValid(refreshToken, user)).thenReturn(true);
@@ -144,7 +142,7 @@ class AuthServiceTest {
         when(tokenRepository.findAllValidTokensByUserId(user.getId())).thenReturn(userTokens);
 
         // When
-        AuthResponse response = authService.refreshToken(request);
+        AuthResponse response = authService.refreshToken("Bearer " + refreshToken);
 
         // Then
         assertNotNull(response);
@@ -156,15 +154,13 @@ class AuthServiceTest {
     @Test
     public void testRefreshToken_InvalidToken_ThrowsMalformedJwtException() {
         // Given
-        String invalidToken = "invalidToken";
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + invalidToken);
+        String invalidToken = "Bearer invalidToken";
 
         // Mock
         when(jwtService.extractEmail(invalidToken)).thenThrow(new MalformedJwtException("Invalid refresh token, principal not found"));
 
         // When & Then
-        Exception exception = assertThrows(MalformedJwtException.class, () -> authService.refreshToken(request));
+        Exception exception = assertThrows(MalformedJwtException.class, () -> authService.refreshToken(invalidToken));
         assertEquals("Invalid refresh token, principal not found", exception.getMessage());
     }
 
@@ -179,13 +175,11 @@ class AuthServiceTest {
                 .build();
 
         // Mock
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + expiredToken);
         when(jwtService.extractEmail(expiredToken)).thenReturn(userEmail);
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
         when(jwtService.isTokenValid(expiredToken, user)).thenReturn(false);
 
         // When & Then
-        assertThrows(ExpiredJwtException.class, () -> authService.refreshToken(request));
+        assertThrows(ExpiredJwtException.class, () -> authService.refreshToken("Bearer " + expiredToken));
     }
 }

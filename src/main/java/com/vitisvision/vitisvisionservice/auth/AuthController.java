@@ -1,22 +1,14 @@
 package com.vitisvision.vitisvisionservice.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -53,14 +45,10 @@ public class AuthController {
             description = "Refresh an access token using the refresh token"
     )
     @PostMapping("/refresh")
-    public void refresh(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        AuthResponse authResponse = service.refreshToken(request);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getWriter(), ApiResponse.success(authResponse, HttpStatus.OK.value()));
-        // can also use ResponseEntity, but this is just to show how to write to response manually using ObjectMapper
+    public ResponseEntity<ApiResponse<AuthResponse>> refresh(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(service.refreshToken(authorization), HttpStatus.OK.value()));
     }
 
 }

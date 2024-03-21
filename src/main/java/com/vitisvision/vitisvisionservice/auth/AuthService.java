@@ -92,18 +92,15 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse refreshToken(
-            HttpServletRequest request
-    ) {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public AuthResponse refreshToken(String jwt) {
         final String refreshToken;
         final String userEmail;
 
-        if (Objects.isNull(authHeader) || !authHeader.startsWith("Bearer ")) {
+        if (Objects.isNull(jwt) || !jwt.startsWith("Bearer ")) {
             return null;
         }
 
-        refreshToken = authHeader.substring(7);
+        refreshToken = jwt.substring(7);
 
         userEmail = jwtService.extractEmail(refreshToken);
         if (Objects.nonNull(userEmail)) {

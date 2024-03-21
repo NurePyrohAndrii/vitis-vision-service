@@ -38,7 +38,7 @@ public class AuthAdvisor {
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleJwtException(JwtException e) {
-        HttpStatus status = getStatus(e);
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         List<ApiError> errors = List.of(
                 new ApiError(
                         status,
@@ -52,7 +52,7 @@ public class AuthAdvisor {
     }
 
     private HttpStatus getStatus(Exception e) {
-        // get status from exception`s annotation
+
         HttpStatus code = e.getClass().getAnnotation(ResponseStatus.class).code();
         log.info("AuthAdvisor class, in getStatus(Exception e) method, extracted status code: {}", code);
         return code;
