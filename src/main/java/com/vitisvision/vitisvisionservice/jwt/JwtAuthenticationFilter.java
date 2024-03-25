@@ -8,8 +8,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -26,7 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -52,13 +49,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        log.info("In doFilterInternal method");
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
         final String userEmail;
 
         if (Objects.isNull(authHeader) || !authHeader.startsWith("Bearer ")) {
-            log.warn("JWT token is missing");
             filterChain.doFilter(request, response);
             return;
         }
@@ -97,16 +92,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    log.warn("This JWT token is not valid or has been revoked");
                     jwtExceptionHandler.handleJwtException(response, new JwtException("This JWT token is not valid or has been revoked"));
                 }
 
             }
 
-            log.info("Out doFilterInternal method");
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            log.warn("JWT token is invalid");
             jwtExceptionHandler.handleJwtException(response, e);
         }
     }

@@ -2,7 +2,6 @@ package com.vitisvision.vitisvisionservice.exception;
 
 import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +14,6 @@ import java.util.List;
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
 
 @ControllerAdvice
-@Slf4j
 public class DefaultExceptionHandler {
 
     @ExceptionHandler(Exception.class)

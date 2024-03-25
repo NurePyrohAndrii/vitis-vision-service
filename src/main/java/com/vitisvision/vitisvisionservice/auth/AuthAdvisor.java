@@ -4,12 +4,10 @@ import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.DuplicateResourceException;
 import io.jsonwebtoken.JwtException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +16,6 @@ import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorRe
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.getAnnotationResponseStatusCode;
 
 @ControllerAdvice(assignableTypes = AuthController.class)
-@Slf4j
 public class AuthAdvisor {
 
     @ExceptionHandler(DuplicateResourceException.class)
