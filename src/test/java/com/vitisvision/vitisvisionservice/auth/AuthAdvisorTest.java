@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 
@@ -54,5 +56,21 @@ public class AuthAdvisorTest {
         ApiResponse<List<ApiError>> apiResponse = response.getBody();
         assertNotNull(apiResponse);
         assertEquals("Invalid JWT token", apiResponse.getErrors().get(0).getMessage());
+    }
+
+    @Test
+    public void handleAuthenticationException_ReturnsUnauthorizedResponse() {
+        // Given
+        AuthenticationException exception = new BadCredentialsException("Bad credentials");
+
+        // When
+        ResponseEntity<ApiResponse<List<ApiError>>> response = authAdvisor.handleAuthenticationException(exception);
+
+        // Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        ApiResponse<List<ApiError>> apiResponse = response.getBody();
+        assertNotNull(apiResponse);
+        assertEquals("Bad credentials", apiResponse.getErrors().get(0).getMessage());
     }
 }

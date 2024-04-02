@@ -6,6 +6,7 @@ import com.vitisvision.vitisvisionservice.exception.DuplicateResourceException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -37,6 +38,21 @@ public class AuthAdvisor {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleJwtException(JwtException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        List<ApiError> errors = List.of(
+                new ApiError(
+                        status,
+                        e.getMessage(),
+                        "Exception " + e.getClass().getSimpleName() + " was thrown",
+                        LocalDateTime.now().toString()
+                )
+        );
+
+        return createErrorResponseEntity(errors, status);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<List<ApiError>>> handleAuthenticationException(AuthenticationException e) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         List<ApiError> errors = List.of(
                 new ApiError(
                         status,
