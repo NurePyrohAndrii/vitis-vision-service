@@ -8,7 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    #show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -39,3 +39,10 @@ cors:
   allowed-methods: "*"
   allowed-headers: "*"
   exposed-headers: "*"
+
+logging:
+    level:
+        com:
+          vitisvision:
+            vitisvisionservice:
+              DEBUG

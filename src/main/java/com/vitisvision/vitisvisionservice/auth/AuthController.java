@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.ThreadContext;
+import org.jboss.logging.NDC;
+import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +29,10 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @RequestBody @Valid RegisterRequest request
     ) {
-        return ResponseEntity.ok(ApiResponse.success(service.register(request), HttpStatus.OK.value()));
+        MDC.put("email", request.getEmail());
+        var response = ApiResponse.success(service.register(request), HttpStatus.OK.value());
+        MDC.clear();
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
