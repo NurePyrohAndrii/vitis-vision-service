@@ -29,10 +29,8 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @RequestBody @Valid RegisterRequest request
     ) {
-        MDC.put("email", request.getEmail());
-        var response = ApiResponse.success(service.register(request), HttpStatus.OK.value());
-        MDC.clear();
-        return ResponseEntity.ok(response);
+        MDC.put("context", request.getEmail());
+        return ResponseEntity.ok(ApiResponse.success(service.register(request), HttpStatus.OK.value()));
     }
 
     @Operation(
@@ -43,6 +41,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> authenticate(
             @RequestBody @Valid AuthenticationRequest request
     ) {
+        MDC.put("context", request.getEmail());
         return ResponseEntity.ok(ApiResponse.success(service.authenticate(request), HttpStatus.OK.value()));
     }
 

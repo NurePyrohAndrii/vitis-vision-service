@@ -2,10 +2,7 @@ package com.vitisvision.vitisvisionservice.token;
 
 import com.vitisvision.vitisvisionservice.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -27,6 +24,7 @@ public class Token {
 
     private boolean revoked;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

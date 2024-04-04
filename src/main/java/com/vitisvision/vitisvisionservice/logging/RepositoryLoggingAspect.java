@@ -30,7 +30,7 @@ public class RepositoryLoggingAspect {
 
         Logger logger = LoggerFactory.getLogger(repositoryClassName);
         String methodName = joinPoint.getSignature().getName();
-        String username = MDC.get("email");
+        String username = MDC.get("context");
 
         logger.info("[%s] %s(..) method called".formatted(username, methodName));
         logger.debug("[%s] %s(..) method arguments : %s".formatted(username, methodName, Arrays.toString(joinPoint.getArgs())));

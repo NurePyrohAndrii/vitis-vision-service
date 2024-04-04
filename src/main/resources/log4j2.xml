@@ -9,7 +9,7 @@
         <Property name="LOG_DIR">./app/logs</Property>
         <Property name="LOG_FILE_BULK">${LOG_DIR}/bulk/vitis-vision-service.log</Property>
         <Property name="LOG_FILE_ORM">${LOG_DIR}/orm/vitis-vision-service-orm.log</Property>
-        <Property name="LOG_FILE_APPLICATION">${LOG_DIR}/application/vitis-vision-service-orm.log</Property>
+        <Property name="LOG_FILE_APPLICATION">${LOG_DIR}/application/vitis-vision-service-application.log</Property>
 
 <!--        Patterns for log output-->
         <Property name="LOG_PATTERN_FILE">

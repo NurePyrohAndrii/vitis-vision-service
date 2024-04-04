@@ -16,7 +16,7 @@ import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorRe
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleException(Exception e) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         List<ApiError> errors = List.of(
