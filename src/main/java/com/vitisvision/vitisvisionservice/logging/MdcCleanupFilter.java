@@ -12,7 +12,7 @@ import java.io.IOException;
  * Filter to clean up MDC after request processing. This filter should be the last filter in the chain.
  */
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order
 public class MdcCleanupFilter implements Filter {
 
     /**

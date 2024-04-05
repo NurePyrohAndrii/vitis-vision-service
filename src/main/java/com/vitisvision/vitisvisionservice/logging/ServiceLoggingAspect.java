@@ -26,25 +26,7 @@ public class ServiceLoggingAspect extends BaseLoggingAspect {
      */
     @Around("serviceMethods()")
     public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        Logger logger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
-        String methodName = joinPoint.getSignature().getName();
-        String username = MDC.get("context");
-
-        logger.info("[%s] %s(..) method called".formatted(username, methodName));
-
-        boolean isDebugEnabled = logger.isDebugEnabled();
-        if (isDebugEnabled) {
-            logger.debug("[%s] %s(..) method arguments : %s".formatted(username, methodName, Arrays.toString(joinPoint.getArgs())));
-        }
-
-        Object result = joinPoint.proceed();
-
-        if (isDebugEnabled) {
-            logger.debug("[%s] %s(..) method returned : %s".formatted(username, methodName, result));
-        }
-
-        return result;
+        return  logMethodExecution(joinPoint, null);
     }
 
 }

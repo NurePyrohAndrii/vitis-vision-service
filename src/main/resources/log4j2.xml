@@ -21,6 +21,8 @@
 
     </Properties>
     <Appenders>
+
+        <!-- bulk appender is for the spring application logs -->
         <RollingFile
                 name="bulk"
                 fileName="${LOG_FILE_BULK}"
@@ -34,6 +36,8 @@
             </Policies>
             <DefaultRolloverStrategy max="10" />
         </RollingFile>
+
+        <!-- orm appender is for the hibernate logs -->
         <RollingFile
                 name="orm"
                 fileName="${LOG_FILE_ORM}"
@@ -47,6 +51,8 @@
             </Policies>
             <DefaultRolloverStrategy max="10" />
         </RollingFile>
+
+        <!-- application appender is for the developed application logs -->
         <RollingFile
                 name="application"
                 fileName="${LOG_FILE_APPLICATION}"
@@ -60,6 +66,8 @@
             </Policies>
             <DefaultRolloverStrategy max="10" />
         </RollingFile>
+
+        <!-- console appender is to write logs in console -->
         <Console
             name="console-default"
             target="SYSTEM_OUT">
@@ -67,21 +75,28 @@
                 <Pattern>${LOG_PATTERN_CONSOLE}</Pattern>
             </PatternLayout>
         </Console>
+
     </Appenders>
     <Loggers>
+
 <!--        Logger for the root package-->
         <Root level="INFO">
             <AppenderRef ref="bulk"/>
             <AppenderRef ref="console-default"/>
         </Root>
+
 <!--        Logger for the application package-->
         <Logger name="com.vitisvision.vitisvisionservice" level="DEBUG">
+
 <!--            <AppenderRef ref="console-default"/>-->
             <AppenderRef ref="application"/>
+
         </Logger>
+
 <!--        Logger for the hibernate package-->
         <Logger name="org.hibernate" level="WARN" additivity="false">
             <AppenderRef ref="orm"/>
         </Logger>
+
     </Loggers>
 </Configuration>
