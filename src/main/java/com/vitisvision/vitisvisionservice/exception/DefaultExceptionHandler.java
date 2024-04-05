@@ -13,9 +13,18 @@ import java.util.List;
 
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
 
+/**
+ * DefaultExceptionHandler class is a global exception handler for the application.
+ */
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
+    /**
+     * Handle all exceptions.
+     *
+     * @param e the exception object of type {@link Throwable}
+     * @return the response entity
+     */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleException(Exception e) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -30,6 +39,12 @@ public class DefaultExceptionHandler {
         return createErrorResponseEntity(errors, status);
     }
 
+    /**
+     * Handle validation exception that occurs when a request body is not valid or has validation errors.
+     *
+     * @param ex the exception object of type {@link MethodArgumentNotValidException}
+     * @return the response entity with the list of errors
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleValidationException(MethodArgumentNotValidException ex) {
         List<ApiError> errors = ex.getAllErrors().stream()

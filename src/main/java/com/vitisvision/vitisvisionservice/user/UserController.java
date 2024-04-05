@@ -14,14 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
+/**
+ * Controller class for user management
+ */
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "Endpoints for user management")
 public class UserController {
 
+    /**
+     * Service class for user management
+     */
     private final UserService userService;
 
+    /**
+     * Change the password of the authenticated user
+     *
+     * @param request   ChangePasswordRequest object
+     * @param principal Principal object
+     * @return ResponseEntity object
+     */
     @Operation(
             summary = "Change the password of the authenticated user",
             description = "Change the password of the authenticated user with the provided details"

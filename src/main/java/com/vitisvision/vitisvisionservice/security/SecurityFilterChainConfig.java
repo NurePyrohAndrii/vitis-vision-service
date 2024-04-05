@@ -19,12 +19,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-
+/**
+ * SecurityFilterChainConfig class is used to configure the security filter chain that will be used to secure the application.
+ */
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityFilterChainConfig {
 
+    /**
+     * List of white listed URLs that are allowed to be accessed without authentication.
+     */
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/auth/**",
             "/swagger-ui/**",
@@ -36,11 +41,32 @@ public class SecurityFilterChainConfig {
             "/swagger-resources/**"
     };
 
+    /**
+     * JwtAuthenticationFilter bean that will be used to authenticate the user using JWT token.
+     */
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    /**
+     * AuthenticationProvider bean that will be used to authenticate the user.
+     */
     private final AuthenticationProvider authenticationProvider;
+
+    /**
+     * LogoutHandler bean that will be used to handle the logout request.
+     */
     private final LogoutHandler logoutHandler;
+
+    /**
+     * CorsConfigurationSource bean that will be used to configure the CORS policy.
+     */
     //private final CorsConfigurationSource corsConfigurationSource;
 
+    /**
+     * Method to configure the security filter chain that will be used to secure the application.
+     * @param http HttpSecurity object that will be used to configure the security filter chain.
+     * @return SecurityFilterChain object that will be used to secure the application.
+     * @throws Exception Exception that will be thrown if any error occurs.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

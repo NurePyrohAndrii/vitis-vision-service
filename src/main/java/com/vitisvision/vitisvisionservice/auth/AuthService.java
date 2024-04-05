@@ -22,16 +22,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * AuthService class provides methods for user authentication and registration.
+ * It also provides methods for generating and refreshing access and refresh tokens.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+    /**
+     * UserRepository is used to interact with the database to perform CRUD operations on User entity.
+     */
     private final UserRepository userRepository;
+
+    /**
+     * TokenRepository is used to interact with the database to perform CRUD operations on Token entity.
+     */
     private final TokenRepository tokenRepository;
+
+    /**
+     * PasswordEncoder is used to encode and decode passwords.
+     */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * JwtService is used to generate and validate JWT tokens.
+     */
     private final JwtService jwtService;
+
+    /**
+     * AuthenticationManager is used to authenticate users.
+     */
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * This method registers a new user.
+     * It checks if the email is already used by another user.
+     * If the email is not used, it creates a new user and saves it to the database.
+     * It then generates and saves access and refresh tokens for the user.
+     * @param request RegisterRequest object containing user details.
+     * @return AuthResponse object containing access and refresh tokens.
+     */
     public AuthResponse register(RegisterRequest request) {
         // check if email exists
         String email = request.getEmail();
@@ -64,6 +95,13 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * This method authenticates a user.
+     * It checks if the email and password match a user in the database.
+     * If the email and password match, it generates and saves access and refresh tokens for the user.
+     * @param request AuthenticationRequest object containing user email and password.
+     * @return AuthResponse object containing access and refresh tokens.
+     */
     public AuthResponse authenticate(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -88,6 +126,14 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * This method refreshes the access token using the refresh token.
+     * It checks if the refresh token is valid and not expired.
+     * If the refresh token is valid, it generates a new access token and saves it to the database.
+     * It then revokes all the user's access tokens.
+     * @param jwt Refresh token.
+     * @return AuthResponse object containing the new access token and the refresh token.
+     */
     public AuthResponse refreshToken(String jwt) {
         final String refreshToken;
         final String userEmail;
@@ -119,6 +165,12 @@ public class AuthService {
         }
     }
 
+    /**
+     * This method saves the jwt of the {@link TokenType} to the database.
+     * @param user User object to which the token belongs.
+     * @param jwt JWT token to be saved.
+     * @param tokenType TokenType of the token.
+     */
     private void saveUserToken(User user, String jwt, TokenType tokenType) {
         Token token = Token.builder()
                 .user(user)
@@ -130,6 +182,10 @@ public class AuthService {
         tokenRepository.save(token);
     }
 
+    /**
+     * This method revokes all the user's jwt.
+     * @param user User object whose tokens are to be revoked.
+     */
     private void revokeAllUserTokens(User user) {
         List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
         if (validUserTokens.isEmpty()) return;
@@ -137,6 +193,10 @@ public class AuthService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    /**
+     * This method revokes all the user's access tokens.
+     * @param user User object whose access tokens are to be revoked.
+     */
     private void revokeAllUserAccessTokens(User user) {
         List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
         if (validUserTokens.isEmpty()) return;

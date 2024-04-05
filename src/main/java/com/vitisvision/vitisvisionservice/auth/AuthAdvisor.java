@@ -16,9 +16,18 @@ import java.util.List;
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
 import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.getAnnotationResponseStatusCode;
 
+/**
+ * AuthAdvisor class is a controller advice class that handles exceptions thrown by the AuthController class.
+ */
 @ControllerAdvice(assignableTypes = AuthController.class)
 public class AuthAdvisor {
 
+    /**
+     * Handles DuplicateResourceException thrown by the AuthController class.
+     *
+     * @param e DuplicateResourceException object that was thrown by the AuthController class. It contains the error message.
+     * @return ResponseEntity<ApiResponse<List<ApiError> object that contains the error message and the status code.
+     */
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
         HttpStatus status = getAnnotationResponseStatusCode(e.getClass());
@@ -35,6 +44,12 @@ public class AuthAdvisor {
         return createErrorResponseEntity(errors, status);
     }
 
+    /**
+     * Handles JwtException thrown by the AuthController class.
+     *
+     * @param e JwtException object that was thrown by the AuthController class. It contains the error message.
+     * @return ResponseEntity<ApiResponse<List<ApiError> object that contains the error message and the status code.
+     */
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleJwtException(JwtException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -50,6 +65,12 @@ public class AuthAdvisor {
         return createErrorResponseEntity(errors, status);
     }
 
+    /**
+     * Handles AuthenticationException thrown by the AuthController class.
+     *
+     * @param e AuthenticationException object that was thrown by the AuthController class. It contains the error message.
+     * @return ResponseEntity<ApiResponse<List<ApiError> object that contains the error message and the status code.
+     */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleAuthenticationException(AuthenticationException e) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;

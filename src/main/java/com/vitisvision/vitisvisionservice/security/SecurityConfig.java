@@ -1,28 +1,35 @@
 package com.vitisvision.vitisvisionservice.security;
 
-import com.vitisvision.vitisvisionservice.jwt.JwtAuthenticationFilter;
-import com.vitisvision.vitisvisionservice.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
+/**
+ * SecurityConfig class is used to configure the beans required for the security
+ */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    /**
+     * UserDetailsService bean is used to load the user details from the database and provide it to the authentication provider
+     */
     private final UserDetailsService userDetailsService;
+
+    /**
+     * PasswordEncoder bean is used to encode the password before storing it in the database
+     */
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * AuthenticationProvider bean is used to authenticate the user based on the user details provided by the userDetailsService
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -31,6 +38,9 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
+    /**
+     * AuthenticationManager bean is used to authenticate the user based on the authentication provider
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

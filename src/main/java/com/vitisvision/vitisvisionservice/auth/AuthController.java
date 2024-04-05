@@ -5,22 +5,32 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.ThreadContext;
-import org.jboss.logging.NDC;
 import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * AuthController class for handling authentication and registration requests from the client
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Endpoints for user authentication and registration")
 public class AuthController {
 
+    /**
+     * The service class dependency for handling authentication and registration requests
+     */
     private final AuthService service;
 
+    /**
+     * Register a new user with the provided details
+     *
+     * @param request the request object containing the user details
+     * @return the response entity containing the response object
+     */
     @Operation(
             summary = "Register a new user",
             description = "Register a new user with the provided details"
@@ -33,6 +43,12 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(service.register(request), HttpStatus.OK.value()));
     }
 
+    /**
+     * Authenticate a user with the provided credentials
+     *
+     * @param request the request object containing the user credentials
+     * @return the response entity containing the response object
+     */
     @Operation(
             summary = "Authenticate a user",
             description = "Authenticate a user with the provided credentials"
@@ -45,6 +61,12 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(service.authenticate(request), HttpStatus.OK.value()));
     }
 
+    /**
+     * Refresh an access token using the refresh token
+     *
+     * @param authorization the authorization header containing the refresh token
+     * @return the response entity containing the response object
+     */
     @Operation(
             summary = "Refresh an access token",
             description = "Refresh an access token using the refresh token"

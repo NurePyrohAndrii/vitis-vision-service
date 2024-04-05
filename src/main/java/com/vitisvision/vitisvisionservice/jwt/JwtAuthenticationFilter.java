@@ -21,18 +21,42 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * This class is responsible for authenticating the request using JWT token
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    /**
+     * The JwtService object to handle JWT operations
+     */
     private final JwtService jwtService;
+
+    /**
+     * The UserDetailsService object to load user details
+     */
     private final UserDetailsService userDetailsService;
+
+    /**
+     * The JwtExceptionHandler object to handle JWT exceptions
+     */
     private final JwtExceptionHandler jwtExceptionHandler;
+
+    /**
+     * The TokenRepository object to interact with the token persistence
+     */
     private final TokenRepository tokenRepository;
 
+    /**
+     * Constructor to initialize the JwtAuthenticationFilter object
+     * @param jwtService the JwtService object
+     * @param userDetailsService the UserDetailsService object qualified with "userDetailsServiceImpl"
+     * @param jwtExceptionHandler the JwtExceptionHandler object
+     * @param tokenRepository the TokenRepository object
+     */
     public JwtAuthenticationFilter(
             JwtService jwtService,
             @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
@@ -45,6 +69,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.tokenRepository = tokenRepository;
     }
 
+    /**
+     * This method is called by the filter chain to authenticate the request
+     * @param request the request object
+     * @param response the response object
+     * @param filterChain the filter chain object
+     * @throws ServletException if an error occurs while processing the request
+     * @throws IOException if an error occurs while reading the request
+     */
     @Override
     public void doFilterInternal(
             @NonNull HttpServletRequest request,

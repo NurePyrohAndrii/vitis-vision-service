@@ -12,13 +12,30 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+/**
+ * LogoutController class is responsible for handling logout requests.
+ */
 @Service
 @RequiredArgsConstructor
 public class LogoutController implements LogoutHandler {
 
+    /**
+     * The logout service to perform logout operations.
+     */
     private final LogoutService logoutService;
+
+    /**
+     * The logout exception handler to handle logout exceptions.
+     */
     private final LogoutExceptionHandler logoutExceptionHandler;
 
+    /**
+     * Logs out the user.
+     *
+     * @param request        the HTTP request
+     * @param response       the HTTP response
+     * @param authentication the authentication object
+     */
     @SneakyThrows
     @Override
     public void logout(

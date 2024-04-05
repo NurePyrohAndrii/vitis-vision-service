@@ -14,8 +14,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * LogoutExceptionHandler class is responsible for handling exceptions that may occur during logout process.
+ */
 @Component
 public class LogoutExceptionHandler {
+
+    /**
+     * Handle logout exception and write the error response to the response object.
+     *
+     * @param response the response object to write the error response
+     * @param e        the exception that occurred during logout process
+     * @throws IOException the io exception that may occur while writing the response
+     */
     public void handleLogoutException(HttpServletResponse response, Exception e) throws IOException {
         HttpStatus status;
         String message = "JWT token is invalid";

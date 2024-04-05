@@ -12,9 +12,22 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * JwtExceptionHandler class for handling exceptions occurred in {@link JwtAuthenticationFilter}
+ * <p>
+ * This class is responsible for handling JWT exceptions.
+ * </p>
+ */
 @Component
 public class JwtExceptionHandler {
 
+    /**
+     * Handle exceptions occurred in {@link JwtAuthenticationFilter}
+     *
+     * @param response the response
+     * @param e        the exception
+     * @throws IOException the io exception occurred while writing response
+     */
     public void handleJwtException(HttpServletResponse response, Exception e) throws IOException {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.UNAUTHORIZED)

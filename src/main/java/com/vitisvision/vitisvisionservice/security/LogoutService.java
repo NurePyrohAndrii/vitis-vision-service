@@ -13,13 +13,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+/**
+ * Service class for logging out a user.
+ */
 @Service
 @RequiredArgsConstructor
 public class LogoutService {
 
+    /**
+     * The token repository to access the tokens.
+     */
     private final TokenRepository tokenRepository;
+
+    /**
+     * The JWT service to validate the token.
+     */
     private final JwtService jwtService;
 
+    /**
+     * Logs out a user by revoking all valid tokens.
+     *
+     * @param request the HTTP request
+     */
     public void logout(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
