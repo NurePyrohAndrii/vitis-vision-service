@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.ResourceNotFoundException;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,13 @@ import java.util.List;
  * LogoutExceptionHandler class is responsible for handling exceptions that may occur during logout process.
  */
 @Component
+@RequiredArgsConstructor
 public class LogoutExceptionHandler {
+
+    /**
+     * The advisor utils to get the error message from the exception.
+     */
+    private final AdvisorUtils advisorUtils;
 
     /**
      * Handle logout exception and write the error response to the response object.
@@ -29,7 +37,7 @@ public class LogoutExceptionHandler {
      */
     public void handleLogoutException(HttpServletResponse response, Exception e) throws IOException {
         HttpStatus status;
-        String message = "JWT token is invalid";
+        String message = "invalid.jwt";
 
         if (e instanceof ResourceNotFoundException) {
             status = HttpStatus.BAD_REQUEST;
@@ -37,13 +45,13 @@ public class LogoutExceptionHandler {
             status = HttpStatus.BAD_REQUEST;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = "An error occurred while processing the request";
+            message = "logout.error";
         }
 
         ApiError apiError = ApiError.builder()
                 .status(status)
-                .message(message)
-                .details(e.getMessage())
+                .message(advisorUtils.getLocalizedMessage(message))
+                .details(advisorUtils.getErrorDetailsString(e))
                 .timestamp(LocalDateTime.now().toString())
                 .build();
 

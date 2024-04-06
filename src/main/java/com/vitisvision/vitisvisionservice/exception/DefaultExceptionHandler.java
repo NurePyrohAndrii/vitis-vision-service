@@ -2,6 +2,8 @@ package com.vitisvision.vitisvisionservice.exception;
 
 import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,13 +13,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
-
 /**
  * DefaultExceptionHandler class is a global exception handler for the application.
  */
 @ControllerAdvice
+@RequiredArgsConstructor
 public class DefaultExceptionHandler {
+
+    /**
+     * The AdvisorUtils object that contains utility methods.
+     */
+    private final AdvisorUtils advisorUtils;
 
     /**
      * Handle all exceptions.
@@ -31,12 +37,12 @@ public class DefaultExceptionHandler {
         List<ApiError> errors = List.of(
                 new ApiError(
                         HttpStatus.INTERNAL_SERVER_ERROR,
-                        e.getClass().toString(),
-                        e.getMessage(),
+                        advisorUtils.getErrorMessageString(e),
+                        advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
-        return createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(errors, status);
     }
 
     /**
@@ -50,13 +56,13 @@ public class DefaultExceptionHandler {
         List<ApiError> errors = ex.getAllErrors().stream()
                 .map(err -> new ApiError(
                         HttpStatus.BAD_REQUEST,
-                        err.getDefaultMessage(),
-                        "Validation error",
+                        advisorUtils.getLocalizedMessage(err.getDefaultMessage()),
+                        advisorUtils.getLocalizedMessage("validation.error"),
                         LocalDateTime.now().toString()
                 ))
                 .toList();
 
-        return createErrorResponseEntity(errors, HttpStatus.BAD_REQUEST);
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.BAD_REQUEST);
     }
 
 }

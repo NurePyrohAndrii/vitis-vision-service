@@ -68,7 +68,7 @@ public class AuthService {
         String email = request.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new DuplicateResourceException(
-                    "Such email is already used by another user. Please use another email."
+                    "error.email.duplicate"
             );
         }
 
@@ -147,7 +147,7 @@ public class AuthService {
         userEmail = jwtService.extractEmail(refreshToken);
         if (Objects.nonNull(userEmail)) {
             User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new ResourceNotFoundException("User associated with the refresh token not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("user.not.found.with.token"));
 
             if (jwtService.isTokenValid(refreshToken, user)) {
                 String accessToken = jwtService.generateAccessToken(Map.of(), user);
@@ -158,10 +158,10 @@ public class AuthService {
                         .refreshToken(refreshToken)
                         .build();
             } else {
-                throw new ExpiredJwtException(null, null, "Refresh token has expired, please authenticate again");
+                throw new ExpiredJwtException(null, null, "expired.refresh.token");
             }
         } else {
-            throw new MalformedJwtException("Invalid refresh token, principal not found");
+            throw new MalformedJwtException("invalid.refresh.token");
         }
     }
 

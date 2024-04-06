@@ -17,9 +17,9 @@ import java.lang.annotation.Target;
  * {@link Size} - checks if the password is between 10 and 16 characters
  * {@link Pattern} - checks if the password contains at least one uppercase letter, 8 lowercase letters, one digit and one special character
  */
-@NotBlank(message = "Password is required")
-@Size(min = 10, max = 16, message = "Password must be at least 10 characters, but no more than 16")
-@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must contain at least one uppercase letter, 8 lowercase letters, one digit and one special character")
+@NotBlank(message = "not.blank.password")
+@Size(min = 10, max = 16, message = "invalid.size.password")
+@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "invalid.password")
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

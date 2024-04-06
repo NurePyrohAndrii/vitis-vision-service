@@ -23,6 +23,9 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: public
 
+  messages:
+    basename: i18n/messages
+
 # Server configuration
 server:
   port: 8181

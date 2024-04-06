@@ -129,7 +129,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    jwtExceptionHandler.handleJwtException(response, new JwtException("This JWT token is not valid or has been revoked"));
+                    jwtExceptionHandler.handleJwtException(response, new JwtException("invalid.jwt"));
                 }
 
             }

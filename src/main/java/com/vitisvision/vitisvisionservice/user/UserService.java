@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+                .orElseThrow(() -> new UsernameNotFoundException("user.not.found"));
     }
 
     /**
@@ -57,14 +57,14 @@ public class UserService implements UserDetailsService {
     public void changePassword(ChangePasswordRequest request, Principal principal) {
         // Check if the new password and confirm password match
         if (!Objects.equals(request.getNewPassword(), request.getConfirmPassword())) {
-            throw new ChangePasswordException("New password and confirm password do not match");
+            throw new ChangePasswordException("error.password.match");
         }
 
         var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
 
         // Check if the current password is correct
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new ChangePasswordException("Current password is incorrect");
+            throw new ChangePasswordException("error.current.password");
         }
 
         // Update and save the user with the new password

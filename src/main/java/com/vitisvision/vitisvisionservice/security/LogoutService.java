@@ -40,7 +40,7 @@ public class LogoutService {
         final String jwt;
 
         if (Objects.isNull(authHeader) || !authHeader.startsWith("Bearer ")) {
-            throw new MalformedJwtException("JWT was not correctly constructed");
+            throw new MalformedJwtException("error.malformed.jwt");
         }
 
         jwt = authHeader.substring(7);
@@ -56,10 +56,10 @@ public class LogoutService {
                     tokenRepository.save(token);
                 });
             } else {
-                throw new JwtException("Token is invalid or has expired");
+                throw new JwtException("invalid.jwt");
             }
         } else {
-            throw new ResourceNotFoundException("Token not found");
+            throw new ResourceNotFoundException("error.token.not.found");
         }
     }
 

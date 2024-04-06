@@ -3,7 +3,9 @@ package com.vitisvision.vitisvisionservice.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -19,7 +21,13 @@ import java.util.List;
  * </p>
  */
 @Component
+@RequiredArgsConstructor
 public class JwtExceptionHandler {
+
+    /**
+     * The AdvisorUtils object to handle advisor operations
+     */
+    private final AdvisorUtils advisorUtils;
 
     /**
      * Handle exceptions occurred in {@link JwtAuthenticationFilter}
@@ -29,10 +37,12 @@ public class JwtExceptionHandler {
      * @throws IOException the io exception occurred while writing response
      */
     public void handleJwtException(HttpServletResponse response, Exception e) throws IOException {
+
+
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .message("JWT token is invalid")
-                .details(e.getMessage())
+                .message(advisorUtils.getErrorMessageString(e))
+                .details(advisorUtils.getErrorDetailsString(e))
                 .timestamp(LocalDateTime.now().toString())
                 .build();
 

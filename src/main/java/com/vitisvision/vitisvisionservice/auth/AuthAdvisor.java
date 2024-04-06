@@ -3,7 +3,9 @@ package com.vitisvision.vitisvisionservice.auth;
 import com.vitisvision.vitisvisionservice.api.ApiError;
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.exception.DuplicateResourceException;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -13,14 +15,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.createErrorResponseEntity;
-import static com.vitisvision.vitisvisionservice.util.AdvisorUtils.getAnnotationResponseStatusCode;
-
 /**
  * AuthAdvisor class is a controller advice class that handles exceptions thrown by the AuthController class.
  */
 @ControllerAdvice(assignableTypes = AuthController.class)
+@RequiredArgsConstructor
 public class AuthAdvisor {
+
+    /**
+     * AdvisorUtils object that contains utility methods.
+     */
+    private final AdvisorUtils advisorUtils;
 
     /**
      * Handles DuplicateResourceException thrown by the AuthController class.
@@ -30,18 +35,18 @@ public class AuthAdvisor {
      */
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
-        HttpStatus status = getAnnotationResponseStatusCode(e.getClass());
+        HttpStatus status = advisorUtils.getAnnotationResponseStatusCode(e.getClass());
 
         List<ApiError> errors = List.of(
                 new ApiError(
                         status,
-                        e.getMessage(),
-                        "Exception " + e.getClass().getSimpleName() + " was thrown",
+                        advisorUtils.getErrorMessageString(e),
+                        advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
-        return createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(errors, status);
     }
 
     /**
@@ -56,13 +61,13 @@ public class AuthAdvisor {
         List<ApiError> errors = List.of(
                 new ApiError(
                         status,
-                        e.getMessage(),
-                        "Exception " + e.getClass().getSimpleName() + " was thrown",
+                        advisorUtils.getErrorMessageString(e),
+                        advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
-        return createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(errors, status);
     }
 
     /**
@@ -77,12 +82,12 @@ public class AuthAdvisor {
         List<ApiError> errors = List.of(
                 new ApiError(
                         status,
-                        e.getMessage(),
-                        "Exception " + e.getClass().getSimpleName() + " was thrown",
+                        advisorUtils.getErrorMessageString(e),
+                        advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
-        return createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(errors, status);
     }
 }

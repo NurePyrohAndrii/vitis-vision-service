@@ -2,6 +2,7 @@ package com.vitisvision.vitisvisionservice.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @param <T> The type of the data that is returned by the API.
  */
 @Getter
+@ToString
 public class ApiResponse<T> {
     /**
      * The status of the API response. It can be either "success" or "error".

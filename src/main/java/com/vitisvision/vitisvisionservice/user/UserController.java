@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.user;
 
 import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class UserController {
      * Service class for user management
      */
     private final UserService userService;
+    private final AdvisorUtils advisorUtils;
 
     /**
      * Change the password of the authenticated user
@@ -44,7 +46,7 @@ public class UserController {
             @RequestBody @Valid ChangePasswordRequest request, Principal principal
     ) {
         userService.changePassword(request, principal);
-        return ResponseEntity.ok(ApiResponse.success("Password changed successfully", HttpStatus.OK.value()));
+        return ResponseEntity.ok(ApiResponse.success(advisorUtils.getLocalizedMessage("password.change.success"), HttpStatus.OK.value()));
     }
 
 }

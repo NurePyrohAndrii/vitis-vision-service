@@ -21,22 +21,22 @@ public class RegisterRequest {
     /**
      * The first name of the user that is registering.
      */
-    @NotBlank(message = "First name is required")
-    @Size(min = 2, max = 20, message = "First name must be between 2 and 20 characters")
+    @NotBlank(message = "not.blank.first.name")
+    @Size(min = 2, max = 20, message = "invalid.size.first.name")
     private String firstName;
 
     /**
      * The last name of the user that is registering.
      */
-    @NotBlank(message = "Last name is required")
-    @Size(min = 2, max = 20, message = "Last name must be between 2 and 20 characters")
+    @NotBlank(message = "not.blank.last.name")
+    @Size(min = 2, max = 20, message = "invalid.size.last.name")
     private String lastName;
 
     /**
      * The email of the user that is registering.
      */
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please enter a valid email")
+    @NotBlank(message = "not.blank.email")
+    @Email(message = "not.valid.email")
     private String email;
 
     /**
