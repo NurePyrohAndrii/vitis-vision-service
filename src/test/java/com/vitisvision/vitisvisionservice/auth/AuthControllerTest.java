@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.jwt.JwtExceptionHandler;
 import com.vitisvision.vitisvisionservice.jwt.JwtService;
 import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,9 @@ public class AuthControllerTest {
 
     @InjectMocks
     private AuthController authController;
+
+    @MockBean
+    private AdvisorUtils advisorUtils;
 
     @BeforeEach
     public void setup() {

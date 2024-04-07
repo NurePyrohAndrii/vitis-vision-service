@@ -68,7 +68,7 @@ class AuthServiceTest {
         // Mock
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(request.getPassword())).thenReturn(user.getPassword());
-        when(jwtService.generateAccessToken(anyMap(), eq(user))).thenReturn("accessToken");
+        when(jwtService.generateAccessToken(anyMap(), any(User.class))).thenReturn("accessToken");
         when(jwtService.generateRefreshToken(any(User.class))).thenReturn("refreshToken");
 
         // When
@@ -157,11 +157,11 @@ class AuthServiceTest {
         String invalidToken = "Bearer invalidToken";
 
         // Mock
-        when(jwtService.extractEmail(invalidToken)).thenThrow(new MalformedJwtException("Invalid refresh token, principal not found"));
+        when(jwtService.extractEmail(invalidToken)).thenThrow(new MalformedJwtException("invalid.refresh.token"));
 
         // When & Then
         Exception exception = assertThrows(MalformedJwtException.class, () -> authService.refreshToken(invalidToken));
-        assertEquals("Invalid refresh token, principal not found", exception.getMessage());
+        assertEquals("invalid.refresh.token", exception.getMessage());
     }
 
     @Test

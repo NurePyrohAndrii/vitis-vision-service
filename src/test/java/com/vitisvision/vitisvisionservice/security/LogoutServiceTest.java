@@ -72,7 +72,7 @@ public class LogoutServiceTest {
 
         // When & Then
         Exception exception = assertThrows(MalformedJwtException.class, () -> logoutService.logout(request));
-        assertEquals("JWT was not correctly constructed", exception.getMessage());
+        assertEquals("error.malformed.jwt", exception.getMessage());
     }
 
     @Test

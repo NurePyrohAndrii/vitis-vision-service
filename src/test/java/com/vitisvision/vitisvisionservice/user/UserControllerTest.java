@@ -6,6 +6,7 @@ import com.vitisvision.vitisvisionservice.auth.AuthController;
 import com.vitisvision.vitisvisionservice.jwt.JwtExceptionHandler;
 import com.vitisvision.vitisvisionservice.jwt.JwtService;
 import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import java.security.Principal;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +52,9 @@ class UserControllerTest {
     @InjectMocks
     private AuthController authController;
 
+    @MockBean
+    private AdvisorUtils advisorUtils;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
@@ -68,6 +73,7 @@ class UserControllerTest {
 
         // Mock
         doNothing().when(userService).changePassword(any(ChangePasswordRequest.class), any(Principal.class));
+        when(advisorUtils.getLocalizedMessage("password.change.success")).thenReturn("Password changed successfully");
 
         // When & Then
         mockMvc.perform(patch("/api/v1/user")
