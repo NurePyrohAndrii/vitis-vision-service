@@ -1,7 +1,7 @@
 package com.vitisvision.vitisvisionservice.util;
 
-import com.vitisvision.vitisvisionservice.api.ApiError;
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.api.ApiError;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

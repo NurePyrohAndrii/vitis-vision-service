@@ -1,6 +1,6 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.vitisvision.vitisvisionservice.token.Token;
+import com.vitisvision.vitisvisionservice.security.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;

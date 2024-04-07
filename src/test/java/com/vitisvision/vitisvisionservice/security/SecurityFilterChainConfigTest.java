@@ -1,5 +1,6 @@
 package com.vitisvision.vitisvisionservice.security;
 
+import com.vitisvision.vitisvisionservice.security.auth.LogoutService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

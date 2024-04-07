@@ -1,6 +1,6 @@
 package com.vitisvision.vitisvisionservice;
 
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,8 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.vitisvision.vitisvisionservice.api.ApiError;
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
-import com.vitisvision.vitisvisionservice.exception.ChangePasswordException;
+import com.vitisvision.vitisvisionservice.common.api.ApiError;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.exception.ChangePasswordException;
 import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

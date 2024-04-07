@@ -1,10 +1,9 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.vitisvision.vitisvisionservice.exception.ChangePasswordException;
+import com.vitisvision.vitisvisionservice.common.exception.ChangePasswordException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

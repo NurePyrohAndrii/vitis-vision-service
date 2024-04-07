@@ -1,9 +1,10 @@
 package com.vitisvision.vitisvisionservice.security;
 
-import com.vitisvision.vitisvisionservice.exception.ResourceNotFoundException;
-import com.vitisvision.vitisvisionservice.jwt.JwtService;
-import com.vitisvision.vitisvisionservice.token.Token;
-import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.auth.LogoutService;
+import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
+import com.vitisvision.vitisvisionservice.security.jwt.JwtService;
+import com.vitisvision.vitisvisionservice.security.token.Token;
+import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
 import com.vitisvision.vitisvisionservice.user.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;

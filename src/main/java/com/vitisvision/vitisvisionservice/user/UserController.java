@@ -1,6 +1,6 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
 import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

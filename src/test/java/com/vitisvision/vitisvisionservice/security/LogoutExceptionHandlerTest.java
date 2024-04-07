@@ -1,8 +1,9 @@
 package com.vitisvision.vitisvisionservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
-import com.vitisvision.vitisvisionservice.exception.ResourceNotFoundException;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.security.auth.LogoutExceptionHandler;
+import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;

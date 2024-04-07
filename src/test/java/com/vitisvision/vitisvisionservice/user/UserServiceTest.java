@@ -1,6 +1,6 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.vitisvision.vitisvisionservice.exception.ChangePasswordException;
+import com.vitisvision.vitisvisionservice.common.exception.ChangePasswordException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

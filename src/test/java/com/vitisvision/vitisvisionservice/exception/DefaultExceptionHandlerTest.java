@@ -1,7 +1,8 @@
 package com.vitisvision.vitisvisionservice.exception;
 
-import com.vitisvision.vitisvisionservice.api.ApiError;
-import com.vitisvision.vitisvisionservice.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.api.ApiError;
+import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.exception.DefaultExceptionHandler;
 import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

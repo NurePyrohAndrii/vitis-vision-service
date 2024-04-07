@@ -3,7 +3,9 @@ package com.vitisvision.vitisvisionservice.security;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vitisvision.vitisvisionservice.security.auth.LogoutController;
+import com.vitisvision.vitisvisionservice.security.auth.LogoutExceptionHandler;
+import com.vitisvision.vitisvisionservice.security.auth.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;

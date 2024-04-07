@@ -1,11 +1,10 @@
 package com.vitisvision.vitisvisionservice.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitisvision.vitisvisionservice.auth.AuthController;
-import com.vitisvision.vitisvisionservice.jwt.JwtExceptionHandler;
-import com.vitisvision.vitisvisionservice.jwt.JwtService;
-import com.vitisvision.vitisvisionservice.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.auth.AuthController;
+import com.vitisvision.vitisvisionservice.security.jwt.JwtExceptionHandler;
+import com.vitisvision.vitisvisionservice.security.jwt.JwtService;
+import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
 import com.vitisvision.vitisvisionservice.util.AdvisorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
