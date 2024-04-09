@@ -1,17 +1,21 @@
+# Application configuration
 spring:
   datasource:
     url: jdbc:postgresql://localhost:15432/vitis_vision_db
     username: vitis_vision_user
     password: password
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    #show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        show_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 
   liquibase:
     enabled: false
@@ -19,5 +23,26 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: public
 
+  messages:
+    basename: i18n/messages
+
+# Server configuration
 server:
   port: 8181
+
+# JWT configuration
+application:
+  security:
+    jwt:
+      secret-key: 3063273f3276282c4a2f7d3f28593f6557707247672b35546e47547e66
+      access:
+        expiration: 86400000 # a day
+      refresh:
+        expiration: 604800000 # a week
+
+# CORS configuration
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
