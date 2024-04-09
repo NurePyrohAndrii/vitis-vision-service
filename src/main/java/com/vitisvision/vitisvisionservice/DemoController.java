@@ -1,10 +1,11 @@
 package com.vitisvision.vitisvisionservice;
 
-import com.vitisvision.vitisvisionservice.common.api.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/v1/demo")
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
 public class DemoController {
 
     private final MessageSource messageSource;
