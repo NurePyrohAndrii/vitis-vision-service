@@ -6,7 +6,7 @@ import com.vitisvision.vitisvisionservice.security.dto.AuthenticationRequest;
 import com.vitisvision.vitisvisionservice.security.dto.RegisterRequest;
 import com.vitisvision.vitisvisionservice.security.token.Token;
 import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
-import com.vitisvision.vitisvisionservice.user.entity.Role;
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;

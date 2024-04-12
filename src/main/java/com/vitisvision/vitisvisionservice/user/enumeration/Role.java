@@ -1,4 +1,4 @@
-package com.vitisvision.vitisvisionservice.user.entity;
+package com.vitisvision.vitisvisionservice.user.enumeration;
 
 /**
  * Role enum for user roles used in the application.

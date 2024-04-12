@@ -3,7 +3,7 @@ package com.vitisvision.vitisvisionservice;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
 import com.vitisvision.vitisvisionservice.security.token.Token;
 import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
-import com.vitisvision.vitisvisionservice.user.entity.Role;
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import com.vitisvision.vitisvisionservice.security.token.TokenType;
@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 
@@ -32,18 +33,22 @@ public class VitisVisionServiceApplication {
     }
 
     @Bean
-    public CommandLineRunner run(UserRepository userRepository, JwtService jwtService, TokenRepository tokenRepository) {
+    public CommandLineRunner run(
+			UserRepository userRepository,
+			JwtService jwtService,
+			TokenRepository tokenRepository,
+			PasswordEncoder passwordEncoder
+	) {
         return args -> {
-
-
             // Create an admin user and save it to the database
             User admin = User.builder()
                     .firstName("Admin")
                     .lastName("User")
                     .email("admin@admin.com")
                     .id(1)
-                    .password("admin")
+                    .password(passwordEncoder.encode("Password1$"))
                     .role(Role.ADMIN)
+					.createdBy("Admin")
 					.build();
 
 			userRepository.save(admin);

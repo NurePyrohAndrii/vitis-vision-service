@@ -21,7 +21,7 @@ import java.security.Principal;
  * Controller class for user management
  */
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "Endpoints for user management")
 public class UserController {

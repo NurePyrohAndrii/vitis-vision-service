@@ -43,7 +43,6 @@ public class UserService implements UserDetailsService {
      * @throws UsernameNotFoundException if the user with the given username is not found
      */
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user.not.found"));
