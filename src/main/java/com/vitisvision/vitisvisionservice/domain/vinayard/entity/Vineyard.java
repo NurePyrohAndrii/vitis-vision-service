@@ -1,8 +1,10 @@
 package com.vitisvision.vitisvisionservice.domain.vinayard.entity;
 
+import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
@@ -17,14 +19,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vineyard {
-    @Id
-    @GeneratedValue
-    @Column
-    private Integer id;
+public class Vineyard extends BaseEntity {
 
     /**
      * Represents the company that owns the vineyard.

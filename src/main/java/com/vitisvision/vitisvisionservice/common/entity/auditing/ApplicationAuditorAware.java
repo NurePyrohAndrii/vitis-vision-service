@@ -13,6 +13,16 @@ import java.util.Optional;
  */
 public class ApplicationAuditorAware implements AuditorAware<String> {
 
+    private static final ThreadLocal<String> auditor = new ThreadLocal<>();
+
+    public static void setAuditor(String username) {
+        auditor.set(username);
+    }
+
+    public static void clearAuditor() {
+        auditor.remove();
+    }
+
     /**
      * Get the current auditor that is making the changes to the entities
      *
@@ -20,6 +30,10 @@ public class ApplicationAuditorAware implements AuditorAware<String> {
      */
     @Override
     public Optional<String> getCurrentAuditor() {
+        if (auditor.get() != null) {
+            return Optional.of(auditor.get());
+        }
+
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();

@@ -1,5 +1,6 @@
 package com.vitisvision.vitisvisionservice.security.service;
 
+import com.vitisvision.vitisvisionservice.common.entity.auditing.ApplicationAuditorAware;
 import com.vitisvision.vitisvisionservice.common.exception.DuplicateResourceException;
 import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.security.dto.AuthResponse;
@@ -13,6 +14,7 @@ import com.vitisvision.vitisvisionservice.user.entity.User;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,45 +64,54 @@ public class AuthService {
      * It checks if the email is already used by another user.
      * If the email is not used, it creates a new user and saves it to the database.
      * It then generates and saves access and refresh tokens for the user.
+     *
      * @param request RegisterRequest object containing user details.
      * @return AuthResponse object containing access and refresh tokens.
      */
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // check if email exists
-        String email = request.getEmail();
-        if (userRepository.existsByEmail(email)) {
-            throw new DuplicateResourceException(
-                    "error.email.duplicate"
-            );
+        try {
+            // check if email exists
+            String email = request.getEmail();
+            if (userRepository.existsByEmail(email)) {
+                throw new DuplicateResourceException(
+                        "error.email.duplicate"
+                );
+            }
+
+            // create and save user
+            User user = User.builder()
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .role(Role.USER)
+                    .build();
+
+            ApplicationAuditorAware.setAuditor(user.getUsername());
+            userRepository.save(user);
+
+            // generate and save tokens
+            String accessToken = jwtService.generateAccessToken(Map.of(), user);
+            saveUserToken(user, accessToken, TokenType.ACCESS);
+
+            String refreshToken = jwtService.generateRefreshToken(user);
+            saveUserToken(user, refreshToken, TokenType.REFRESH);
+
+            return AuthResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } finally {
+            ApplicationAuditorAware.clearAuditor();
         }
-
-        // create and save user
-        User user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-
-        // generate and save tokens
-        String accessToken = jwtService.generateAccessToken(Map.of(), user);
-        saveUserToken(user, accessToken, TokenType.ACCESS);
-
-        String refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(user, refreshToken, TokenType.REFRESH);
-
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
     }
 
     /**
      * This method authenticates a user.
      * It checks if the email and password match a user in the database.
      * If the email and password match, it generates and saves access and refresh tokens for the user.
+     *
      * @param request AuthenticationRequest object containing user email and password.
      * @return AuthResponse object containing access and refresh tokens.
      */
@@ -133,6 +144,7 @@ public class AuthService {
      * It checks if the refresh token is valid and not expired.
      * If the refresh token is valid, it generates a new access token and saves it to the database.
      * It then revokes all the user's access tokens.
+     *
      * @param jwt Refresh token.
      * @return AuthResponse object containing the new access token and the refresh token.
      */
@@ -169,8 +181,9 @@ public class AuthService {
 
     /**
      * This method saves the jwt of the {@link TokenType} to the database.
-     * @param user User object to which the token belongs.
-     * @param jwt JWT token to be saved.
+     *
+     * @param user      User object to which the token belongs.
+     * @param jwt       JWT token to be saved.
      * @param tokenType TokenType of the token.
      */
     private void saveUserToken(User user, String jwt, TokenType tokenType) {
@@ -186,6 +199,7 @@ public class AuthService {
 
     /**
      * This method revokes all the user's jwt.
+     *
      * @param user User object whose tokens are to be revoked.
      */
     private void revokeAllUserTokens(User user) {
@@ -197,6 +211,7 @@ public class AuthService {
 
     /**
      * This method revokes all the user's access tokens.
+     *
      * @param user User object whose access tokens are to be revoked.
      */
     private void revokeAllUserAccessTokens(User user) {

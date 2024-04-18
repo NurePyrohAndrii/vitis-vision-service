@@ -7,6 +7,8 @@ import com.vitisvision.vitisvisionservice.controller.security.AuthController;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @ControllerAdvice(assignableTypes = AuthController.class)
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AuthAdvisor {
 
     /**

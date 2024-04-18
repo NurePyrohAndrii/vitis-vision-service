@@ -29,7 +29,7 @@ public class Address {
     private String city;
 
     /**
-     * Represents the state of the vineyard.
+     * Represents the zip code of state of the vineyard.
      */
     @Column(nullable = false)
     private String zipCode;

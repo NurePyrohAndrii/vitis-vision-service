@@ -22,14 +22,14 @@ import java.util.Objects;
  * It is also used to implement the UserDetails interface to provide
  * the user details to the spring security.
  */
+@Entity
+@Table(name = "_user")
 @Getter
 @Setter
 @ToString
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@Entity
-@Table(name = "_user")
 public class User extends BaseEntity implements UserDetails {
 
     /**
