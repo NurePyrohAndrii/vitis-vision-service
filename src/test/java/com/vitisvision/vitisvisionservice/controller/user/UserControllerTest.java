@@ -53,9 +53,6 @@ class UserControllerTest {
     @MockBean
     private TokenRepository tokenRepository;
 
-    @InjectMocks
-    private AuthController authController;
-
     @MockBean
     private AdvisorUtils advisorUtils;
 
@@ -80,7 +77,7 @@ class UserControllerTest {
         when(advisorUtils.getLocalizedMessage("password.change.success")).thenReturn("Password changed successfully");
 
         // When & Then
-        mockMvc.perform(patch("/api/v1/user")
+        mockMvc.perform(patch("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
