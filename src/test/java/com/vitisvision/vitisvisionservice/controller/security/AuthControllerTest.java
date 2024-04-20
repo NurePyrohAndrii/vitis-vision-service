@@ -1,6 +1,8 @@
 package com.vitisvision.vitisvisionservice.controller.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import com.vitisvision.vitisvisionservice.security.dto.AuthResponse;
 import com.vitisvision.vitisvisionservice.security.dto.AuthenticationRequest;
 import com.vitisvision.vitisvisionservice.security.dto.RegisterRequest;
@@ -8,7 +10,6 @@ import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHan
 import com.vitisvision.vitisvisionservice.security.service.AuthService;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
 import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
-import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,6 +60,9 @@ public class AuthControllerTest {
 
     @InjectMocks
     private AuthController authController;
+
+    @MockBean
+    private MessageSourceUtils messageSourceUtils;
 
     @MockBean
     private AdvisorUtils advisorUtils;

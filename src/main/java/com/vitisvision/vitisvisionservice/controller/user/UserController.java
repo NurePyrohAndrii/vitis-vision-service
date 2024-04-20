@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.controller.user;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import com.vitisvision.vitisvisionservice.user.service.UserService;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
@@ -30,7 +31,11 @@ public class UserController {
      * Service class for user management
      */
     private final UserService userService;
-    private final AdvisorUtils advisorUtils;
+
+    /**
+     * MessageSourceUtils object for using the message source.
+     */
+    private final MessageSourceUtils messageSourceUtils;
 
     /**
      * Change the password of the authenticated user
@@ -48,7 +53,7 @@ public class UserController {
             @RequestBody @Valid ChangePasswordRequest request, Principal principal
     ) {
         userService.changePassword(request, principal);
-        return ResponseEntity.ok(ApiResponse.success(advisorUtils.getLocalizedMessage("password.change.success"), HttpStatus.OK.value()));
+        return ResponseEntity.ok(ApiResponse.success(messageSourceUtils.getLocalizedMessage("password.change.success"), HttpStatus.OK.value()));
     }
 
 }

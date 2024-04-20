@@ -34,18 +34,10 @@ public class UserAdvisor {
      */
     @ExceptionHandler
     public ResponseEntity<ApiResponse<List<ApiError>>> handleChangePasswordException(ChangePasswordException e) {
-        HttpStatus status = advisorUtils.getAnnotationResponseStatusCode(e.getClass());
-
-        List<ApiError> errors = List.of(
-                new ApiError(
-                        status,
-                        advisorUtils.getErrorMessageString(e),
-                        advisorUtils.getErrorDetailsString(e),
-                        LocalDateTime.now().toString()
-                )
+        return advisorUtils.createErrorResponseEntity(
+                e,
+                advisorUtils.getAnnotationResponseStatusCode(e.getClass())
         );
-
-        return advisorUtils.createErrorResponseEntity(errors, status);
     }
 
 }

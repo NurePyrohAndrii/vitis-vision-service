@@ -5,6 +5,7 @@ import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,11 @@ public class LogoutExceptionHandler {
     private final AdvisorUtils advisorUtils;
 
     /**
+     * The message source utils to get the localized error message.
+     */
+    private final MessageSourceUtils messageSourceUtils;
+
+    /**
      * Handle logout exception and write the error response to the response object.
      *
      * @param response the response object to write the error response
@@ -50,18 +56,13 @@ public class LogoutExceptionHandler {
 
         ApiError apiError = ApiError.builder()
                 .status(status)
-                .message(advisorUtils.getLocalizedMessage(message))
+                .message(messageSourceUtils.getLocalizedMessage(message))
                 .details(advisorUtils.getErrorDetailsString(e))
                 .timestamp(LocalDateTime.now().toString())
                 .build();
 
-        ApiResponse<?> apiResponse = ApiResponse.error(
-                List.of(apiError),
-                status.value()
-        );
-
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getWriter(), apiResponse);
+        new ObjectMapper().writeValue(response.getWriter(), advisorUtils.createErrorResponseEntity(List.of(apiError), status).getBody());
     }
 }

@@ -1,8 +1,10 @@
 package com.vitisvision.vitisvisionservice.common.advisor;
 
+import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -29,6 +31,11 @@ public class DefaultExceptionHandler {
     private final AdvisorUtils advisorUtils;
 
     /**
+     * The MessageSourceUtils object that contains utility methods for message source.
+     */
+    private final MessageSourceUtils messageSourceUtils;
+
+    /**
      * Handle all exceptions.
      *
      * @param e the exception object of type {@link Throwable}
@@ -36,16 +43,7 @@ public class DefaultExceptionHandler {
      */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleException(Exception e) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        List<ApiError> errors = List.of(
-                new ApiError(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        advisorUtils.getErrorMessageString(e),
-                        advisorUtils.getErrorDetailsString(e),
-                        LocalDateTime.now().toString()
-                )
-        );
-        return advisorUtils.createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -59,8 +57,8 @@ public class DefaultExceptionHandler {
         List<ApiError> errors = ex.getAllErrors().stream()
                 .map(err -> new ApiError(
                         HttpStatus.BAD_REQUEST,
-                        advisorUtils.getLocalizedMessage(err.getDefaultMessage()),
-                        advisorUtils.getLocalizedMessage("validation.error"),
+                        messageSourceUtils.getLocalizedMessage(err.getDefaultMessage()),
+                        messageSourceUtils.getLocalizedMessage("validation.error"),
                         LocalDateTime.now().toString()
                 ))
                 .toList();
@@ -79,12 +77,23 @@ public class DefaultExceptionHandler {
         List<ApiError> errors = List.of(
                 new ApiError(
                         HttpStatus.FORBIDDEN,
-                        advisorUtils.getLocalizedMessage("error.access.denied"),
+                        messageSourceUtils.getLocalizedMessage("error.access.denied"),
                         advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
         return advisorUtils.createErrorResponseEntity(errors, HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Handle resource not found exception that occurs when a resource is not found in the database.
+     *
+     * @param e the exception object of type {@link ResourceNotFoundException}
+     * @return the response entity with the list of errors
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<List<ApiError>>> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND);
     }
 }

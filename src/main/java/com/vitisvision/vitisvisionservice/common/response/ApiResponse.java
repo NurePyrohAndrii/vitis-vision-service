@@ -21,7 +21,7 @@ public class ApiResponse<T> {
     /**
      * The status code of the API response.
      */
-    private final int statusCode;
+    private final Integer statusCode;
 
     /**
      * The list of errors that occurred during the API call.

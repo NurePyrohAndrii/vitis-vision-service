@@ -1,9 +1,11 @@
 package com.vitisvision.vitisvisionservice.common;
 
+import com.vitisvision.vitisvisionservice.common.advisor.DefaultExceptionHandler;
+import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
-import com.vitisvision.vitisvisionservice.common.advisor.DefaultExceptionHandler;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,9 +17,10 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,64 +31,100 @@ public class DefaultExceptionHandlerTest {
     @Mock
     private AdvisorUtils advisorUtils;
 
+    @Mock
+    private MessageSourceUtils messageSourceUtils;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        defaultExceptionHandler = new DefaultExceptionHandler(advisorUtils);
+        defaultExceptionHandler = new DefaultExceptionHandler(advisorUtils, messageSourceUtils);
+        setUpMocks();
+    }
+
+    private void setUpMocks() {
+        when(advisorUtils.createErrorResponseEntity(any(Exception.class), any(HttpStatus.class)))
+                .thenAnswer(invocation -> {
+                    HttpStatus status = invocation.getArgument(1);
+                    ApiError apiError = new ApiError(status, "Default Error Message", "Default Error Details", null);
+                    ApiResponse<List<ApiError>> apiResponse = ApiResponse.error(List.of(apiError), status.value());
+                    return new ResponseEntity<>(apiResponse, status);
+                });
     }
 
     @Test
     public void handleException_ShouldReturnInternalServerError() {
         // Given
         Exception exception = new Exception("Internal error occurred");
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Translated message", "Error details", LocalDateTime.now().toString());
-        when(advisorUtils.createErrorResponseEntity(any(), any()))
-                .thenReturn(new ResponseEntity<>(ApiResponse.error(List.of(apiError), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR));
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", "An unexpected error occurred", null);
+        ResponseEntity<ApiResponse<List<ApiError>>> expectedResponse = new ResponseEntity<>(ApiResponse.error(List.of(apiError), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+        when(advisorUtils.createErrorResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR)).thenReturn(expectedResponse);
 
         // When
         ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleException(exception);
 
         // Then
+        assertNotNull(response, "The response should not be null");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Translated message", response.getBody().getErrors().get(0).getMessage());
+        assertEquals("Internal Server Error", Objects.requireNonNull(response.getBody()).getErrors().get(0).getMessage());
     }
 
     @Test
     public void handleValidationException_ShouldReturnBadRequest() {
+        when(advisorUtils.createErrorResponseEntity(anyList(), eq(HttpStatus.BAD_REQUEST)))
+                .thenReturn(new ResponseEntity<>(ApiResponse.error(List.of(new ApiError(HttpStatus.BAD_REQUEST, "Validation Error", "Field must not be null", null)), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST));
+
         // Given
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new Object(), "objectName");
         bindingResult.addError(new FieldError("objectName", "field", "must not be null"));
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Translated message", "Validation error", LocalDateTime.now().toString());
-        when(advisorUtils.createErrorResponseEntity(any(), any()))
-                .thenReturn(new ResponseEntity<>(ApiResponse.error(List.of(apiError), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST));
 
         // When
         ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleValidationException(ex);
 
         // Then
+        assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Translated message", response.getBody().getErrors().get(0).getMessage());
-        assertEquals("Validation error", response.getBody().getErrors().get(0).getDetails());
     }
 
     @Test
     public void handleAccessDeniedException_ShouldReturnForbiddenStatus() {
         // Given
-        AccessDeniedException accessDeniedException = new AccessDeniedException("Access is denied");
-        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Access is denied", "You do not have permission to access this resource", LocalDateTime.now().toString());
-        when(advisorUtils.createErrorResponseEntity(any(), any()))
-                .thenReturn(new ResponseEntity<>(ApiResponse.error(List.of(apiError), HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN));
+        AccessDeniedException e = new AccessDeniedException("Access is denied");
+
+        when(messageSourceUtils.getLocalizedMessage("error.access.denied")).thenReturn("Access is denied");
+        when(advisorUtils.getErrorDetailsString(e)).thenReturn("You do not have permission to access this resource");
+
+        when(advisorUtils.createErrorResponseEntity(any(List.class), any(HttpStatus.class))).thenAnswer(invocation -> {
+            List<ApiError> errors = invocation.getArgument(0);
+            HttpStatus status = invocation.getArgument(1);
+            ApiResponse<List<ApiError>> apiResponse = ApiResponse.error(errors, status.value());
+            return new ResponseEntity<>(apiResponse, status);
+        });
 
         // When
-        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleAccessDeniedException(accessDeniedException);
+        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleAccessDeniedException(e);
 
         // Then
+        assertNotNull(response, "The response should not be null");
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Access is denied", response.getBody().getErrors().get(0).getMessage());
-        assertEquals("You do not have permission to access this resource", response.getBody().getErrors().get(0).getDetails());
+        assertEquals("Access is denied", Objects.requireNonNull(response.getBody()).getErrors().get(0).getMessage());
+    }
+
+
+    @Test
+    public void handleResourceNotFoundException_ShouldReturnNotFoundStatus() {
+        // Given
+        ResourceNotFoundException e = new ResourceNotFoundException("Resource not found");
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "Resource not found", "The requested resource was not found", null);
+        ResponseEntity<ApiResponse<List<ApiError>>> expectedResponse = new ResponseEntity<>(ApiResponse.error(List.of(apiError), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+        when(advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND)).thenReturn(expectedResponse);
+
+        // When
+        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleResourceNotFoundException(e);
+
+        // Then
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Resource not found", Objects.requireNonNull(response.getBody()).getErrors().get(0).getMessage());
     }
 }

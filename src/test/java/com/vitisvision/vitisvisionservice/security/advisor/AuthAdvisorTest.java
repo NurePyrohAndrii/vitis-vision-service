@@ -3,14 +3,13 @@ package com.vitisvision.vitisvisionservice.security.advisor;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.exception.DuplicateResourceException;
-import com.vitisvision.vitisvisionservice.security.advisor.AuthAdvisor;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,16 +26,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AuthAdvisorTest {
 
     @Mock
-    private MessageSource messageSource;
+    private MessageSourceUtils messageSourceUtils;
 
     private AuthAdvisor authAdvisor;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        AdvisorUtils advisorUtils = new AdvisorUtils(messageSource);
+        AdvisorUtils advisorUtils = new AdvisorUtils(messageSourceUtils);
         authAdvisor = new AuthAdvisor(advisorUtils);
-        when(messageSource.getMessage(any(), any(), eq(Locale.getDefault()))).thenReturn("Translated message");
+        when(messageSourceUtils.getLocalizedMessage(any())).thenReturn("Translated message");
     }
 
     @Test

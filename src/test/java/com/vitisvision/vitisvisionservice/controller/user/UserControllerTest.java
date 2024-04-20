@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import com.vitisvision.vitisvisionservice.controller.security.AuthController;
 import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHandler;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
@@ -54,6 +55,9 @@ class UserControllerTest {
     private TokenRepository tokenRepository;
 
     @MockBean
+    private MessageSourceUtils messageSourceUtils;
+
+    @MockBean
     private AdvisorUtils advisorUtils;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -74,7 +78,7 @@ class UserControllerTest {
 
         // Mock
         doNothing().when(userService).changePassword(any(ChangePasswordRequest.class), any(Principal.class));
-        when(advisorUtils.getLocalizedMessage("password.change.success")).thenReturn("Password changed successfully");
+        when(messageSourceUtils.getLocalizedMessage("password.change.success")).thenReturn("Password changed successfully");
 
         // When & Then
         mockMvc.perform(patch("/api/v1/users")
