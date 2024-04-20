@@ -6,8 +6,6 @@ import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,7 +21,7 @@ import java.util.List;
  */
 @ControllerAdvice
 @RequiredArgsConstructor
-public class DefaultExceptionHandler {
+public class GlobalAdvisor {
 
     /**
      * The AdvisorUtils object that contains utility methods.

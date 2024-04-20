@@ -1,4 +1,4 @@
-package com.vitisvision.vitisvisionservice.security.token;
+package com.vitisvision.vitisvisionservice.security.enumeration;
 
 /**
  * TokenType enum class which defines the token types used in the application.

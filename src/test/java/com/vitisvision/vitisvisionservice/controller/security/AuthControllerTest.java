@@ -9,7 +9,7 @@ import com.vitisvision.vitisvisionservice.security.dto.RegisterRequest;
 import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHandler;
 import com.vitisvision.vitisvisionservice.security.service.AuthService;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
-import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.repository.TokenRepository;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

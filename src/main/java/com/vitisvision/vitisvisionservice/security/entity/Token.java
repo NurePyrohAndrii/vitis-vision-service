@@ -1,5 +1,6 @@
-package com.vitisvision.vitisvisionservice.security.token;
+package com.vitisvision.vitisvisionservice.security.entity;
 
+import com.vitisvision.vitisvisionservice.security.enumeration.TokenType;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;

@@ -2,17 +2,15 @@ package com.vitisvision.vitisvisionservice.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
-import com.vitisvision.vitisvisionservice.controller.security.AuthController;
 import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHandler;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
-import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.repository.TokenRepository;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import com.vitisvision.vitisvisionservice.user.service.UserService;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

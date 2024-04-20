@@ -2,7 +2,7 @@ package com.vitisvision.vitisvisionservice.user.entity;
 
 import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
-import com.vitisvision.vitisvisionservice.security.token.Token;
+import com.vitisvision.vitisvisionservice.security.entity.Token;
 import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import jakarta.persistence.*;
 import lombok.*;

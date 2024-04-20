@@ -1,7 +1,6 @@
 package com.vitisvision.vitisvisionservice.common.logging;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
@@ -18,10 +17,17 @@ import java.util.Arrays;
 public class BaseLoggingAspect {
 
     /**
-     * Pointcut for all repository methods
+     * Pointcut for all user and token repositories methods
      */
-    @Pointcut("execution(* com.vitisvision.vitisvisionservice.*.*Repository.*(..))")
-    public void repositoryMethods() {
+    @Pointcut("execution(* com.vitisvision.vitisvisionservice.*.*.*Repository.*(..))")
+    public void userAndTokenRepositoriesMethods() {
+    }
+
+    /**
+     * Pointcut for all domain repositories
+     */
+    @Pointcut("execution(* com.vitisvision.vitisvisionservice.domain.*.repository.*Repository.*(..))")
+    public void domainRepositories() {
     }
 
     /**
@@ -39,23 +45,23 @@ public class BaseLoggingAspect {
     }
 
     /**
-     * Pointcut for all once per request filter methods
+     * Pointcut for mdc cleanup filter methods
      */
-    @Pointcut("execution(* org.springframework.web.filter.OncePerRequestFilter.*(..))")
-    public void oncePerRequestFilterMethods() {
+    @Pointcut("execution(* com.vitisvision.vitisvisionservice.common.logging.MdcCleanupFilter.*(..))")
+    public void mdcFilterMethods() {
     }
 
     /**
      * Pointcut for all exception handler methods
      */
-    @Pointcut("execution(* com.vitisvision.vitisvisionservice.*.*ExceptionHandler.*(..))")
+    @Pointcut("execution(* com.vitisvision.vitisvisionservice.*.*.*ExceptionHandler.*(..))")
     public void exceptionHandlerMethods() {
     }
 
     /**
      * Pointcut for all controller advisor methods
      */
-    @Pointcut("execution(* com.vitisvision.vitisvisionservice.*.*Advisor.*(..))")
+    @Pointcut("execution(* (@org.springframework.web.bind.annotation.ControllerAdvice *).*(..))")
     public void advisorMethods() {
     }
 

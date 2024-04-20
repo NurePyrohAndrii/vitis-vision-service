@@ -1,12 +1,12 @@
 package com.vitisvision.vitisvisionservice;
 
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
-import com.vitisvision.vitisvisionservice.security.token.Token;
-import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.entity.Token;
+import com.vitisvision.vitisvisionservice.security.repository.TokenRepository;
 import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
-import com.vitisvision.vitisvisionservice.security.token.TokenType;
+import com.vitisvision.vitisvisionservice.security.enumeration.TokenType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

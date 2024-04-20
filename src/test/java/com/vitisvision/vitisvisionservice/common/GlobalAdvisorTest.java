@@ -1,6 +1,6 @@
 package com.vitisvision.vitisvisionservice.common;
 
-import com.vitisvision.vitisvisionservice.common.advisor.DefaultExceptionHandler;
+import com.vitisvision.vitisvisionservice.common.advisor.GlobalAdvisor;
 import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
@@ -24,9 +24,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DefaultExceptionHandlerTest {
+public class GlobalAdvisorTest {
 
-    private DefaultExceptionHandler defaultExceptionHandler;
+    private GlobalAdvisor globalAdvisor;
 
     @Mock
     private AdvisorUtils advisorUtils;
@@ -37,7 +37,7 @@ public class DefaultExceptionHandlerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        defaultExceptionHandler = new DefaultExceptionHandler(advisorUtils, messageSourceUtils);
+        globalAdvisor = new GlobalAdvisor(advisorUtils, messageSourceUtils);
         setUpMocks();
     }
 
@@ -60,7 +60,7 @@ public class DefaultExceptionHandlerTest {
         when(advisorUtils.createErrorResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR)).thenReturn(expectedResponse);
 
         // When
-        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleException(exception);
+        ResponseEntity<ApiResponse<List<ApiError>>> response = globalAdvisor.handleException(exception);
 
         // Then
         assertNotNull(response, "The response should not be null");
@@ -79,7 +79,7 @@ public class DefaultExceptionHandlerTest {
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
 
         // When
-        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleValidationException(ex);
+        ResponseEntity<ApiResponse<List<ApiError>>> response = globalAdvisor.handleValidationException(ex);
 
         // Then
         assertNotNull(response);
@@ -102,7 +102,7 @@ public class DefaultExceptionHandlerTest {
         });
 
         // When
-        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleAccessDeniedException(e);
+        ResponseEntity<ApiResponse<List<ApiError>>> response = globalAdvisor.handleAccessDeniedException(e);
 
         // Then
         assertNotNull(response, "The response should not be null");
@@ -120,7 +120,7 @@ public class DefaultExceptionHandlerTest {
         when(advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND)).thenReturn(expectedResponse);
 
         // When
-        ResponseEntity<ApiResponse<List<ApiError>>> response = defaultExceptionHandler.handleResourceNotFoundException(e);
+        ResponseEntity<ApiResponse<List<ApiError>>> response = globalAdvisor.handleResourceNotFoundException(e);
 
         // Then
         assertNotNull(response);
