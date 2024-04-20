@@ -3,6 +3,7 @@ package com.vitisvision.vitisvisionservice.domain.vinayard.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
  * This class is used to represent the address entity in the database.
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable

@@ -7,4 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Repository class for managing Vineyard entity in the database
  */
 public interface VineyardRepository extends JpaRepository<Vineyard, Integer> {
+
+    /**
+     * Check if a vineyard with the given dbaName exists in the database
+     *
+     * @param dbaName the dbaName to check
+     * @return true if a vineyard with the given dbaName exists, false otherwise
+     */
+    boolean existsByCompany_DbaName(String dbaName);
+
 }

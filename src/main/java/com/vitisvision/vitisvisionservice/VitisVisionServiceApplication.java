@@ -10,7 +10,6 @@ import com.vitisvision.vitisvisionservice.security.token.TokenType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +31,7 @@ public class VitisVisionServiceApplication {
         SpringApplication.run(VitisVisionServiceApplication.class, args);
     }
 
-    @Bean
+//	@Bean
     public CommandLineRunner run(
 			UserRepository userRepository,
 			JwtService jwtService,
@@ -48,7 +47,7 @@ public class VitisVisionServiceApplication {
                     .id(1)
                     .password(passwordEncoder.encode("Password1$"))
                     .role(Role.ADMIN)
-					.createdBy("Admin")
+                    .createdBy("system")
 					.build();
 
 			userRepository.save(admin);

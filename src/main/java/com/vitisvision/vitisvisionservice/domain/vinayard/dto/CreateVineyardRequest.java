@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class VineyardRequest {
+public class CreateVineyardRequest {
 
     /**
      * Represents name of the company that owns the vineyard.

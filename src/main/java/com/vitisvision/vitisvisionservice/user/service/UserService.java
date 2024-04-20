@@ -72,4 +72,25 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+
+    /**
+     * Find a user by their email.
+     *
+     * @param email the email of the user to find
+     * @return the user with the given email
+     * @throws UsernameNotFoundException if the user with the given email is not found
+     */
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("error.email.not.found"));
+    }
+
+    /**
+     * Save a user to the database.
+     *
+     * @param user the user to save
+     */
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
 }
