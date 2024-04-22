@@ -62,6 +62,15 @@ public class AuthAdvisor {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleAuthenticationException(AuthenticationException e) {
-        return advisorUtils.createErrorResponseEntity(e, HttpStatus.UNAUTHORIZED);
+        List<ApiError> errors = List.of(
+                new ApiError(
+                        HttpStatus.UNAUTHORIZED,
+                        e.getMessage(),
+                        advisorUtils.getErrorDetailsString(e),
+                        LocalDateTime.now().toString()
+                )
+        );
+
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.UNAUTHORIZED);
     }
 }

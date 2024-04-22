@@ -41,7 +41,16 @@ public class GlobalAdvisor {
      */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleException(Exception e) {
-        return advisorUtils.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        List<ApiError> errors = List.of(
+                new ApiError(
+                        HttpStatus.FORBIDDEN,
+                        messageSourceUtils.getLocalizedMessage("global.error"),
+                        advisorUtils.getErrorDetailsString(e),
+                        LocalDateTime.now().toString()
+                )
+        );
+
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.FORBIDDEN);
     }
 
     /**

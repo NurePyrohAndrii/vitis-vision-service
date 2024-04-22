@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * VineyardRequest class is a DTO class that represents the vineyard request for creating and updating vineyard.
+ */
 @Data
 @Builder
 @AllArgsConstructor
-public class CreateVineyardRequest {
+public class VineyardRequest {
 
     /**
      * Represents name of the company that owns the vineyard.

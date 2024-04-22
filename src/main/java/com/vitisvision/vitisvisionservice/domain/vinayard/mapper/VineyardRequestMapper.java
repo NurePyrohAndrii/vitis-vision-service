@@ -1,6 +1,6 @@
-package com.vitisvision.vitisvisionservice.user.mapper;
+package com.vitisvision.vitisvisionservice.domain.vinayard.mapper;
 
-import com.vitisvision.vitisvisionservice.domain.vinayard.dto.CreateVineyardRequest;
+import com.vitisvision.vitisvisionservice.domain.vinayard.dto.VineyardRequest;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Address;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Company;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
-public class CreateVineyardRequestMapper implements Function<CreateVineyardRequest, Vineyard> {
+public class VineyardRequestMapper implements Function<VineyardRequest, Vineyard> {
     @Override
-    public Vineyard apply(CreateVineyardRequest request) {
+    public Vineyard apply(VineyardRequest request) {
         return Vineyard.builder()
                 .company(
                         Company.builder()

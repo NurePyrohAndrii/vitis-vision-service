@@ -1,15 +1,20 @@
 package com.vitisvision.vitisvisionservice.domain.vinayard.service;
 
-import com.vitisvision.vitisvisionservice.domain.vinayard.dto.CreateVineyardRequest;
+import com.vitisvision.vitisvisionservice.domain.vinayard.dto.VineyardRequest;
+import com.vitisvision.vitisvisionservice.domain.vinayard.dto.VineyardResponse;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
 import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardDuplicationException;
+import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardNotFoundException;
 import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardParticipationConflictException;
+import com.vitisvision.vitisvisionservice.domain.vinayard.mapper.VineyardResponseMapper;
 import com.vitisvision.vitisvisionservice.domain.vinayard.repository.VineyardRepository;
 import com.vitisvision.vitisvisionservice.user.entity.User;
-import com.vitisvision.vitisvisionservice.user.mapper.CreateVineyardRequestMapper;
+import com.vitisvision.vitisvisionservice.domain.vinayard.mapper.VineyardRequestMapper;
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -34,16 +39,20 @@ public class VineyardService {
     /**
      * CreateVineyardRequestMapper object is used to map the vineyard request to vineyard entity.
      */
-    private final CreateVineyardRequestMapper createVineyardRequestMapper;
+    private final VineyardRequestMapper createVineyardRequestMapper;
+
+    private final VineyardResponseMapper vineyardResponseMapper;
 
     /**
      * This method is used to create a vineyard.
-     * @param createVineyardRequest a request object to create a vineyard
+     * @param vineyardRequest a request object to create a vineyard
      * @param principal a principal object to get the user details
-     * @return vineyard id
+     * @return vineyard response object containing the created vineyard details
      */
     @Transactional
-    public Integer createVineyard(CreateVineyardRequest createVineyardRequest, Principal principal) {
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public VineyardResponse createVineyard(VineyardRequest vineyardRequest, Principal principal) {
+        checkVineyardDuplicationByDbaName(vineyardRequest.getDbaName());
 
         User user = userService.findUserByEmail(principal.getName());
 
@@ -52,20 +61,35 @@ public class VineyardService {
             throw new VineyardParticipationConflictException("user.already.participating.error");
         }
 
-        // Check if the vineyard is already exists
-        if (vineyardRepository.existsByCompany_DbaName(createVineyardRequest.getDbaName())) {
-                throw new VineyardDuplicationException("vineyard.duplicate.error");
-        }
-
         // Save the vineyard
         Vineyard vineyard = vineyardRepository.save(
-                createVineyardRequestMapper.apply(createVineyardRequest)
+                createVineyardRequestMapper.apply(vineyardRequest)
         );
 
-        // Set the vineyard to the user
+        // Set the user`s vineyard and role
         user.setVineyard(vineyard);
+        user.setRole(Role.VINEYARD_DIRECTOR);
         userService.saveUser(user);
 
-        return vineyard.getId();
+        return vineyardResponseMapper.apply(vineyard);
+    }
+
+    @Transactional
+    @PreAuthorize("hasAuthority('vineyard:write')")
+    public VineyardResponse updateVineyard(Integer vineyardId, VineyardRequest vineyardRequest, Principal principal) {
+        checkVineyardDuplicationByDbaName(vineyardRequest.getDbaName());
+
+        Vineyard editedVineyard = vineyardRepository.findById(vineyardId)
+                .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"));
+
+        return null;
+        // TODO: Implement the update vineyard logic
+    }
+
+    private void checkVineyardDuplicationByDbaName(String dbaName) {
+        // Check if the vineyard is already exists
+        if (vineyardRepository.existsByCompany_DbaName(dbaName)) {
+            throw new VineyardDuplicationException("vineyard.duplicate.error");
+        }
     }
 }

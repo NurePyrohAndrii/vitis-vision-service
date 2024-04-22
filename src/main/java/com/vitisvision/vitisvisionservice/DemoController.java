@@ -16,7 +16,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/v1/demo")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('vineyard:read')")
 public class DemoController {
 
     private final MessageSource messageSource;
