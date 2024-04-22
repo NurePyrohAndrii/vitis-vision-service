@@ -5,6 +5,7 @@ import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.controller.vineyard.VineyardController;
 import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardDuplicationException;
+import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardNotFoundException;
 import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardParticipationConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
@@ -50,4 +51,16 @@ public class VineyardAdvisor {
     public ResponseEntity<ApiResponse<List<ApiError>>> handleVineyardDuplicationException(VineyardDuplicationException e) {
         return advisorUtils.createErrorResponseEntity(e, HttpStatus.CONFLICT);
     }
+
+    /**
+     * Handle the VineyardNotFoundException that occurs when a vineyard with the given id does not exist.
+     *
+     * @param e the exception object of type {@link VineyardNotFoundException}
+     * @return the response entity with the error message and status code
+     */
+    @ExceptionHandler(VineyardNotFoundException.class)
+    public ResponseEntity<ApiResponse<List<ApiError>>> handleVineyardNotFoundException(VineyardNotFoundException e) {
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND);
+    }
+
 }

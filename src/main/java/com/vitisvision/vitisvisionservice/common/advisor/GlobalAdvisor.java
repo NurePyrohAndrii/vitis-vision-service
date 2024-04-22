@@ -43,14 +43,14 @@ public class GlobalAdvisor {
     public ResponseEntity<ApiResponse<List<ApiError>>> handleException(Exception e) {
         List<ApiError> errors = List.of(
                 new ApiError(
-                        HttpStatus.FORBIDDEN,
+                        HttpStatus.INTERNAL_SERVER_ERROR,
                         messageSourceUtils.getLocalizedMessage("global.error"),
                         advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
-        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.FORBIDDEN);
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -63,14 +63,14 @@ public class GlobalAdvisor {
     public ResponseEntity<ApiResponse<List<ApiError>>> handleValidationException(MethodArgumentNotValidException ex) {
         List<ApiError> errors = ex.getAllErrors().stream()
                 .map(err -> new ApiError(
-                        HttpStatus.BAD_REQUEST,
+                        HttpStatus.UNPROCESSABLE_ENTITY,
                         messageSourceUtils.getLocalizedMessage(err.getDefaultMessage()),
                         messageSourceUtils.getLocalizedMessage("validation.error"),
                         LocalDateTime.now().toString()
                 ))
                 .toList();
 
-        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.BAD_REQUEST);
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**

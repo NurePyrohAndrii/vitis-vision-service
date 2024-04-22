@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,14 +55,44 @@ public class VineyardController {
                 .body(ApiResponse.success(vineyardResponse, HttpStatus.CREATED.value()));
     }
 
-    @Operation()
+    /**
+     * Update a vineyard with the provided details
+     *
+     * @param vineyardId      the id of the vineyard to update
+     * @param vineyardRequest the request object containing the vineyard details
+     * @param principal       the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Update a vineyard",
+            description = "Update a vineyard with the provided details"
+    )
     @PutMapping("/{vineyardId}")
-    public ResponseEntity<?> updateVineyard(
+    public ResponseEntity<ApiResponse<VineyardResponse>> updateVineyard(
             @PathVariable Integer vineyardId,
             @RequestBody @Valid VineyardRequest vineyardRequest,
             Principal principal
     ) {
         return ResponseEntity.ok(ApiResponse.success(vineyardService.updateVineyard(vineyardId, vineyardRequest, principal), HttpStatus.OK.value()));
+    }
+
+    /**
+     * Get a vineyard with the provided id
+     *
+     * @param vineyardId the id of the vineyard to get
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Delete a vineyard",
+            description = "Delete a vineyard with the provided id"
+    )
+    @DeleteMapping("/{vineyardId}")
+    public ResponseEntity<ApiResponse<Void>> deleteVineyard(
+            @PathVariable Integer vineyardId,
+            Principal principal
+    ) {
+        vineyardService.deleteVineyard(vineyardId, principal);
+        return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
     }
 
 }

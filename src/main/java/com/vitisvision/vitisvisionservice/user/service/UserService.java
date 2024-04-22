@@ -1,5 +1,6 @@
 package com.vitisvision.vitisvisionservice.user.service;
 
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
 import com.vitisvision.vitisvisionservice.user.exception.ChangePasswordException;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -92,5 +94,20 @@ public class UserService implements UserDetailsService {
      */
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    /**
+     * Set the role of all staff of the vineyard with the given id to USER.
+     * Break the association of the staff with the vineyard.
+     *
+     * @param vineyardId the id of the vineyard
+     */
+    public void disassociateVineyardStaff(Integer vineyardId) {
+        List<User> vineyardStaff = userRepository.findAllByVineyard_Id(vineyardId);
+        for (User user : vineyardStaff) {
+            user.setRole(Role.USER);
+            user.setVineyard(null);
+        }
+        userRepository.saveAll(vineyardStaff);
     }
 }

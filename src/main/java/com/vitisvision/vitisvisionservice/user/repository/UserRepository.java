@@ -3,6 +3,7 @@ package com.vitisvision.vitisvisionservice.user.repository;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,4 +27,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      */
     boolean existsByEmail(String email);
 
+    /**
+     * Finds all users working in a vineyard with the given id.
+     *
+     * @param vineyardId id of the vineyard.
+     * @return list of users.
+     */
+    List<User> findAllByVineyard_Id(int vineyardId);
 }

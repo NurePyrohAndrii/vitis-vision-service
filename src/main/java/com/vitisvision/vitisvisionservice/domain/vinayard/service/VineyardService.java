@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * VineyardService class is a service class for vineyard operations.
@@ -41,18 +42,25 @@ public class VineyardService {
      */
     private final VineyardRequestMapper createVineyardRequestMapper;
 
+    /**
+     * VineyardResponseMapper object is used to map the vineyard entity to vineyard response.
+     */
     private final VineyardResponseMapper vineyardResponseMapper;
 
     /**
      * This method is used to create a vineyard.
+     *
      * @param vineyardRequest a request object to create a vineyard
-     * @param principal a principal object to get the user details
+     * @param principal       a principal object to get the user details
      * @return vineyard response object containing the created vineyard details
      */
     @Transactional
     @PreAuthorize("hasRole('ROLE_USER')")
     public VineyardResponse createVineyard(VineyardRequest vineyardRequest, Principal principal) {
-        checkVineyardDuplicationByDbaName(vineyardRequest.getDbaName());
+        // Check if a vineyard with the given dbaName exists
+        if (vineyardRepository.existsByCompany_DbaName(vineyardRequest.getDbaName())) {
+            throw new VineyardDuplicationException("vineyard.duplicate.error");
+        }
 
         User user = userService.findUserByEmail(principal.getName());
 
@@ -74,22 +82,63 @@ public class VineyardService {
         return vineyardResponseMapper.apply(vineyard);
     }
 
+    /**
+     * This method is used to update a vineyard with the provided details.
+     *
+     * @param vineyardId      the vineyard id to update
+     * @param vineyardRequest the request object to update the vineyard
+     * @param principal       the principal object to get the user details
+     * @return vineyard response object containing the updated vineyard details
+     */
     @Transactional
     @PreAuthorize("hasAuthority('vineyard:write')")
     public VineyardResponse updateVineyard(Integer vineyardId, VineyardRequest vineyardRequest, Principal principal) {
-        checkVineyardDuplicationByDbaName(vineyardRequest.getDbaName());
 
-        Vineyard editedVineyard = vineyardRepository.findById(vineyardId)
-                .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"));
+        ensureVineyardParticipation(vineyardId, principal);
 
-        return null;
-        // TODO: Implement the update vineyard logic
-    }
+        Optional<Vineyard> vineyardByRequestDbaName = vineyardRepository.findByCompany_DbaName(vineyardRequest.getDbaName());
 
-    private void checkVineyardDuplicationByDbaName(String dbaName) {
-        // Check if the vineyard is already exists
-        if (vineyardRepository.existsByCompany_DbaName(dbaName)) {
+        // If a vineyard with the given dbaName exists, and it is not requested vineyard
+        if (vineyardByRequestDbaName.isPresent() && !vineyardByRequestDbaName.get().getId().equals(vineyardId)) {
             throw new VineyardDuplicationException("vineyard.duplicate.error");
         }
+
+        Vineyard updatedVineyard = createVineyardRequestMapper.apply(vineyardRequest);
+        updatedVineyard.setId(vineyardId);
+
+        return vineyardResponseMapper.apply(vineyardRepository.save(updatedVineyard));
     }
+
+    /**
+     * This method is used to delete a vineyard.
+     *
+     * @param vineyardId the vineyard id to delete
+     * @param principal  the principal object to get the user details
+     */
+    @Transactional
+    @PreAuthorize("hasAuthority('vineyard:delete')")
+    public void deleteVineyard(Integer vineyardId, Principal principal) {
+        ensureVineyardParticipation(vineyardId, principal);
+        userService.disassociateVineyardStaff(vineyardId);
+        vineyardRepository.deleteById(vineyardId);
+    }
+
+    /**
+     * This method is used to ensure the vineyard participation of the user.
+     *
+     * @param vineyardId the vineyard id to check
+     * @param principal  the principal object to get the user details
+     */
+    private void ensureVineyardParticipation(Integer vineyardId, Principal principal) {
+        if (!vineyardRepository.existsById(vineyardId)) {
+            throw new VineyardNotFoundException("vineyard.not.found.error");
+        }
+
+        User requestingUser = userService.findUserByEmail(principal.getName());
+
+        if (!requestingUser.getVineyard().getId().equals(vineyardId)) {
+            throw new VineyardParticipationConflictException("vineyard.participation.mismatch.error");
+        }
+    }
+
 }
