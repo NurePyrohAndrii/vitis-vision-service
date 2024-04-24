@@ -1,6 +1,8 @@
 package com.vitisvision.vitisvisionservice.domain.vinayard.repository;
 
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -33,5 +35,4 @@ public interface VineyardRepository extends JpaRepository<Vineyard, Integer> {
      * @return true if a vineyard with the given id exists, false otherwise
      */
     boolean existsById (int id);
-
 }

@@ -14,6 +14,8 @@ import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import com.vitisvision.vitisvisionservice.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +126,34 @@ public class VineyardService {
     }
 
     /**
+     * This method is used to get a vineyard with the provided id.
+     *
+     * @param vineyardId the vineyard id to get
+     * @return vineyard response object containing the vineyard details
+     */
+    @Transactional
+    @PreAuthorize("hasAuthority('vineyard:read')")
+    public VineyardResponse getVineyard(Integer vineyardId, Principal principal) {
+        ensureVineyardParticipation(vineyardId, principal);
+        return vineyardResponseMapper.apply(
+                vineyardRepository.findById(vineyardId)
+                        .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"))
+        );
+    }
+
+    /**
+     * This method is used to get all vineyards.
+     *
+     * @param pageable the pageable object to get the paginated vineyards
+     * @return the paginated vineyards
+     */
+    @PreAuthorize("hasAuthority('vineyard:read')")
+    public Page<VineyardResponse> getVineyards(Pageable pageable) {
+        return vineyardRepository.findAll(pageable)
+                .map(vineyardResponseMapper);
+    }
+
+    /**
      * This method is used to ensure the vineyard participation of the user.
      *
      * @param vineyardId the vineyard id to check
@@ -140,5 +170,6 @@ public class VineyardService {
             throw new VineyardParticipationConflictException("vineyard.participation.mismatch.error");
         }
     }
+
 
 }

@@ -19,7 +19,11 @@ public enum Role {
     /**
      * User role. Default role for all users. Determines the access level of the user.
      */
-    USER(Collections.emptySet()),
+    USER(
+            Set.of(
+                    VINEYARD_READ
+            )
+    ),
 
     /**
      * Admin role. Higher access level than user. Can perform admin operations on users.
@@ -60,7 +64,6 @@ public enum Role {
      */
     VINEYARD_WORKER(
             Set.of(
-                    VINEYARD_READ,
                     GROUP_READ,
                     BLOCK_READ,
                     VINE_READ,
