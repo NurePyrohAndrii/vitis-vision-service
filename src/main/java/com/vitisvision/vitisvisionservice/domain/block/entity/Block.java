@@ -25,7 +25,7 @@ public class Block extends BaseEntity {
     /**
      * The name of the block.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     /**

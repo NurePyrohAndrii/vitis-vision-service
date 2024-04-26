@@ -28,7 +28,7 @@ public class Company {
     /**
      * Represents the name of the vineyard. DBA stands for "doing business as".
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String dbaName;
 
     /**

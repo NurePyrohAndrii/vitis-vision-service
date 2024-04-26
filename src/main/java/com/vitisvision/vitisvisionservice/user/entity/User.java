@@ -47,10 +47,7 @@ public class User extends BaseEntity implements UserDetails {
     /**
      * The email of the user. Application insures that this is unique.
      */
-    @Column(
-            unique = true,
-            nullable = false
-    )
+    @Column(unique = true, nullable = false)
     private String email;
 
     /**
@@ -78,7 +75,7 @@ public class User extends BaseEntity implements UserDetails {
     private List<Token> tokens;
 
     /**
-     * Describes the user`s vineyard employment status.
+     * Describes the user's vineyard employment status.
      * The vineyard associated with the user. This is optional. If the user is not associated with a vineyard, this will be null.
      *
      * @see Vineyard

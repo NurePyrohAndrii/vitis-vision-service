@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-
+        // TODO: handle more exceptions there (AccessDeniedException, AuthenticationException, etc.)
         Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
         logger.info("[authenticating...] doFilterInternal(..) method called");
 

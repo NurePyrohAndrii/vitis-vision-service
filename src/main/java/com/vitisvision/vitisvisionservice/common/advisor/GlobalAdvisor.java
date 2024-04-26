@@ -1,5 +1,6 @@
 package com.vitisvision.vitisvisionservice.common.advisor;
 
+import com.vitisvision.vitisvisionservice.common.exception.DuplicateResourceException;
 import com.vitisvision.vitisvisionservice.common.exception.ResourceNotFoundException;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
@@ -102,5 +103,10 @@ public class GlobalAdvisor {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleResourceNotFoundException(ResourceNotFoundException e) {
         return advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.CONFLICT);
     }
 }

@@ -2,16 +2,14 @@ package com.vitisvision.vitisvisionservice.user.advisor;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
+import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.controller.user.UserController;
 import com.vitisvision.vitisvisionservice.user.exception.ChangePasswordException;
-import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

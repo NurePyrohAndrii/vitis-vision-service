@@ -133,11 +133,10 @@ public class BlockService {
             throw new BlockDuplicationException("block.duplicate.error");
         }
 
-        // Update the block entity object and set the vineyard
+        // Update the block entity object
         Block updatedBlock = blockRepository.findById(blockId)
                 .orElseThrow(() -> new BlockNotFoundException("block.not.found.error"));
         blockRequestMapper.update(blockRequest, updatedBlock);
-        updatedBlock.setVineyard(vineyardService.getVineyardById(vineyardId));
 
         // Save the block entity object and return the response object
         return blockResponseMapper.apply(blockRepository.save(updatedBlock));
@@ -170,5 +169,4 @@ public class BlockService {
             throw new BlockNotFoundException("block.not.found.error");
         }
     }
-
 }

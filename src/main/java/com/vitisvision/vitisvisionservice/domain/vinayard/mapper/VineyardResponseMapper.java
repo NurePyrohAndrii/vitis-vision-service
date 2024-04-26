@@ -27,7 +27,6 @@ public class VineyardResponseMapper implements Function<Vineyard, VineyardRespon
         Address vineyardCompanyAddress = vineyardCompany.getAddress();
 
         LocalDateTime lastUpdatedAt = vineyard.getLastUpdatedAt();
-        String lastUpdatedBy = vineyard.getLastUpdatedBy();
         return VineyardResponse.builder()
                 .id(vineyard.getId())
                 .companyName(vineyardCompany.getCompanyName())
@@ -40,7 +39,7 @@ public class VineyardResponseMapper implements Function<Vineyard, VineyardRespon
                 .createdAt(vineyard.getCreatedAt().toString())
                 .createdBy(vineyard.getCreatedBy())
                 .lastUpdatedAt(lastUpdatedAt != null ? lastUpdatedAt.toString() : null)
-                .lastUpdatedBy(lastUpdatedBy)
+                .lastUpdatedBy(vineyard.getLastUpdatedBy())
                 .build();
     }
 

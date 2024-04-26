@@ -16,7 +16,6 @@ public class BlockResponseMapper implements Function<Block, BlockResponse> {
     @Override
     public BlockResponse apply(Block block) {
         LocalDateTime lastUpdatedAt = block.getLastUpdatedAt();
-        String lastUpdatedBy = block.getLastUpdatedBy();
         return BlockResponse.builder()
                 .id(block.getId())
                 .name(block.getName())
@@ -28,7 +27,7 @@ public class BlockResponseMapper implements Function<Block, BlockResponse> {
                 .createdAt(block.getCreatedAt().toString())
                 .createdBy(block.getCreatedBy())
                 .lastUpdatedAt(lastUpdatedAt != null ? lastUpdatedAt.toString() : null)
-                .lastUpdatedBy(lastUpdatedBy)
+                .lastUpdatedBy(block.getLastUpdatedBy())
                 .build();
     }
 }
