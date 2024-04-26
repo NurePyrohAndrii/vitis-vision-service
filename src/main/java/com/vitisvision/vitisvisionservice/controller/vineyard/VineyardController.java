@@ -2,7 +2,6 @@ package com.vitisvision.vitisvisionservice.controller.vineyard;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.response.PageableResponse;
-import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
 import com.vitisvision.vitisvisionservice.common.util.PaginationUtils;
 import com.vitisvision.vitisvisionservice.domain.vinayard.dto.VineyardRequest;
 import com.vitisvision.vitisvisionservice.domain.vinayard.dto.VineyardResponse;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller class for managing vineyard details
@@ -36,11 +34,6 @@ public class VineyardController {
      * The service class dependency for handling vineyard details management
      */
     private final VineyardService vineyardService;
-
-    /**
-     * Utility class for handling common operations
-     */
-    private final MessageSourceUtils messageSourceUtils;
 
     /**
      * Utility class for handling pagination operations such as creating pagination headers
@@ -60,7 +53,8 @@ public class VineyardController {
     )
     @PostMapping
     public ResponseEntity<ApiResponse<VineyardResponse>> createVineyard(
-            @RequestBody @Valid VineyardRequest vineyardRequest, Principal principal
+            @RequestBody @Valid VineyardRequest vineyardRequest,
+            Principal principal
     ) {
         VineyardResponse vineyardResponse = vineyardService.createVineyard(vineyardRequest, principal);
         return ResponseEntity.created(URI.create("ap1/v1/vineyards/" + vineyardResponse.getId()))
@@ -101,7 +95,7 @@ public class VineyardController {
     ) {
         Page<VineyardResponse> vineyards = vineyardService.getVineyards(pageable);
         return ResponseEntity.ok()
-                .headers(PaginationUtils.createPaginationHeaders(vineyards, pageable))
+                .headers(paginationUtils.createPaginationHeaders(vineyards, pageable))
                 .body(ApiResponse.success(PageableResponse.of(vineyards), HttpStatus.OK.value()));
     }
 

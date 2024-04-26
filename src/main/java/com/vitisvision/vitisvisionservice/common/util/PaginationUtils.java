@@ -19,7 +19,7 @@ public class PaginationUtils {
      * @param pageable The pageable object containing the pagination details.
      * @return The HttpHeaders object containing the pagination headers.
      */
-    public static HttpHeaders createPaginationHeaders(Page<?> page, Pageable pageable) {
+    public HttpHeaders createPaginationHeaders(Page<?> page, Pageable pageable) {
         HttpHeaders headers = new HttpHeaders();
 
         if (page.hasPrevious()) {
@@ -43,7 +43,7 @@ public class PaginationUtils {
      * @param rel      The relation of the page link.
      * @return The page link header.
      */
-    private static String generatePageLinkHeader(Pageable pageable, String rel) {
+    private String generatePageLinkHeader(Pageable pageable, String rel) {
         String url = ServletUriComponentsBuilder.fromCurrentRequest()
                 .replaceQueryParam("page", pageable.getPageNumber())
                 .toUriString();

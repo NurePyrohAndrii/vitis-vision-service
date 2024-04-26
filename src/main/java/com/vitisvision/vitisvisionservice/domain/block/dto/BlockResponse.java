@@ -1,18 +1,16 @@
-package com.vitisvision.vitisvisionservice.domain.vinayard.dto;
+package com.vitisvision.vitisvisionservice.domain.block.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
- * VineyardResponse class is a DTO class that represents the vineyard response for getting vineyard details.
+ * BlockResponse class is a DTO class that represents the block response for getting block details.
  */
 @Data
 @Builder
 @AllArgsConstructor
-public class VineyardResponse {
+public class BlockResponse {
 
     /**
      * <p>The id of the entity returned.</p>
@@ -20,39 +18,38 @@ public class VineyardResponse {
     private Integer id;
 
     /**
-     * Represents name of the company that owns the vineyard.
+     * The name of the block.
      */
-    private String companyName;
+    private String name;
 
     /**
-     * Represents the name of the vineyard. DBA stands for "doing business as".
+     * Partitioning type represents the principle of partitioning vineyard into blocks.
      */
-    private String dbaName;
+    private String partitioningType;
 
     /**
-     * Represents the street address of the vineyard.
+     * Represents the row spacing in centimeters.
+     * Row spacing is the distance between the rows of vines in a vineyard.
      */
-    private String streetAddress;
+    private double rowSpacing;
 
     /**
-     * Represents the city of the vineyard.
+     * Represents the vine spacing in centimeters.
+     * Vine spacing is the distance between the vines in a row.
      */
-    private String city;
+    private double vineSpacing;
 
     /**
-     * Represents the zip code of state of the vineyard.
+     * Represents the row orientation in the vineyard.
+     * Row orientation is the direction of the rows in the vineyard.
      */
-    private String zipCode;
+    private String rowOrientation;
 
     /**
-     * Represents the phone number of the vineyard that can be used to contact the vineyard.
+     * Represents the trellis system type used in the block.
+     * Trellis system is the structure that supports the vine.
      */
-    private String phoneNumber;
-
-    /**
-     * Represents the email of the vineyard that can be used to contact the vineyard.
-     */
-    private String email;
+    private String trellisSystemType;
 
     /**
      * <p>The created at field of the entity. This field is used to store the date and time when the entity was created.</p>

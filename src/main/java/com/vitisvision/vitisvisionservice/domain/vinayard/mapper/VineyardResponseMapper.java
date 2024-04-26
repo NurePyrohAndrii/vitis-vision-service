@@ -6,14 +6,28 @@ import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Company;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
+/**
+ * The CreateVineyardResponseMapper class is used to map the vineyard entity to vineyard response.
+ */
 @Service
 public class VineyardResponseMapper implements Function<Vineyard, VineyardResponse> {
+
+    /**
+     * This method is used to map the vineyard entity to vineyard response when the vineyard is created.
+     *
+     * @param vineyard the vineyard entity object
+     * @return the vineyard response object
+     */
     @Override
     public VineyardResponse apply(Vineyard vineyard) {
         Company vineyardCompany = vineyard.getCompany();
         Address vineyardCompanyAddress = vineyardCompany.getAddress();
+
+        LocalDateTime lastUpdatedAt = vineyard.getLastUpdatedAt();
+        String lastUpdatedBy = vineyard.getLastUpdatedBy();
         return VineyardResponse.builder()
                 .id(vineyard.getId())
                 .companyName(vineyardCompany.getCompanyName())
@@ -23,8 +37,11 @@ public class VineyardResponseMapper implements Function<Vineyard, VineyardRespon
                 .zipCode(vineyardCompanyAddress.getZipCode())
                 .phoneNumber(vineyardCompany.getPhoneNumber())
                 .email(vineyardCompany.getEmail())
-                .createdAt(vineyard.getCreatedAt())
+                .createdAt(vineyard.getCreatedAt().toString())
                 .createdBy(vineyard.getCreatedBy())
+                .lastUpdatedAt(lastUpdatedAt != null ? lastUpdatedAt.toString() : null)
+                .lastUpdatedBy(lastUpdatedBy)
                 .build();
     }
+
 }

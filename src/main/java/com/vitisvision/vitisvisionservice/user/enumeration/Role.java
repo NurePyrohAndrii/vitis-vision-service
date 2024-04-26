@@ -104,7 +104,6 @@ public enum Role {
                 .collect(Collectors.toSet());
         collectChildAuthorities(this, authorities);
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        System.out.println("authorities = " + authorities);
         return new ArrayList<>(authorities);
     }
 

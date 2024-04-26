@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.domain.vinayard.entity;
 
 import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
+import com.vitisvision.vitisvisionservice.domain.block.entity.Block;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,10 @@ public class Vineyard extends BaseEntity {
     @OneToMany(mappedBy = "vineyard")
     @ToString.Exclude
     private List<User> users;
+
+    @OneToMany(mappedBy = "vineyard")
+    @ToString.Exclude
+    private List<Block> blocks;
 
     @Override
     public final boolean equals(Object o) {

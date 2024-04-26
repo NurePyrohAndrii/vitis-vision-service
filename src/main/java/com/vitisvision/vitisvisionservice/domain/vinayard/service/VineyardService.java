@@ -42,7 +42,7 @@ public class VineyardService {
     /**
      * CreateVineyardRequestMapper object is used to map the vineyard request to vineyard entity.
      */
-    private final VineyardRequestMapper createVineyardRequestMapper;
+    private final VineyardRequestMapper vineyardRequestMapper;
 
     /**
      * VineyardResponseMapper object is used to map the vineyard entity to vineyard response.
@@ -72,11 +72,12 @@ public class VineyardService {
         }
 
         // Save the vineyard
+
         Vineyard vineyard = vineyardRepository.save(
-                createVineyardRequestMapper.apply(vineyardRequest)
+                vineyardRequestMapper.apply(vineyardRequest)
         );
 
-        // Set the user`s vineyard and role
+        // Set the user's vineyard and role
         user.setVineyard(vineyard);
         user.setRole(Role.VINEYARD_DIRECTOR);
         userService.saveUser(user);
@@ -95,7 +96,6 @@ public class VineyardService {
     @Transactional
     @PreAuthorize("hasAuthority('vineyard:write')")
     public VineyardResponse updateVineyard(Integer vineyardId, VineyardRequest vineyardRequest, Principal principal) {
-
         ensureVineyardParticipation(vineyardId, principal);
 
         Optional<Vineyard> vineyardByRequestDbaName = vineyardRepository.findByCompany_DbaName(vineyardRequest.getDbaName());
@@ -105,8 +105,12 @@ public class VineyardService {
             throw new VineyardDuplicationException("vineyard.duplicate.error");
         }
 
-        Vineyard updatedVineyard = createVineyardRequestMapper.apply(vineyardRequest);
-        updatedVineyard.setId(vineyardId);
+        // Retrieve the existing vineyard to update or throw an exception if not found
+        Vineyard updatedVineyard = vineyardRepository.findById(vineyardId)
+                .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"));
+
+        // Update the vineyard
+        vineyardRequestMapper.update(vineyardRequest, updatedVineyard);
 
         return vineyardResponseMapper.apply(vineyardRepository.save(updatedVineyard));
     }
@@ -122,6 +126,7 @@ public class VineyardService {
     public void deleteVineyard(Integer vineyardId, Principal principal) {
         ensureVineyardParticipation(vineyardId, principal);
         userService.disassociateVineyardStaff(vineyardId);
+        // TODO: Delete all associated entities
         vineyardRepository.deleteById(vineyardId);
     }
 
@@ -135,6 +140,7 @@ public class VineyardService {
     @PreAuthorize("hasAuthority('vineyard:read')")
     public VineyardResponse getVineyard(Integer vineyardId, Principal principal) {
         ensureVineyardParticipation(vineyardId, principal);
+
         return vineyardResponseMapper.apply(
                 vineyardRepository.findById(vineyardId)
                         .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"))
@@ -154,12 +160,23 @@ public class VineyardService {
     }
 
     /**
+     * This method is used to get a vineyard by id.
+     *
+     * @param vineyardId the vineyard id to get
+     * @return the vineyard object
+     */
+    public Vineyard getVineyardById(Integer vineyardId) {
+        return vineyardRepository.findById(vineyardId)
+                .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"));
+    }
+
+    /**
      * This method is used to ensure the vineyard participation of the user.
      *
      * @param vineyardId the vineyard id to check
      * @param principal  the principal object to get the user details
      */
-    private void ensureVineyardParticipation(Integer vineyardId, Principal principal) {
+    public void ensureVineyardParticipation(Integer vineyardId, Principal principal) {
         if (!vineyardRepository.existsById(vineyardId)) {
             throw new VineyardNotFoundException("vineyard.not.found.error");
         }
@@ -170,6 +187,5 @@ public class VineyardService {
             throw new VineyardParticipationConflictException("vineyard.participation.mismatch.error");
         }
     }
-
 
 }
