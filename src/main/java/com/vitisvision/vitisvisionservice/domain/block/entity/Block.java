@@ -2,9 +2,12 @@ package com.vitisvision.vitisvisionservice.domain.block.entity;
 
 import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
+import com.vitisvision.vitisvisionservice.domain.vine.entity.Vine;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 /**
  * Block entity class.
@@ -70,4 +73,13 @@ public class Block extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "vineyard_id")
     private Vineyard vineyard;
+
+    /**
+     * Represents the vines in the block.
+     *
+     * @see Vine
+     */
+    @OneToMany(mappedBy = "block")
+    @ToString.Exclude
+    private List<Vine> vines;
 }

@@ -159,6 +159,29 @@ public class BlockService {
     }
 
     /**
+     * Ensure the user has access to the block with the provided id
+     *
+     * @param blockId    the id of the block
+     * @param principal  the principal object containing the user details
+     */
+    public void ensureBlockAccess(Integer blockId, Principal principal) {
+        Block block = blockRepository.findById(blockId)
+                .orElseThrow(() -> new BlockNotFoundException("block.not.found.error"));
+        vineyardService.ensureVineyardParticipation(block.getVineyard().getId(), principal);
+    }
+
+    /**
+     * Get a block by id
+     *
+     * @param blockId the id of the block
+     * @return the block entity object
+     */
+    public Block getBlockById(Integer blockId) {
+        return blockRepository.findById(blockId)
+                .orElseThrow(() -> new BlockNotFoundException("block.not.found.error"));
+    }
+
+    /**
      * Ensure the existence of a block in a vineyard with the provided id
      *
      * @param blockId    the id of the block

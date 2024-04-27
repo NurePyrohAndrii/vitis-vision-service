@@ -2,9 +2,12 @@ package com.vitisvision.vitisvisionservice.domain.group.entity;
 
 import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
 import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
+import com.vitisvision.vitisvisionservice.domain.vine.entity.Vine;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 /**
  * Group entity class.
@@ -46,4 +49,15 @@ public class Group extends BaseEntity {
     @JoinColumn(name = "vineyard_id")
     private Vineyard vineyard;
 
+    /**
+     * Represents the list of vines in the group.
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "group_vine",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "vine_id")
+    )
+    @ToString.Exclude
+    List<Vine> vines;
 }

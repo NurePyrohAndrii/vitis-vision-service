@@ -5,8 +5,8 @@ import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.controller.vineyard.VineyardController;
 import com.vitisvision.vitisvisionservice.controller.vineyard.block.BlockController;
-import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardDuplicationException;
-import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardNotFoundException;
+import com.vitisvision.vitisvisionservice.controller.vineyard.group.GroupController;
+import com.vitisvision.vitisvisionservice.controller.vineyard.vine.VineController;
 import com.vitisvision.vitisvisionservice.domain.vinayard.exception.VineyardParticipationConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * VineyardAdvisor class is an exception handler for the VineyardController.
  */
-@ControllerAdvice(assignableTypes = {VineyardController.class, BlockController.class})
+@ControllerAdvice(assignableTypes = {VineyardController.class, BlockController.class, GroupController.class, VineController.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
 public class VineyardAdvisor {

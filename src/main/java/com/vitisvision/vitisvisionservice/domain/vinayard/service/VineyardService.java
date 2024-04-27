@@ -140,7 +140,6 @@ public class VineyardService {
     @PreAuthorize("hasAuthority('vineyard:read')")
     public VineyardResponse getVineyard(Integer vineyardId, Principal principal) {
         ensureVineyardParticipation(vineyardId, principal);
-
         return vineyardResponseMapper.apply(
                 vineyardRepository.findById(vineyardId)
                         .orElseThrow(() -> new VineyardNotFoundException("vineyard.not.found.error"))

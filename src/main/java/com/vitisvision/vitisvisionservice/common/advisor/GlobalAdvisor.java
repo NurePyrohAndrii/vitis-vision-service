@@ -105,6 +105,12 @@ public class GlobalAdvisor {
         return advisorUtils.createErrorResponseEntity(e, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handle duplicate resource exception that occurs when a resource is already present in the database.
+     *
+     * @param e the exception object of type {@link DuplicateResourceException}
+     * @return the response entity with the list of errors
+     */
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
         return advisorUtils.createErrorResponseEntity(e, HttpStatus.CONFLICT);
