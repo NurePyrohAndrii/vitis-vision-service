@@ -1,6 +1,8 @@
 package com.vitisvision.vitisvisionservice.user.repository;
 
 import com.vitisvision.vitisvisionservice.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * Check if a user exists by email.
      *
      * @param email email of the user.
-     * @return true if user exists, false otherwise.
+     * @return true if a user exists, false otherwise.
      */
     boolean existsByEmail(String email);
 
@@ -34,4 +36,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @return list of users.
      */
     List<User> findAllByVineyard_Id(int vineyardId);
+
+    /**
+     * Finds all users working in a vineyard with the given id.
+     *
+     * @param vineyardId id of the vineyard.
+     * @param pageable the pageable object.
+     * @return page of users.
+     */
+    Page<User> findAllByVineyard_Id(int vineyardId, Pageable pageable);
 }

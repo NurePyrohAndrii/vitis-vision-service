@@ -17,15 +17,6 @@ import static com.vitisvision.vitisvisionservice.user.enumeration.Permission.*;
 public enum Role {
 
     /**
-     * User role. Default role for all users. Determines the access level of the user.
-     */
-    USER(
-            Set.of(
-                    VINEYARD_READ
-            )
-    ),
-
-    /**
      * Admin role. Higher access level than user. Can perform admin operations on users.
      */
     ADMIN(
@@ -38,24 +29,11 @@ public enum Role {
     ),
 
     /**
-     * The role of the director. Can perform operations on all vineyard accounts and manage users. Highest access level.
+     * User role. Default role for all users. Determines the access level of the user.
      */
-    VINEYARD_DIRECTOR(
+    USER(
             Set.of(
-                    VINEYARD_WRITE,
-                    VINEYARD_DELETE
-            )
-    ),
-
-    /**
-     * The role of the manager. Can perform operations on the vineyard vines, groups, blocks and devices.
-     */
-    VINEYARD_MANAGER(
-            Set.of(
-                    GROUP_WRITE,
-                    GROUP_DELETE,
-                    BLOCK_WRITE,
-                    BLOCK_DELETE
+                    VINEYARD_READ
             )
     ),
 
@@ -72,6 +50,32 @@ public enum Role {
                     VINE_DELETE,
                     DEVICE_WRITE,
                     DEVICE_DELETE
+            )
+    ),
+
+    /**
+     * The role of the manager. Can perform operations on the vineyard vines, groups, blocks and devices.
+     */
+    VINEYARD_MANAGER(
+            Set.of(
+                    GROUP_WRITE,
+                    GROUP_DELETE,
+                    BLOCK_WRITE,
+                    BLOCK_DELETE,
+                    STAFF_READ
+            )
+    ),
+
+    /**
+     * The role of the director. Can perform operations on all vineyard accounts and manage users. Highest access level.
+     */
+    VINEYARD_DIRECTOR(
+            Set.of(
+                    VINEYARD_WRITE,
+                    VINEYARD_DELETE,
+                    STAFF_HIRE,
+                    STAFF_FIRE,
+                    STAFF_WRITE
             )
     );
 
@@ -108,7 +112,7 @@ public enum Role {
     }
 
     /**
-     * Collects the authorities of the child roles of the given role.
+     * Collects child's role authorities of the given role.
      *
      * @param role the role
      * @param authorities the set of authorities

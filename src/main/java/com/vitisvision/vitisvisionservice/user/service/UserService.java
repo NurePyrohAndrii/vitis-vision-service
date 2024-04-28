@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.user.service;
 
 import com.vitisvision.vitisvisionservice.user.enumeration.Role;
+import com.vitisvision.vitisvisionservice.user.exception.UserNotFoundException;
 import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
 import com.vitisvision.vitisvisionservice.user.exception.ChangePasswordException;
@@ -8,6 +9,8 @@ import com.vitisvision.vitisvisionservice.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -88,6 +91,28 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Find a user by their id.
+     *
+     * @param id the id of the user to find
+     * @return the user with the given id
+     * @throws UsernameNotFoundException if the user with the given id is not found
+     */
+    public User findUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("user.not.found"));
+    }
+
+    /**
+     * Find all users working in a vineyard with the given id.
+     *
+     * @param vineyardId the id of the vineyard
+     * @return list of users
+     */
+    public Page<User> getAllUsersByVineyardId(Integer vineyardId, Pageable pageable) {
+        return userRepository.findAllByVineyard_Id(vineyardId, pageable);
+    }
+
+    /**
      * Save a user to the database.
      *
      * @param user the user to save
@@ -97,7 +122,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Set the role of all staff of the vineyard with the given id to USER.
+     * Set the role of all staff in the vineyard with the given id to USER.
      * Break the association of the staff with the vineyard.
      *
      * @param vineyardId the id of the vineyard

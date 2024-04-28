@@ -187,4 +187,35 @@ public class VineyardService {
         }
     }
 
+    /**
+     * This method is used to ensure the vineyard participation of the user.
+     *
+     * @param vineyardId the vineyard id to check
+     * @param userId     the user id to check
+     * @return the user object
+     */
+    public User ensureVineyardParticipation(Integer vineyardId, Integer userId) {
+        if (!vineyardRepository.existsById(vineyardId)) {
+            throw new VineyardNotFoundException("vineyard.not.found.error");
+        }
+        User user = userService.findUserById(userId);
+        if (user.getVineyard() == null || !user.getVineyard().getId().equals(vineyardId)) {
+            throw new VineyardParticipationConflictException("vineyard.participation.mismatch.error");
+        }
+        return user;
+    }
+
+    /**
+     * This method is used to ensure the user is not participating in a vineyard.
+     *
+     * @param userId the user id to check
+     */
+    public User ensureUserNotParticipatingInVineyard(Integer userId) {
+        User user = userService.findUserById(userId);
+        if (user.getVineyard() != null) {
+            throw new VineyardParticipationConflictException("user.already.participating.error");
+        }
+        return user;
+    }
+
 }

@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Permission {
+    ADMIN_READ("admin:read"),
+    ADMIN_WRITE("admin:write"),
+    ADMIN_DELETE("admin:delete"),
+    ADMIN_BLOCK("admin:block"),
 
     VINEYARD_READ("vineyard:read"),
     VINEYARD_WRITE("vineyard:write"),
@@ -30,10 +34,10 @@ public enum Permission {
     DEVICE_WRITE("device:write"),
     DEVICE_DELETE("device:delete"),
 
-    ADMIN_READ("admin:read"),
-    ADMIN_WRITE("admin:write"),
-    ADMIN_DELETE("admin:delete"),
-    ADMIN_BLOCK("admin:block");
+    STAFF_READ("staff:read"),
+    STAFF_HIRE("staff:hire"),
+    STAFF_FIRE("staff:fire"),
+    STAFF_WRITE("staff:write");
 
     private final String permission;
 }

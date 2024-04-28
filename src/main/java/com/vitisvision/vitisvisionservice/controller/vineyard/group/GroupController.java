@@ -7,6 +7,7 @@ import com.vitisvision.vitisvisionservice.domain.group.dto.GroupRequest;
 import com.vitisvision.vitisvisionservice.domain.group.dto.GroupResponse;
 import com.vitisvision.vitisvisionservice.domain.group.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/vineyards/{vineyardId}/groups")
 @RequiredArgsConstructor
+@Tag(name = "Group", description = "Endpoints for managing group details in a vineyard")
 public class GroupController {
 
     /**

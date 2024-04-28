@@ -7,6 +7,7 @@ import com.vitisvision.vitisvisionservice.domain.vine.dto.VineRequest;
 import com.vitisvision.vitisvisionservice.domain.vine.dto.VineResponse;
 import com.vitisvision.vitisvisionservice.domain.vine.service.VineService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/blocks/{blockId}/vines")
 @RequiredArgsConstructor
+@Tag(name = "Vine", description = "Endpoints for managing vine details in a block")
 public class VineController {
 
     /**

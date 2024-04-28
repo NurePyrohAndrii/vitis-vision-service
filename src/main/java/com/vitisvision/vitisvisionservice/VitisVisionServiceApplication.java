@@ -21,7 +21,7 @@ public class VitisVisionServiceApplication {
         SpringApplication.run(VitisVisionServiceApplication.class, args);
     }
 
-	@Bean
+	//@Bean
     public CommandLineRunner run(StartupSeeder startupSeeder) {
         return args -> startupSeeder.run();
     }

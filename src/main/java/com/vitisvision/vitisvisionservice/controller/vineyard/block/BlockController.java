@@ -7,6 +7,7 @@ import com.vitisvision.vitisvisionservice.domain.block.dto.BlockRequest;
 import com.vitisvision.vitisvisionservice.domain.block.dto.BlockResponse;
 import com.vitisvision.vitisvisionservice.domain.block.service.BlockService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/vineyards/{vineyardId}/blocks")
 @RequiredArgsConstructor
+@Tag(name = "Block", description = "Endpoints for managing block details in a vineyard")
 public class BlockController {
 
     /**
