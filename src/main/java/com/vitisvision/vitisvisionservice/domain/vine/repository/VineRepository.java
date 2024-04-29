@@ -4,7 +4,10 @@ import com.vitisvision.vitisvisionservice.domain.vine.entity.Vine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -58,4 +61,15 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
      * @return true if the vine exists, false otherwise
      */
     boolean existsByIdAndBlock_Id(Integer vineId, Integer blockId);
+
+    /**
+     * Find all vines by block id and vine ids.
+     *
+     * @param pageable the pageable object containing the pagination details
+     * @param ids the list of vine ids
+     * @return the page object containing the vine objects
+     */
+    @Query("SELECT v FROM Vine v WHERE v.id IN :ids")
+    Page<Vine> findAllByIds(Pageable pageable, @Param("ids") List<Integer> ids);
+
 }

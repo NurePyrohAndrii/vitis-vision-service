@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -122,7 +123,7 @@ public class VineService {
     public VineResponse updateVine(VineRequest vineRequest, Integer blockId, Integer vineId, Principal principal) {
         // Ensure that the user has access to the block and the vine exists in the block
         blockService.ensureBlockAccess(blockId, principal);
-        ensureVineExistence(vineId, blockId);
+        ensureVineInBlockExistence(vineId, blockId);
 
         // Check if the requested vine position is available for the update
         Optional<Vine> updatedVine = vineRepository.findByVineNumberAndRowNumberAndBlock_Id(
@@ -155,10 +156,31 @@ public class VineService {
     public void deleteVine(Integer blockId, Integer vineId, Principal principal) {
         // Ensure that the user has access to the block
         blockService.ensureBlockAccess(blockId, principal);
-        ensureVineExistence(vineId, blockId);
+        ensureVineInBlockExistence(vineId, blockId);
         // TODO: dissociate related entities
         // Delete the vine entity
         vineRepository.deleteById(vineId);
+    }
+
+    /**
+     * Get all vines with the provided ids
+     *
+     * @param vineIds the list of vine ids
+     * @return the list of vine objects
+     */
+    public List<Vine> getAllVinesWithIds(List<Integer> vineIds) {
+        return vineRepository.findAllById(vineIds);
+    }
+
+    /**
+     * Get all vines with the provided ids and pagination details
+     *
+     * @param vineIds  the list of vine ids
+     * @param pageable the pageable object containing the pagination details
+     * @return the page object containing the vine objects
+     */
+    public Page<Vine> getAllVinesWithIds(List<Integer> vineIds, Pageable pageable) {
+        return vineRepository.findAllByIds(pageable, vineIds);
     }
 
     /**
@@ -167,7 +189,7 @@ public class VineService {
      * @param vineId  the vine id
      * @param blockId the block id
      */
-    private void ensureVineExistence(Integer vineId, Integer blockId) {
+    private void ensureVineInBlockExistence(Integer vineId, Integer blockId) {
         if (!vineRepository.existsByIdAndBlock_Id(vineId, blockId)) {
             throw new VineNotFoundException("vine.not.found.error");
         }

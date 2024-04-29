@@ -5,6 +5,8 @@ import com.vitisvision.vitisvisionservice.common.response.PageableResponse;
 import com.vitisvision.vitisvisionservice.common.util.PaginationUtils;
 import com.vitisvision.vitisvisionservice.domain.group.dto.GroupRequest;
 import com.vitisvision.vitisvisionservice.domain.group.dto.GroupResponse;
+import com.vitisvision.vitisvisionservice.domain.group.dto.GroupVineResponse;
+import com.vitisvision.vitisvisionservice.domain.group.dto.VinesGroupAssignmentRequest;
 import com.vitisvision.vitisvisionservice.domain.group.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -152,5 +154,79 @@ public class GroupController {
     ) {
         groupService.deleteGroup(vineyardId, groupId, principal);
         return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
+    }
+
+    /**
+     * Add vines to a group
+     *
+     * @param vineyardId the id of the vineyard to which the group belongs
+     * @param groupId    the id of the group to which the vines are to be added
+     * @param request    the request object containing the vine details
+     * @param principal  the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Add vines to a group",
+            description = "Add vines to a group in a vineyard with the provided details"
+    )
+    @PostMapping("/{groupId}/vines")
+    public ResponseEntity<ApiResponse<Void>> addVinesToGroup(
+            @PathVariable Integer groupId,
+            @PathVariable Integer vineyardId,
+            @RequestBody VinesGroupAssignmentRequest request,
+            Principal principal
+    ) {
+        groupService.addVinesToGroup(groupId, vineyardId, request, principal);
+        return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
+    }
+
+    /**
+     * Remove vines from a group
+     *
+     * @param vineyardId the id of the vineyard to which the group belongs
+     * @param groupId    the id of the group from which the vines are to be removed
+     * @param request    the request object containing the vine details
+     * @param principal  the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Remove vines from a group",
+            description = "Remove vines from a group in a vineyard with the provided details"
+    )
+    @DeleteMapping("/{groupId}/vines")
+    public ResponseEntity<ApiResponse<Void>> removeVinesFromGroup(
+            @PathVariable Integer groupId,
+            @PathVariable Integer vineyardId,
+            @RequestBody VinesGroupAssignmentRequest request,
+            Principal principal
+    ) {
+        groupService.removeVinesFromGroup(groupId, vineyardId, request, principal);
+        return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
+    }
+
+    /**
+     * Get all vines in a group
+     *
+     * @param vineyardId the id of the vineyard to which the group belongs
+     * @param groupId    the id of the group to get the vines
+     * @param pageable   the pageable object containing the pagination details
+     * @param principal  the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Get all vines in a group",
+            description = "Get all vines in a group in a vineyard with the provided details"
+    )
+    @GetMapping("/{groupId}/vines")
+    public ResponseEntity<ApiResponse<PageableResponse<List<GroupVineResponse>>>> getVinesInGroup(
+            @PathVariable Integer vineyardId,
+            @PathVariable Integer groupId,
+            @PageableDefault(size = 5, sort = "block") Pageable pageable,
+            Principal principal
+    ) {
+        Page<GroupVineResponse> vines = groupService.getVinesInGroup(vineyardId, groupId, pageable, principal);
+        return ResponseEntity.ok()
+                .headers(paginationUtils.createPaginationHeaders(vines, pageable))
+                .body(ApiResponse.success(PageableResponse.of(vines), HttpStatus.OK.value()));
     }
 }

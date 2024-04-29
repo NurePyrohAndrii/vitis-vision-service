@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.domain.group.repository;
 
 import com.vitisvision.vitisvisionservice.domain.group.entity.Group;
+import com.vitisvision.vitisvisionservice.domain.vine.entity.Vine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
