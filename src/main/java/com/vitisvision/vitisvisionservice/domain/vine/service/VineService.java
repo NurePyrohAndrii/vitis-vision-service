@@ -157,7 +157,15 @@ public class VineService {
         // Ensure that the user has access to the block
         blockService.ensureBlockAccess(blockId, principal);
         ensureVineInBlockExistence(vineId, blockId);
-        // TODO: dissociate related entities
+
+        Vine vine = vineRepository.findById(vineId)
+                .orElseThrow(() -> new VineNotFoundException("vine.not.found.error"));
+
+        // Remove the vine from the groups
+        vine.getGroups().forEach(
+                group -> group.getVines().remove(vine)
+        );
+
         // Delete the vine entity
         vineRepository.deleteById(vineId);
     }

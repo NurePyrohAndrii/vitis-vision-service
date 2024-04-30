@@ -87,7 +87,7 @@ public class Block extends BaseEntity {
      *
      * @see Vine
      */
-    @OneToMany(mappedBy = "block")
+    @OneToMany(mappedBy = "block", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Vine> vines;
 }

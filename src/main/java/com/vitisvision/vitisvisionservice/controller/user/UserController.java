@@ -2,19 +2,17 @@ package com.vitisvision.vitisvisionservice.controller.user;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.MessageSourceUtils;
+import com.vitisvision.vitisvisionservice.user.dto.UserRequest;
+import com.vitisvision.vitisvisionservice.user.dto.UserResponse;
 import com.vitisvision.vitisvisionservice.user.service.UserService;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
-import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -56,4 +54,72 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(messageSourceUtils.getLocalizedMessage("password.change.success"), HttpStatus.OK.value()));
     }
 
+    /**
+     * Get the currently authenticated user
+     *
+     * @param principal Principal object
+     * @return ResponseEntity object
+     */
+    @Operation(
+            summary = "Get the currently authenticated user",
+            description = "Get the details of the currently authenticated user"
+    )
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getMe(Principal principal) {
+        return ResponseEntity.ok(ApiResponse.success(userService.getAuthenticatedUser(principal), HttpStatus.OK.value()));
+    }
+
+    /**
+     * Update the details of the user with the provided details
+     *
+     * @param userResponse UserResponse object
+     * @return ResponseEntity object
+     */
+    @Operation(
+            summary = "Update user",
+            description = "Update the details of the user with the provided details"
+    )
+    @PutMapping
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @RequestBody @Valid UserRequest userResponse,
+            Principal principal
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(userService.updateUser(userResponse, principal), HttpStatus.OK.value()));
+    }
+
+    /**
+     * Delete the currently authenticated user
+     *
+     * @param principal Principal object
+     * @return ResponseEntity object
+     */
+    @Operation(
+            summary = "Delete user",
+            description = "Delete the currently authenticated user"
+    )
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> deleteUser(Principal principal) {
+        userService.deleteUser(principal);
+        return ResponseEntity.ok(ApiResponse.success(null , HttpStatus.OK.value()));
+    }
+
+    /**
+     * Get the details of the user with the given id
+     *
+     * @param id the id of the user
+     * @return ResponseEntity object
+     */
+    @Operation(
+            summary = "Get user with id",
+            description = "Get the details of the user with the given id"
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Integer id) {
+        return ResponseEntity.ok(ApiResponse.success(userService.getUser(id), HttpStatus.OK.value()));
+    }
+
+    // TODO get all users
+    // TODO delete user by id
+    // TODO block user
+    // TODO unblock user
 }

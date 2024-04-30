@@ -143,7 +143,7 @@ public class StartupSeeder {
                 .email(faker.internet().emailAddress())
                 .firstName(faker.name().firstName())
                 .lastName(faker.name().lastName())
-                .password("Password1" + i)
+                .password("Password1$" + i)
                 .build();
     }
 

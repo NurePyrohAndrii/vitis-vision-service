@@ -42,14 +42,14 @@ public class Vineyard extends BaseEntity {
     /**
      * Represents the blocks that are associated with the vineyard.
      */
-    @OneToMany(mappedBy = "vineyard")
+    @OneToMany(mappedBy = "vineyard", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Block> blocks;
 
     /**
      * Represents the groups that are associated with the vineyard.
      */
-    @OneToMany(mappedBy = "vineyard")
+    @OneToMany(mappedBy = "vineyard", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Group> groups;
 

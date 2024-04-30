@@ -126,7 +126,6 @@ public class VineyardService {
     public void deleteVineyard(Integer vineyardId, Principal principal) {
         ensureVineyardParticipation(vineyardId, principal);
         userService.disassociateVineyardStaff(vineyardId);
-        // TODO: Delete all associated entities
         vineyardRepository.deleteById(vineyardId);
     }
 

@@ -1,16 +1,20 @@
 package com.vitisvision.vitisvisionservice.user.service;
 
-import com.vitisvision.vitisvisionservice.user.enumeration.Role;
-import com.vitisvision.vitisvisionservice.user.exception.UserNotFoundException;
-import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
-import com.vitisvision.vitisvisionservice.user.exception.ChangePasswordException;
+import com.vitisvision.vitisvisionservice.user.dto.UserRequest;
+import com.vitisvision.vitisvisionservice.user.dto.UserResponse;
 import com.vitisvision.vitisvisionservice.user.entity.User;
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
+import com.vitisvision.vitisvisionservice.user.exception.ChangePasswordException;
+import com.vitisvision.vitisvisionservice.user.exception.UserNotFoundException;
+import com.vitisvision.vitisvisionservice.user.mapper.UserResponseMapper;
+import com.vitisvision.vitisvisionservice.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,6 +45,11 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     /**
+     * The user response mapper to map user entities to user response DTOs.
+     */
+    private final UserResponseMapper userResponseMapper;
+
+    /**
      * Load a user by their username (email) from the database.
      *
      * @param username the username (email) of the user to load
@@ -56,7 +65,7 @@ public class UserService implements UserDetailsService {
     /**
      * Change the password of the currently logged-in user.
      *
-     * @param request the request containing the current password, new password, and confirm password
+     * @param request   the request containing the current password, new password, and confirm password
      * @param principal the principal of the currently logged-in user
      */
     @Transactional
@@ -76,6 +85,54 @@ public class UserService implements UserDetailsService {
         // Update and save the user with the new password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+    }
+
+    /**
+     * Get the currently authenticated user.
+     *
+     * @param principal the principal of the currently authenticated user
+     * @return the currently authenticated user
+     */
+    public UserResponse getAuthenticatedUser(Principal principal) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        return userResponseMapper.apply(user);
+    }
+
+    /**
+     * Update the details of the currently authenticated user.
+     *
+     * @param userResponse the request containing the updated details
+     * @param principal    the principal of the currently authenticated user
+     * @return the updated user
+     */
+    public UserResponse updateUser(UserRequest userResponse, Principal principal) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        user.setFirstName(userResponse.getFirstName());
+        user.setLastName(userResponse.getLastName());
+        userRepository.save(user);
+        return userResponseMapper.apply(user);
+    }
+
+    /**
+     * Delete the currently authenticated user.
+     *
+     * @param principal the principal of the currently authenticated user
+     */
+    public void deleteUser(Principal principal) {
+        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        user.setVineyard(null);
+        userRepository.delete(user);
+    }
+
+    /**
+     * Get a user by their id.
+     *
+     * @param id the id of the user to get
+     * @return the user with the given id
+     */
+    @PreAuthorize("hasAuthority('admin:read')")
+    public UserResponse getUser(Integer id) {
+        return userResponseMapper.apply(findUserById(id));
     }
 
     /**

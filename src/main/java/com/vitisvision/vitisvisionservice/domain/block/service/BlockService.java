@@ -154,7 +154,6 @@ public class BlockService {
     public void deleteBlock(Integer vineyardId, Integer blockId, Principal principal) {
         vineyardService.ensureVineyardParticipation(vineyardId, principal);
         ensureBlockExistence(blockId, vineyardId);
-        // TODO: Delete all associated entities
         blockRepository.deleteById(blockId);
     }
 

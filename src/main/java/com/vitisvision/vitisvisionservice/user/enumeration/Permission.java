@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Permission {
+    // admin permissions
     ADMIN_READ("admin:read"),
     ADMIN_WRITE("admin:write"),
     ADMIN_DELETE("admin:delete"),
@@ -16,6 +17,7 @@ public enum Permission {
 
     DB_BACKUP("admin:db-backup"),
 
+    // domain permissions
     VINEYARD_READ("vineyard:read"),
     VINEYARD_WRITE("vineyard:write"),
     VINEYARD_DELETE("vineyard:delete"),

@@ -1,13 +1,9 @@
 package com.vitisvision.vitisvisionservice.domain.vine.dto;
 
 import com.vitisvision.vitisvisionservice.common.response.BaseResponse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDate;
 
 /**
  * VineResponse class is a DTO class for vine response.

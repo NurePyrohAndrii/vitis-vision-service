@@ -88,7 +88,7 @@ public class Vine extends BaseEntity {
     /**
      * Represents the device that the vine is associated with.
      */
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "device_id")
     private Device device;
 
