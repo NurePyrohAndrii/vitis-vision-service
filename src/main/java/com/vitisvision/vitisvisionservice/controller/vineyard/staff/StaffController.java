@@ -8,6 +8,7 @@ import com.vitisvision.vitisvisionservice.domain.staff.dto.StaffResponse;
 import com.vitisvision.vitisvisionservice.domain.staff.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class StaffController {
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> hireStaff(
             @PathVariable Integer vineyardId,
-            @RequestBody StaffRequest staffRequest,
+            @RequestBody @Valid StaffRequest staffRequest,
             Principal principal
     ) {
         staffService.hireStaff(vineyardId, staffRequest, principal);
@@ -99,7 +100,7 @@ public class StaffController {
     @PutMapping
     public ResponseEntity<ApiResponse<StaffResponse>> updateStaff(
             @PathVariable Integer vineyardId,
-            @RequestBody StaffRequest staffRequest,
+            @RequestBody @Valid StaffRequest staffRequest,
             Principal principal
     ) {
         return ResponseEntity.ok(ApiResponse.success(staffService.updateStaff(vineyardId, staffRequest, principal), HttpStatus.OK.value()));
@@ -120,7 +121,7 @@ public class StaffController {
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> fireStaff(
             @PathVariable Integer vineyardId,
-            @RequestBody StaffRequest staffRequest,
+            @RequestBody @Valid StaffRequest staffRequest,
             Principal principal
     ) {
         staffService.fireStaff(vineyardId, staffRequest, principal);

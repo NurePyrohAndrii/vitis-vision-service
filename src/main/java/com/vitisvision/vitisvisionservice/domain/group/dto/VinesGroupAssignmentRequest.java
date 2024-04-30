@@ -1,5 +1,6 @@
 package com.vitisvision.vitisvisionservice.domain.group.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VinesGroupAssignmentRequest {
+
+    /**
+     * Vine ids to be assigned to a group.
+     */
+    @NotNull(message = "invalid.vine.ids")
     private List<Integer> vineIds;
 }

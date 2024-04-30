@@ -46,7 +46,7 @@ public class VineRequest {
     /**
      * The planting date of the vine.
      */
-    @ValidDate(format = "yyyy-MM-dd", message = "invalid.vine.planting.date")
+    @ValidDate(format = "yyyy-MM-dd", message = "invalid.date")
     private String plantingDate;
 
     /**

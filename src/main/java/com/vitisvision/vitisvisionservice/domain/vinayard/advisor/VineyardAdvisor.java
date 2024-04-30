@@ -5,6 +5,7 @@ import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import com.vitisvision.vitisvisionservice.controller.vineyard.VineyardController;
 import com.vitisvision.vitisvisionservice.controller.vineyard.block.BlockController;
+import com.vitisvision.vitisvisionservice.controller.vineyard.device.DeviceController;
 import com.vitisvision.vitisvisionservice.controller.vineyard.group.GroupController;
 import com.vitisvision.vitisvisionservice.controller.vineyard.staff.StaffController;
 import com.vitisvision.vitisvisionservice.controller.vineyard.vine.VineController;
@@ -22,7 +23,10 @@ import java.util.List;
 /**
  * VineyardAdvisor class is an exception handler for the VineyardController.
  */
-@ControllerAdvice(assignableTypes = {VineyardController.class, BlockController.class, GroupController.class, VineController.class, StaffController.class})
+@ControllerAdvice(assignableTypes = {
+        VineyardController.class, BlockController.class,
+        GroupController.class, VineController.class,
+        StaffController.class, DeviceController.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
 public class VineyardAdvisor {

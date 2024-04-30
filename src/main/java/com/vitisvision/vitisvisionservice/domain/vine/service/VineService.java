@@ -184,6 +184,20 @@ public class VineService {
     }
 
     /**
+     * Ensure that the vine exists in the block and the user has access to the block
+     *
+     * @param vineId    the vine id
+     * @param principal the principal object containing the user details
+     * @return the vine object
+     */
+    public Vine ensureVineAccess(Integer vineId, Principal principal) {
+        Vine vine = vineRepository.findById(vineId)
+                .orElseThrow(() -> new VineNotFoundException("vine.not.found.error"));
+        blockService.ensureBlockAccess(vine.getBlock().getId(), principal);
+        return vine;
+    }
+
+    /**
      * Ensure that the vine exists in the block
      *
      * @param vineId  the vine id

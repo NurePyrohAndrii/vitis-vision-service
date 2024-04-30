@@ -15,7 +15,16 @@ import java.util.List;
  * The group entity represents a group of vines that are managed together.
  */
 @Entity
-@Table(name = "_group")
+@Table(name = "_group",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_group_name_vineyard_id",
+                        columnNames = {
+                                "name",
+                                "vineyard_id"
+                        }
+                )
+        })
 @Getter
 @Setter
 @ToString
@@ -27,7 +36,7 @@ public class Group extends BaseEntity {
     /**
      * Represents the name of the group.
      */
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     /**

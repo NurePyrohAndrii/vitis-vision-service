@@ -173,7 +173,7 @@ public class GroupController {
     public ResponseEntity<ApiResponse<Void>> addVinesToGroup(
             @PathVariable Integer groupId,
             @PathVariable Integer vineyardId,
-            @RequestBody VinesGroupAssignmentRequest request,
+            @RequestBody @Valid VinesGroupAssignmentRequest request,
             Principal principal
     ) {
         groupService.addVinesToGroup(groupId, vineyardId, request, principal);
@@ -197,7 +197,7 @@ public class GroupController {
     public ResponseEntity<ApiResponse<Void>> removeVinesFromGroup(
             @PathVariable Integer groupId,
             @PathVariable Integer vineyardId,
-            @RequestBody VinesGroupAssignmentRequest request,
+            @RequestBody @Valid VinesGroupAssignmentRequest request,
             Principal principal
     ) {
         groupService.removeVinesFromGroup(groupId, vineyardId, request, principal);

@@ -16,7 +16,15 @@ import java.util.List;
  * @see BaseEntity
  */
 @Entity
-@Table
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_block_name_vineyard_id",
+                columnNames = {
+                        "name",
+                        "vineyard_id"
+                }
+        )
+})
 @Getter
 @Setter
 @ToString
@@ -28,7 +36,7 @@ public class Block extends BaseEntity {
     /**
      * The name of the block.
      */
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     /**
