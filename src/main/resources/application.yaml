@@ -39,6 +39,15 @@ application:
         expiration: 86400000 # a day
       refresh:
         expiration: 604800000 # a week
+  backup:
+    script:
+      path: ./infrastructure/db/backup/db-backup.lnk
+    result:
+      path: C:\Projects\vitis-vision-service\app\backups\
+      name: db-backup
+      extension: .sql
+    command: cmd /c start /wait
+
 
 # CORS configuration
 cors:

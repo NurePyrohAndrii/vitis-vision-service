@@ -24,7 +24,8 @@ public enum Role {
                     ADMIN_READ,
                     ADMIN_WRITE,
                     ADMIN_DELETE,
-                    ADMIN_BLOCK
+                    ADMIN_BLOCK,
+                    DB_BACKUP
             )
     ),
 

@@ -14,6 +14,8 @@ public enum Permission {
     ADMIN_DELETE("admin:delete"),
     ADMIN_BLOCK("admin:block"),
 
+    DB_BACKUP("admin:db-backup"),
+
     VINEYARD_READ("vineyard:read"),
     VINEYARD_WRITE("vineyard:write"),
     VINEYARD_DELETE("vineyard:delete"),
