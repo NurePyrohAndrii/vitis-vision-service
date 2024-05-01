@@ -180,6 +180,18 @@ public class AuthService {
     }
 
     /**
+     * This method revokes all the user's jwt.
+     *
+     * @param user User object whose tokens are to be revoked.
+     */
+    public void revokeAllUserTokens(User user) {
+        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
+        if (validUserTokens.isEmpty()) return;
+        validUserTokens.forEach(t -> t.setRevoked(true));
+        tokenRepository.saveAll(validUserTokens);
+    }
+
+    /**
      * This method saves the jwt of the {@link TokenType} to the database.
      *
      * @param user      User object to which the token belongs.
@@ -195,18 +207,6 @@ public class AuthService {
                 .expired(false)
                 .build();
         tokenRepository.save(token);
-    }
-
-    /**
-     * This method revokes all the user's jwt.
-     *
-     * @param user User object whose tokens are to be revoked.
-     */
-    private void revokeAllUserTokens(User user) {
-        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId());
-        if (validUserTokens.isEmpty()) return;
-        validUserTokens.forEach(t -> t.setRevoked(true));
-        tokenRepository.saveAll(validUserTokens);
     }
 
     /**

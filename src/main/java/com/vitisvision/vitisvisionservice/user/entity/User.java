@@ -68,6 +68,11 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
 
     /**
+     * The block status
+     */
+    boolean isBlocked = false;
+
+    /**
      * The list of tokens associated with the user.
      *
      * @see Token
@@ -133,7 +138,7 @@ public class User extends BaseEntity implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isBlocked;
     }
 
     /**

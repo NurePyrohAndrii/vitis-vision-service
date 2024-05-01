@@ -13,8 +13,8 @@ public enum Permission {
     ADMIN_READ("admin:read"),
     ADMIN_WRITE("admin:write"),
     ADMIN_DELETE("admin:delete"),
-    ADMIN_BLOCK("admin:block"),
 
+    ADMIN_BLOCK("admin:block"),
     DB_BACKUP("admin:db-backup"),
 
     // domain permissions

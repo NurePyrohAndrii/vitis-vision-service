@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.user.service;
 
 import com.vitisvision.vitisvisionservice.user.dto.ChangePasswordRequest;
+import com.vitisvision.vitisvisionservice.user.dto.UserBlockRequest;
 import com.vitisvision.vitisvisionservice.user.dto.UserRequest;
 import com.vitisvision.vitisvisionservice.user.dto.UserResponse;
 import com.vitisvision.vitisvisionservice.user.entity.User;
@@ -133,6 +134,52 @@ public class UserService implements UserDetailsService {
     @PreAuthorize("hasAuthority('admin:read')")
     public UserResponse getUser(Integer id) {
         return userResponseMapper.apply(findUserById(id));
+    }
+
+    /**
+     * Get all users.
+     *
+     * @param pageable object defining pagination info
+     * @return the user response objects
+     */
+    @PreAuthorize("hasAuthority('admin:read')")
+    public Page<UserResponse> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userResponseMapper);
+    }
+
+    /**
+     * Delete user by id provided
+     *
+     * @param userId user id to be deleted
+     */
+    @PreAuthorize("hasAuthority('admin:delete')")
+    public void deleteUserById(Integer userId) {
+        userRepository.delete(findUserById(userId));
+    }
+
+    /**
+     * Block user with given request id
+     *
+     * @param request introduces user to be blocked details
+     */
+    @PreAuthorize("hasAuthority('admin:block')")
+    public void blockUser(UserBlockRequest request) {
+        User user = findUserById(request.getUserId());
+        user.setBlocked(true);
+        userRepository.save(user);
+    }
+
+    /**
+     * Unblock user with given request id
+     *
+     * @param request introduces user to be unblocked details
+     */
+    @PreAuthorize("hasAuthority('admin:block')")
+    public void unblockUser(UserBlockRequest request) {
+        User user = findUserById(request.getUserId());
+        user.setBlocked(false);
+        userRepository.save(user);
     }
 
     /**
