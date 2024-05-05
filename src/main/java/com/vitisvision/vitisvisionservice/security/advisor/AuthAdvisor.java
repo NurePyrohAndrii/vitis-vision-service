@@ -7,6 +7,8 @@ import com.vitisvision.vitisvisionservice.controller.security.AuthController;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @ControllerAdvice(assignableTypes = AuthController.class)
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AuthAdvisor {
 
     /**
@@ -37,17 +40,7 @@ public class AuthAdvisor {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
         HttpStatus status = advisorUtils.getAnnotationResponseStatusCode(e.getClass());
-
-        List<ApiError> errors = List.of(
-                new ApiError(
-                        status,
-                        advisorUtils.getErrorMessageString(e),
-                        advisorUtils.getErrorDetailsString(e),
-                        LocalDateTime.now().toString()
-                )
-        );
-
-        return advisorUtils.createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(e, status);
     }
 
     /**
@@ -58,17 +51,7 @@ public class AuthAdvisor {
      */
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleJwtException(JwtException e) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        List<ApiError> errors = List.of(
-                new ApiError(
-                        status,
-                        advisorUtils.getErrorMessageString(e),
-                        advisorUtils.getErrorDetailsString(e),
-                        LocalDateTime.now().toString()
-                )
-        );
-
-        return advisorUtils.createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -79,16 +62,15 @@ public class AuthAdvisor {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<List<ApiError>>> handleAuthenticationException(AuthenticationException e) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
         List<ApiError> errors = List.of(
                 new ApiError(
-                        status,
-                        advisorUtils.getErrorMessageString(e),
+                        HttpStatus.UNAUTHORIZED,
+                        e.getMessage(),
                         advisorUtils.getErrorDetailsString(e),
                         LocalDateTime.now().toString()
                 )
         );
 
-        return advisorUtils.createErrorResponseEntity(errors, status);
+        return advisorUtils.createErrorResponseEntity(errors, HttpStatus.UNAUTHORIZED);
     }
 }

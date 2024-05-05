@@ -3,19 +3,21 @@ package com.vitisvision.vitisvisionservice.security.advisor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitisvision.vitisvisionservice.common.response.ApiError;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
-import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHandler;
 import com.vitisvision.vitisvisionservice.common.util.AdvisorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JwtFilterExceptionHandlerTest {
@@ -36,22 +38,22 @@ class JwtFilterExceptionHandlerTest {
         // Given
         MockHttpServletResponse response = new MockHttpServletResponse();
         Exception exception = new Exception("JWT token is expired");
-        ApiError apiError = ApiError.builder()
-                .status(HttpStatus.UNAUTHORIZED)
-                .message("JWT token is invalid")
-                .details("JWT token is expired")
-                .timestamp(LocalDateTime.now().toString())
-                .build();
 
-        when(advisorUtils.getErrorMessageString(exception)).thenReturn("JWT token is invalid");
-        when(advisorUtils.getErrorDetailsString(exception)).thenReturn("JWT token is expired");
+        when(advisorUtils.createErrorResponseEntity(exception, HttpStatus.UNAUTHORIZED))
+                .thenAnswer(
+                        invocation -> {
+                            List<ApiError> errors = List.of(new ApiError(HttpStatus.UNAUTHORIZED, "JWT token is invalid", "JWT token is expired", LocalDateTime.now().toString()));
+                            ApiResponse<List<ApiError>> apiResponse = ApiResponse.error(errors, HttpStatus.UNAUTHORIZED.value());
+                            return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+                        }
+                );
 
         // When
         jwtExceptionHandler.handleJwtException(response, exception);
 
         // Then
         assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
-        assertEquals("application/json", response.getContentType());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         ApiResponse<?> apiResponse = new ObjectMapper().readValue(response.getContentAsString(), ApiResponse.class);
 

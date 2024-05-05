@@ -96,6 +96,7 @@
 <!--        Logger for the hibernate package-->
         <Logger name="org.hibernate" level="WARN" additivity="false">
             <AppenderRef ref="orm"/>
+            <AppenderRef ref="console-default"/>
         </Logger>
 
     </Loggers>

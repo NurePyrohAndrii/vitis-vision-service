@@ -1,0 +1,1 @@
+docker exec -t pg-db pg_dump -U vitis_vision_user -d vitis_vision_db > %1

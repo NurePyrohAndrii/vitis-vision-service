@@ -2,9 +2,9 @@ package com.vitisvision.vitisvisionservice.security.filter;
 
 import com.vitisvision.vitisvisionservice.security.advisor.JwtFilterExceptionHandler;
 import com.vitisvision.vitisvisionservice.security.service.JwtService;
-import com.vitisvision.vitisvisionservice.security.token.Token;
-import com.vitisvision.vitisvisionservice.security.token.TokenRepository;
-import com.vitisvision.vitisvisionservice.security.token.TokenType;
+import com.vitisvision.vitisvisionservice.security.entity.Token;
+import com.vitisvision.vitisvisionservice.security.repository.TokenRepository;
+import com.vitisvision.vitisvisionservice.security.enumeration.TokenType;
 import com.vitisvision.vitisvisionservice.user.entity.User;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

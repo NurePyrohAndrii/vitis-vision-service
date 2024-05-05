@@ -1,8 +1,14 @@
 package com.vitisvision.vitisvisionservice.user.entity;
 
-import com.vitisvision.vitisvisionservice.security.token.Token;
+import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
+import com.vitisvision.vitisvisionservice.domain.vinayard.entity.Vineyard;
+import com.vitisvision.vitisvisionservice.security.entity.Token;
+import com.vitisvision.vitisvisionservice.user.enumeration.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,41 +24,38 @@ import java.util.Objects;
  * It is also used to implement the UserDetails interface to provide
  * the user details to the spring security.
  */
+@Entity
+@Table(name = "_user")
 @Getter
 @Setter
 @ToString
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "_user")
-public class User implements UserDetails {
-
-    /**
-     * The id of the user.
-     */
-    @Id
-    @GeneratedValue
-    private Integer id;
+public class User extends BaseEntity implements UserDetails {
 
     /**
      * The first name of the user.
      */
+    @Column(nullable = false)
     private String firstName;
 
     /**
      * The last name of the user.
      */
+    @Column(nullable = false)
     private String lastName;
 
     /**
      * The email of the user. Application insures that this is unique.
      */
+    @Column(unique = true, nullable = false)
     private String email;
 
     /**
      * The password of the user.
      */
+    @Column(nullable = false)
     private String password;
 
     /**
@@ -61,29 +64,45 @@ public class User implements UserDetails {
      * @see Role
      */
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    /**
+     * The block status
+     */
+    boolean isBlocked = false;
 
     /**
      * The list of tokens associated with the user.
      *
      * @see Token
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Token> tokens;
 
     /**
-     * Get the authorities of the user.
+     * Describes the user's vineyard employment status.
+     * The vineyard associated with the user. This is optional. If the user is not associated with a vineyard, this will be null.
+     *
+     * @see Vineyard
+     */
+    @ManyToOne
+    @JoinColumn(name = "vineyard_id")
+    private Vineyard vineyard;
+
+    /**
+     * Get the authorities of the user. Mandatory for the UserDetails interface of spring security.
      *
      * @return List of {@link SimpleGrantedAuthority}.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities();
     }
 
     /**
-     * Get the password of the user.
+     * Get the password of the user. Mandatory for the UserDetails interface of spring security.
      *
      * @return The password of the user.
      */
@@ -93,7 +112,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Get the username of the user.
+     * Get the username of the user. Mandatory for the UserDetails interface of spring security.
      *
      * @return The email of the user.
      */
@@ -103,7 +122,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Check if the account is not expired.
+     * Check if the account is not expired. Mandatory for the UserDetails interface of spring security.
      *
      * @return True if the account is not expired.
      */
@@ -113,17 +132,17 @@ public class User implements UserDetails {
     }
 
     /**
-     * Check if the account is not locked.
+     * Check if the account is not locked. Mandatory for the UserDetails interface of spring security.
      *
      * @return True if the account is not locked.
      */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isBlocked;
     }
 
     /**
-     * Check if the credentials are not expired.
+     * Check if the credentials are not expired. Mandatory for the UserDetails interface of spring security.
      *
      * @return True if the credentials are not expired.
      */
@@ -133,7 +152,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Check if the account is enabled.
+     * Check if the account is enabled. Mandatory for the UserDetails interface of spring security.
      *
      * @return True if the account is enabled.
      */

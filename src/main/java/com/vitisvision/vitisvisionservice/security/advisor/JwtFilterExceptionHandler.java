@@ -39,22 +39,9 @@ public class JwtFilterExceptionHandler {
      */
     public void handleJwtException(HttpServletResponse response, Exception e) throws IOException {
 
-
-        ApiError apiError = ApiError.builder()
-                .status(HttpStatus.UNAUTHORIZED)
-                .message(advisorUtils.getErrorMessageString(e))
-                .details(advisorUtils.getErrorDetailsString(e))
-                .timestamp(LocalDateTime.now().toString())
-                .build();
-
-        ApiResponse<?> apiResponse = ApiResponse.error(
-                List.of(apiError),
-                HttpStatus.UNAUTHORIZED.value()
-        );
-
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getWriter(), apiResponse);
+        new ObjectMapper().writeValue(response.getWriter(), advisorUtils.createErrorResponseEntity(e, HttpStatus.UNAUTHORIZED).getBody());
     }
 
 }

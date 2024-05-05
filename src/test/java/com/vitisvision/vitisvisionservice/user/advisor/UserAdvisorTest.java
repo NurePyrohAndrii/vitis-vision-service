@@ -44,9 +44,7 @@ class UserAdvisorTest {
         );
 
         when(advisorUtils.getAnnotationResponseStatusCode(exception.getClass())).thenReturn(HttpStatus.BAD_REQUEST);
-        when(advisorUtils.getErrorMessageString(exception)).thenReturn("Password change failed");
-        when(advisorUtils.getErrorDetailsString(exception)).thenReturn("ChangePasswordException occurred");
-        when(advisorUtils.createErrorResponseEntity(any(List.class), eq(status)))
+        when(advisorUtils.createErrorResponseEntity(any(Exception.class), eq(status)))
                 .thenReturn(new ResponseEntity<>(ApiResponse.error(List.of(apiError), status.value()), status));
 
         // When
