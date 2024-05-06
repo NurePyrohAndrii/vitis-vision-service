@@ -5,37 +5,38 @@
   "parts": [
     { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": -4.76, "attrs": {} },
     {
-      "type": "wokwi-resistor",
-      "id": "r1",
-      "top": 109.55,
-      "left": -76.8,
-      "attrs": { "value": "1000" }
-    },
-    {
-      "type": "wokwi-led",
-      "id": "led1",
-      "top": 34.8,
-      "left": -111.4,
-      "attrs": { "color": "blue" }
-    },
-    {
       "type": "wokwi-lcd2004",
       "id": "lcd",
       "top": -214.4,
       "left": 15.2,
       "attrs": { "pins": "i2c" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": 96.3, "left": -168.6, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht2", "top": -105.3, "left": -168.6, "attrs": {} },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": -188.8,
+      "left": -287.2,
+      "attrs": {}
     }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
-    [ "r1:1", "led1:A", "green", [ "v0.07", "h-10" ] ],
-    [ "esp:GND.1", "led1:C", "black", [ "h0" ] ],
-    [ "esp:26", "r1:2", "green", [ "h0" ] ],
     [ "esp:3V3", "lcd:VCC", "red", [ "h-28.65", "v-201.7" ] ],
     [ "lcd:SDA", "esp:21", "green", [ "h-28.8", "v153.8", "h124.8", "v86.4" ] ],
     [ "esp:22", "lcd:SCL", "gold", [ "h28.8", "v-67.2", "h-124.8", "v-134.7" ] ],
-    [ "esp:GND.3", "lcd:GND", "black", [ "h38.4", "v-115.2", "h-153.6", "v-153.6" ] ]
+    [ "esp:GND.3", "lcd:GND", "black", [ "h38.4", "v-115.2", "h-153.6", "v-153.6" ] ],
+    [ "dht1:VCC", "esp:3V3", "red", [ "v9.6", "h86.4", "h0", "v-192" ] ],
+    [ "dht1:SDA", "esp:13", "green", [ "v19.2", "h67.3", "v-67.2" ] ],
+    [ "esp:GND.1", "dht1:GND", "black", [ "h-86.25", "v67.2" ] ],
+    [ "esp:GND.1", "dht2:GND", "black", [ "h-86.25", "v-86.4", "h-38.4", "v-57.6" ] ],
+    [ "dht2:VCC", "esp:3V3", "red", [ "v19.2" ] ],
+    [ "dht2:SDA", "esp:12", "green", [ "v38.4", "h67.3", "v86.4" ] ],
+    [ "ldr1:GND", "esp:GND.1", "black", [ "h28.8", "v335.6" ] ],
+    [ "ldr1:VCC", "esp:3V3", "red", [ "h86.4", "v220.8" ] ],
+    [ "esp:35", "ldr1:AO", "green", [ "h-76.65", "v-220.8" ] ]
   ],
   "dependencies": {}
 }

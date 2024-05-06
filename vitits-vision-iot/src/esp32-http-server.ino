@@ -1,14 +1,38 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
 #include <WebServer.h>
 #include <LiquidCrystal_I2C.h>
 #include <uri/UriBraces.h>
+#include "DHT.h"
+#include <Adafruit_Sensor.h>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+#include <ArduinoJson.h>
 
-// Device ID
-const int id = 1;
 
-// Struct to store network information
-struct NetworkInfo {
+const int id = 1; // Device ID
+
+// DHT sensors properties
+#define DHT_AIR_PIN 13
+#define DHT_AIR_TYPE DHT22
+#define DHT_GND_PIN 12
+#define DHT_GND_TYPE DHT22
+
+#define LDR_PIN 35 // Photoresistor pin
+
+// Constants for the photoresistor calculation
+const float GAMMA = 0.7;
+const float RL10 = 50;
+
+// Initialize the DHT sensor
+DHT dht_air(DHT_AIR_PIN, DHT_AIR_TYPE);
+DHT dht_gnd(DHT_GND_PIN, DHT_GND_TYPE);
+
+
+struct NetworkInfo { // Struct to store network information
   String ssid;
   String password;
 };
@@ -18,33 +42,18 @@ const int MAX_NETWORKS = 10;
 NetworkInfo availableNetworks[MAX_NETWORKS];
 int numNetworks = 0;
 
-// Default s erial communication properties if the user does not specify
-int serialBaudRate = 115200;
+int serialBaudRate = 115200; // Default s erial communication properties if the user does not specify
 
-// LCD display properties
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+WebServer server(80); // Web server setup
 
+LiquidCrystal_I2C lcd(0x27, 20, 4); // LCD display properties
 
-////////////////
-// REMOVE THIS LINE AFTER REMOVING LED FROM THE SCHEMATIC
-const int ledPin = 26;
-////////////////
+bool measuring = false; // Flag to control the measuring
+String accumulatedData = ""; // String to accumulate data
+unsigned long lastMeasurement = 0; // Time of the last measurement
+int measureFrequency = 1000; // Measurement frequency in milliseconds
 
-
-// Web server setup
-WebServer server(80);
-
-// Measure time (in milliseconds) passed as a parameter in the URL of {id}/measure/{} endpoint
-int measureTime;
-
-// Function to handle HTTP requests
-void handleRequest() {
-  String message = "\"Hello from ESP32! My ID is " + String(id) + ", you passed measure time: " + String(measureTime/1000) + " seconds." + "\"";
-  server.send(200, "application/json", "{\"result\":" + message + "}");
-}
-
-// Function to connect to WiFi
-void connectToWiFi() {
+void connectToWiFi() { // Function to connect to WiFi
   Serial.println("Scanning for available networks...");
 
   // Scan for available networks
@@ -87,69 +96,140 @@ void connectToWiFi() {
   Serial.println("IP address: " + WiFi.localIP().toString());
 }
 
-// Function to determine the baud rate that the user wants to use
-void determineBaudRate() {
+void determineBaudRate() { // Function to determine the baud rate that the user wants to use
   Serial.println("Enter the desired baud rate:");
 
-  while (!Serial.available()) {
-    // Wait for user input
+  while (!Serial.available()) { // Wait for user input 
   }
 
-  // Read the user input and set the baud rate
-  serialBaudRate = Serial.parseInt();
+  serialBaudRate = Serial.parseInt(); // Read the user input and set the baud rate
   Serial.begin(serialBaudRate);
 
   Serial.print("Baud rate set to ");
   Serial.println(serialBaudRate);
 }
 
-// Function to initialize the LCD display
-void initializeLCD() {
+void initializeLCD() { // Function to initialize the LCD display
   lcd.init();
   lcd.backlight();
 }
 
-// Function to display a message on the LCD display
-void displayMessage(const String& message) {
+void displayMessage(const String& message) { // Function to display a message on the LCD display
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.println(message);
 }
 
-void setup() {
-  Serial.begin(serialBaudRate);
-  delay(1000);
+float calculateLux(float LdrValue){ // Function to calculate the lux value from the photoresistor value
+  float voltage = LdrValue / 1024. * 5 / 4;
+  float resistance = 2000 * voltage / (1 - voltage / 5);
+  float lux = pow(RL10 * 1e3 * pow(10, GAMMA) / resistance, (1 / GAMMA));
+  return lux;
+}
 
-  determineBaudRate();
-  Serial.begin(serialBaudRate);
+void readData() { // Function to read data from the DHT sensors and photoresistor
+  if (!measuring) return; // Only read data if measuring is true
 
-  initializeLCD();
-  displayMessage("Connecting to WiFi...");
+  // Current time in ISO 8601 format
+  auto now = std::chrono::system_clock::now();
+  auto now_c = std::chrono::system_clock::to_time_t(now);
+  std::stringstream ss;
+  ss << std::put_time(std::localtime(&now_c), "%FT%TZ"); // ISO 8601 format
+  String timeData = "\"timestamp\":\"" + String(ss.str().c_str()) + "\"";
 
-  connectToWiFi();
+  float air_humidity = dht_air.readHumidity();
+  float air_temperature = dht_air.readTemperature();
+  float gnd_humidity = dht_gnd.readHumidity();
+  float gnd_temperature = dht_gnd.readTemperature();
 
-  displayMessage("Connected to WiFi");
+  float currentLdrValue = (float) analogRead(LDR_PIN);
+  float measuredLux = calculateLux(currentLdrValue);
 
-  pinMode(ledPin, OUTPUT);
+  if (isnan(air_humidity) || isnan(air_temperature) || isnan(gnd_humidity) || isnan(gnd_temperature) || isnan(measuredLux)) {
+    return; // Skip this reading if any data is not valid
+  }
 
-  server.on(UriBraces("/" + String(id) + "/measure/{}"), []() {
-    try {
-      if (server.pathArg(0).toInt() <= 0) {
-        server.send(400, "application/json", "{\"error\":\"Invalid measure time\"}");
-        return;
-      }
-      measureTime = server.pathArg(0).toInt() * 1000;
-    } catch (const std::exception& e) {
-      server.send(400, "application/json", "{\"error\":\"Invalid measure time\"}");
+  // Create data string
+  String data = "{ \"air_temperature\":" + String(air_temperature, 2) +
+                ", \"air_humidity\":" + String(air_humidity, 2) +
+                ", \"gnd_temperature\":" + String(gnd_temperature, 2) +
+                ", \"gnd_humidity\":" + String(gnd_humidity, 2) +
+                ", \"lux\":" + String(measuredLux, 2) +
+                ", " + timeData + "},";
+  
+  accumulatedData += data; // Append this data to the accumulated data
+}
+
+void startMeasure() { // Function to start the measurement
+  measuring = true;
+  Serial.println("Measurement started");
+  displayMessage("Measuring...");
+}
+
+void stopMeasure() { // Function to stop the measurement
+  measuring = false;
+  Serial.println("Measurement stopped");
+  displayMessage("Waiting for request...");
+}
+
+void setTimeFromString(String timeString) {  // Set the time of the device from a string in ISO 8601 format
+    struct tm tm;
+    strptime(timeString.c_str(), "%Y-%m-%dT%H:%M:%SZ", &tm);
+    time_t t = mktime(&tm);
+    struct timeval now = { .tv_sec = t };
+    settimeofday(&now, NULL);
+}
+
+void setupServer() { // Function to setup the server
+  server.on("/" + String(id) + "/start", HTTP_POST, []() {
+    String requestBody = server.arg("plain");
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, requestBody);
+
+    if (error) {
+      server.send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
       return;
     }
 
-    handleRequest();
+    measureFrequency = doc["frequency"].as<int>() * 1000;
+    setTimeFromString(doc["timestamp"].as<String>());
+
+    startMeasure();
+    server.send(200, "application/json", "{\"message\":\"Measurement started\"}");
   });
 
+  server.on("/" + String(id) + "/stop", HTTP_GET, []() {
+    stopMeasure();
+    server.send(200, "application/json", "{\"data\":[" + accumulatedData + "]}");
+    accumulatedData = ""; // Clear accumulated data
+  });
+}
+
+void setup() { // Main setup function
+  Serial.begin(serialBaudRate);
+  delay(1000);
+  determineBaudRate();
+  Serial.begin(serialBaudRate);
+
+  // Initialize the DHT sensors and the photoresistor
+  dht_air.begin();
+  dht_gnd.begin();
+  pinMode(LDR_PIN, INPUT);
+  initializeLCD();
+
+  displayMessage("Connecting to WiFi...");
+  connectToWiFi();
+  displayMessage("Connected to WiFi");
+
+  setupServer();
   server.begin();
 }
 
-void loop() {
+void loop() { // Main loop function
   server.handleClient();
+  if (measuring && millis() - lastMeasurement >= measureFrequency) {
+    readData();
+    lastMeasurement = millis(); // Update the last measurement time
+  }
+  delay(50); 
 }
