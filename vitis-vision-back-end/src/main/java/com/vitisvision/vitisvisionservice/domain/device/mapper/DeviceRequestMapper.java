@@ -21,6 +21,7 @@ public class DeviceRequestMapper implements Function<DeviceRequest, Device> {
                 .installationDate(LocalDate.parse(deviceRequest.getInstallationDate()))
                 .deviceType(deviceRequest.getDeviceType())
                 .manufacturer(deviceRequest.getManufacturer())
+                .isActive(false)
                 .build();
     }
 

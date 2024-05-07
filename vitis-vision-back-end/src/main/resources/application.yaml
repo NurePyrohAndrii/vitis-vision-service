@@ -48,6 +48,11 @@ application:
       extension: .sql
     command: cmd /c start /wait
 
+device:
+  ip-address: http://localhost:8180/
+  endpoint:
+    activate: /start
+    deactivate: /stop
 
 # CORS configuration
 cors:

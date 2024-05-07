@@ -51,4 +51,10 @@ public class Device extends BaseEntity {
      */
     @Column(nullable = false)
     private String manufacturer;
+
+    /**
+     * Represents the device status.
+     */
+    @Column(nullable = false)
+    private boolean isActive;
 }

@@ -38,4 +38,9 @@ public class DeviceResponse extends BaseResponse {
      */
     private String manufacturer;
 
+    /**
+     * Represents the device status.
+     */
+    private boolean isActive;
+
 }

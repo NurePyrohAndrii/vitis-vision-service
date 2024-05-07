@@ -182,12 +182,17 @@ void setTimeFromString(String timeString) {  // Set the time of the device from 
 
 void setupServer() { // Function to setup the server
   server.on("/" + String(id) + "/start", HTTP_POST, []() {
+    if (measuring) {
+      server.send(400, "application/json", "{\"error\":\"Measurement already in progress\"}");
+      return;
+    }
+
     String requestBody = server.arg("plain");
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, requestBody);
 
     if (error) {
-      server.send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
+      server.send(400, "application/json", "{\"error\":\"Invalid request\"}");
       return;
     }
 
@@ -199,7 +204,13 @@ void setupServer() { // Function to setup the server
   });
 
   server.on("/" + String(id) + "/stop", HTTP_GET, []() {
+    if (!measuring) {
+      server.send(400, "application/json", "{\"error\":\"No measurement in progress\"}");
+      return;
+    }
     stopMeasure();
+    
+    accumulatedData = accumulatedData.substring(0, accumulatedData.length() - 1); // remove the last comma from the accumulated data
     server.send(200, "application/json", "{\"data\":[" + accumulatedData + "]}");
     accumulatedData = ""; // Clear accumulated data
   });

@@ -37,6 +37,8 @@ public enum Permission {
     DEVICE_READ("device:read"),
     DEVICE_WRITE("device:write"),
     DEVICE_DELETE("device:delete"),
+    DEVICE_ACTIVATE("device:activate"),
+    DEVICE_DEACTIVATE("device:deactivate"),
 
     STAFF_READ("staff:read"),
     STAFF_HIRE("staff:hire"),

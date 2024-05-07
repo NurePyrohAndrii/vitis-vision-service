@@ -1,6 +1,7 @@
 package com.vitisvision.vitisvisionservice.controller.vineyard.device;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
+import com.vitisvision.vitisvisionservice.domain.device.dto.DeviceActivateResponse;
 import com.vitisvision.vitisvisionservice.domain.device.dto.DeviceRequest;
 import com.vitisvision.vitisvisionservice.domain.device.dto.DeviceResponse;
 import com.vitisvision.vitisvisionservice.domain.device.service.DeviceService;
@@ -118,4 +119,48 @@ public class DeviceController {
         return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
     }
 
+    /**
+     * Activate the device with the provided frequency
+     *
+     * @param vineId    the vine id
+     * @param deviceId  the device id
+     * @param frequency the frequency of data collection from sensors
+     * @param principal the principal object containing the user details
+     * @return the response object containing the device details
+     */
+    @Operation(
+            summary = "Activate the device with the provided frequency",
+            description = "Activate the device with the provided frequency in a vineyard with the provided details"
+    )
+    @PostMapping("{deviceId}/activate/{frequency}")
+    public ResponseEntity<ApiResponse<DeviceActivateResponse>> activateDevice(
+            @PathVariable Integer vineId,
+            @PathVariable Integer deviceId,
+            @PathVariable Integer frequency,
+            Principal principal
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(deviceService.activateDevice(vineId, deviceId, frequency, principal), HttpStatus.OK.value()));
+    }
+
+    /**
+     * Deactivate the device
+     *
+     * @param vineId    the vine id
+     * @param deviceId  the device id
+     * @param principal the principal object containing the user details
+     * @return the response object containing the device details
+     */
+    @Operation(
+            summary = "Deactivate the device",
+            description = "Deactivate the device in a vineyard with the provided details"
+    )
+    @PostMapping("{deviceId}/deactivate")
+    public ResponseEntity<ApiResponse<Void>> deactivateDevice(
+            @PathVariable Integer vineId,
+            @PathVariable Integer deviceId,
+            Principal principal
+    ) {
+        deviceService.deactivateDevice(vineId, deviceId, principal);
+        return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
+    }
 }

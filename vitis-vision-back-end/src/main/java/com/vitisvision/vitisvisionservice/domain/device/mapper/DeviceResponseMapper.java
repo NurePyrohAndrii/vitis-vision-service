@@ -23,6 +23,7 @@ public class DeviceResponseMapper implements Function<Device, DeviceResponse> {
                 .installationDate(device.getInstallationDate().toString())
                 .deviceType(device.getDeviceType())
                 .manufacturer(device.getManufacturer())
+                .isActive(device.isActive())
                 .lastUpdatedAt(lastUpdatedAt != null ? lastUpdatedAt.toString() : null)
                 .lastUpdatedBy(device.getLastUpdatedBy())
                 .createdBy(device.getCreatedBy())
