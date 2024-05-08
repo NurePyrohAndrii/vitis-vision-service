@@ -2,6 +2,7 @@ package com.vitisvision.vitisvisionservice.common.dbbackup;
 
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/db-backups")
 @RequiredArgsConstructor
+@Tag(name = "Database Backup", description = "APIs to perform database backup operations")
 public class DbBackupController {
 
     /**

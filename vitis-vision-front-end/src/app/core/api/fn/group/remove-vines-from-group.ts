@@ -1,0 +1,36 @@
+/* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { StrictHttpResponse } from '../../strict-http-response';
+import { RequestBuilder } from '../../request-builder';
+
+import { ApiResponseVoid } from '../../models/api-response-void';
+import { VinesGroupAssignmentRequest } from '../../models/vines-group-assignment-request';
+
+export interface RemoveVinesFromGroup$Params {
+  groupId: number;
+  vineyardId: number;
+      body: VinesGroupAssignmentRequest
+}
+
+export function removeVinesFromGroup(http: HttpClient, rootUrl: string, params: RemoveVinesFromGroup$Params, context?: HttpContext): Observable<StrictHttpResponse<ApiResponseVoid>> {
+  const rb = new RequestBuilder(rootUrl, removeVinesFromGroup.PATH, 'delete');
+  if (params) {
+    rb.path('groupId', params.groupId, {});
+    rb.path('vineyardId', params.vineyardId, {});
+    rb.body(params.body, 'application/json');
+  }
+
+  return http.request(
+    rb.build({ responseType: 'blob', accept: '*/*', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<ApiResponseVoid>;
+    })
+  );
+}
+
+removeVinesFromGroup.PATH = '/api/v1/vineyards/{vineyardId}/groups/{groupId}/vines';

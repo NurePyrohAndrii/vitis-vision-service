@@ -92,7 +92,7 @@ public class AuthService {
             userRepository.save(user);
 
             // generate and save tokens
-            String accessToken = jwtService.generateAccessToken(Map.of(), user);
+            String accessToken = jwtService.generateAccessToken(Map.of("role", "USER"), user);
             saveUserToken(user, accessToken, TokenType.ACCESS);
 
             String refreshToken = jwtService.generateRefreshToken(user);
@@ -126,7 +126,7 @@ public class AuthService {
         // generate and save tokens
         User user = (User) authentication.getPrincipal();
 
-        String jwt = jwtService.generateAccessToken(Map.of(), user);
+        String jwt = jwtService.generateAccessToken(Map.of("role", user.getRole().toString()), user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
 
@@ -164,7 +164,7 @@ public class AuthService {
                     .orElseThrow(() -> new ResourceNotFoundException("user.not.found.with.token"));
 
             if (jwtService.isTokenValid(refreshToken, user)) {
-                String accessToken = jwtService.generateAccessToken(Map.of(), user);
+                String accessToken = jwtService.generateAccessToken(Map.of("role", user.getRole().toString()), user);
                 revokeAllUserAccessTokens(user);
                 saveUserToken(user, accessToken, TokenType.ACCESS);
                 return AuthResponse.builder()
