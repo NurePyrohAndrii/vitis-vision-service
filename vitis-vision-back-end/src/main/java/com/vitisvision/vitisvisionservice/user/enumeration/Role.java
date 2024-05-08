@@ -65,7 +65,8 @@ public enum Role {
                     BLOCK_DELETE,
                     STAFF_READ,
                     DEVICE_ACTIVATE,
-                    DEVICE_DEACTIVATE
+                    DEVICE_DEACTIVATE,
+                    BLOCK_REPORT
             )
     ),
 

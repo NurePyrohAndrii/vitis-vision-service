@@ -49,7 +49,7 @@ application:
     command: cmd /c start /wait
 
 device:
-  ip-address: http://localhost:8180/
+  ip-address: http://host.docker.internal:8180/
   endpoint:
     activate: /start
     deactivate: /stop

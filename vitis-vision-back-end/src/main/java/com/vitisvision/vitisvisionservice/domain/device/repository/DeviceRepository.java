@@ -2,7 +2,9 @@ package com.vitisvision.vitisvisionservice.domain.device.repository;
 
 import com.vitisvision.vitisvisionservice.domain.device.entity.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,18 +13,11 @@ import java.util.Optional;
 public interface DeviceRepository extends JpaRepository<Device, Integer> {
 
     /**
-     * Find the device by name.
+     * Find device ids by block id.
      *
-     * @param name the name of the device
-     * @return the device object
+     * @param blockId the id of the block
+     * @return the list of device ids
      */
-    Optional<Device> findByName(String name);
-
-    /**
-     * Check if the device exists by name.
-     *
-     * @param name the name of the device
-     * @return true if the device exists, false otherwise
-     */
-    boolean existsByName(String name);
+    @Query("SELECT v.device.id FROM Vine v WHERE v.block.id = :blockId")
+    List<Integer> findDeviceIdsByBlockId(Integer blockId);
 }

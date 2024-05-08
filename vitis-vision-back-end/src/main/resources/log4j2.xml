@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-<!--        Pattern variables-->
+        <!--        Pattern variables-->
         <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd'T'HH:mm:ss.SSSXXX</Property>
         <Property name="LOG_EXCEPTION_CONVERSION_WORD">%wEx</Property>
 
-<!--        log file paths variables-->
+        <!--        log file paths variables-->
         <Property name="LOG_DIR">./app/logs</Property>
         <Property name="LOG_FILE_BULK">${LOG_DIR}/bulk/vitis-vision-service.log</Property>
         <Property name="LOG_FILE_ORM">${LOG_DIR}/orm/vitis-vision-service-orm.log</Property>
         <Property name="LOG_FILE_APPLICATION">${LOG_DIR}/application/vitis-vision-service-application.log</Property>
 
-<!--        Patterns for log output-->
+        <!--        Patterns for log output-->
         <Property name="LOG_PATTERN_FILE">
-            %d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{1.1.1.*} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+            %d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t]
+            %-40.40logger{1.1.1.*} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
         </Property>
         <Property name="LOG_PATTERN_CONSOLE">
-            %clr{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}}{faint} %clr{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=white, ERROR=red, WARN=bright_blue, INFO=black, DEBUG=bright_green, TRACE=blue} %clr{${PID:- } --- [%t]}{faint} %clr{%-40.40logger{1.1.1.*}}{cyan} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+            %clr{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}}{faint}
+            %clr{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=white, ERROR=red, WARN=bright_blue, INFO=black, DEBUG=bright_green,
+            TRACE=blue} %clr{${PID:- } --- [%t]}{faint} %clr{%-40.40logger{1.1.1.*}}{cyan} :
+            %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
         </Property>
 
     </Properties>
@@ -34,7 +38,7 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
-            <DefaultRolloverStrategy max="10" />
+            <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <!-- orm appender is for the hibernate logs -->
@@ -49,7 +53,7 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
-            <DefaultRolloverStrategy max="10" />
+            <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <!-- application appender is for the developed application logs -->
@@ -62,15 +66,15 @@
                 <Pattern>${LOG_PATTERN_FILE}</Pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="10 MB" />
+                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="10" />
+            <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
         <!-- console appender is to write logs in console -->
         <Console
-            name="console-default"
-            target="SYSTEM_OUT">
+                name="console-default"
+                target="SYSTEM_OUT">
             <PatternLayout>
                 <Pattern>${LOG_PATTERN_CONSOLE}</Pattern>
             </PatternLayout>
@@ -78,24 +82,24 @@
 
     </Appenders>
     <Loggers>
-
-<!--        Logger for the root package-->
+        <!-- Commented all files appender to not crete file within docker container-->
+        <!--        Logger for the root package-->
         <Root level="INFO">
-            <AppenderRef ref="bulk"/>
+            <!--            <AppenderRef ref="bulk"/>-->
             <AppenderRef ref="console-default"/>
         </Root>
 
-<!--        Logger for the application package-->
+        <!--        Logger for the application package-->
         <Logger name="com.vitisvision.vitisvisionservice" level="DEBUG">
 
-<!--            <AppenderRef ref="console-default"/>-->
-            <AppenderRef ref="application"/>
+            <!--            <AppenderRef ref="console-default"/>-->
+            <!--            <AppenderRef ref="application"/>-->
 
         </Logger>
 
-<!--        Logger for the hibernate package-->
+        <!--        Logger for the hibernate package-->
         <Logger name="org.hibernate" level="WARN" additivity="false">
-            <AppenderRef ref="orm"/>
+            <!--            <AppenderRef ref="orm"/>-->
             <AppenderRef ref="console-default"/>
         </Logger>
 

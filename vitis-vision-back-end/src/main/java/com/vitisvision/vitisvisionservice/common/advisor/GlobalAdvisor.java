@@ -115,4 +115,15 @@ public class GlobalAdvisor {
     public ResponseEntity<ApiResponse<List<ApiError>>> handleDuplicateResourceException(DuplicateResourceException e) {
         return advisorUtils.createErrorResponseEntity(e, HttpStatus.CONFLICT);
     }
+
+    /**
+     * Handle illegal argument exception that occurs when an illegal argument is passed to a method.
+     *
+     * @param e the exception object of type {@link IllegalArgumentException}
+     * @return the response entity with the list of errors
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<List<ApiError>>> handleIllegalArgumentException(IllegalArgumentException e) {
+        return advisorUtils.createErrorResponseEntity(e, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -136,6 +136,10 @@ public class UserController {
      * @param pageable pagination info to be applied
      * @return configured response object with user details
      */
+    @Operation(
+            summary = "Get all users",
+            description = "Get all users registered in the application"
+    )
     @GetMapping
     public ResponseEntity<ApiResponse<PageableResponse<List<UserResponse>>>> getUsers(@PageableDefault(sort = "lastName") Pageable pageable) {
         Page<UserResponse> users = userService.getUsers(pageable);
@@ -150,6 +154,10 @@ public class UserController {
      * @param userId user id to be deleted
      * @return response entity with response code
      */
+    @Operation(
+            summary = "Delete user with id",
+            description = "Delete the user with the given id"
+    )
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse<Void>> deleteUserById(@PathVariable Integer userId) {
         userService.deleteUserById(userId);
@@ -162,6 +170,10 @@ public class UserController {
      * @param request details of user to be blocked
      * @return response entity with status code
      */
+    @Operation(
+            summary = "Block user",
+            description = "Block the user with the provided details"
+    )
     @PostMapping("/block")
     public ResponseEntity<ApiResponse<Void>> blockUser(@RequestBody @Valid UserBlockRequest request) {
         userService.blockUser(request);
@@ -174,6 +186,10 @@ public class UserController {
      * @param request details of user to be unblocked
      * @return response entity with status code
      */
+    @Operation(
+            summary = "Unblock user",
+            description = "Unblock the user with the provided details"
+    )
     @PostMapping("/unblock")
     public ResponseEntity<ApiResponse<Void>> unblockUser(@RequestBody @Valid UserBlockRequest request) {
         userService.unblockUser(request);

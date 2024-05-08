@@ -29,6 +29,7 @@ public enum Permission {
     BLOCK_READ("block:read"),
     BLOCK_WRITE("block:write"),
     BLOCK_DELETE("block:delete"),
+    BLOCK_REPORT("block:report"),
 
     VINE_READ("vine:read"),
     VINE_WRITE("vine:write"),

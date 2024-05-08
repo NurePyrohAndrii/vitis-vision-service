@@ -3,6 +3,7 @@ package com.vitisvision.vitisvisionservice.controller.vineyard.block;
 import com.vitisvision.vitisvisionservice.common.response.ApiResponse;
 import com.vitisvision.vitisvisionservice.common.response.PageableResponse;
 import com.vitisvision.vitisvisionservice.common.util.PaginationUtils;
+import com.vitisvision.vitisvisionservice.domain.block.dto.BlockReportRequest;
 import com.vitisvision.vitisvisionservice.domain.block.dto.BlockRequest;
 import com.vitisvision.vitisvisionservice.domain.block.dto.BlockResponse;
 import com.vitisvision.vitisvisionservice.domain.block.service.BlockService;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -150,6 +153,38 @@ public class BlockController {
     ) {
         blockService.deleteBlock(vineyardId, blockId, principal);
         return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK.value()));
+    }
+
+    /**
+     * Generate a report for a block in a vineyard
+     *
+     * @param vineyardId         the id of the vineyard to which the block belongs
+     * @param blockId            the id of the block to generate the report for
+     * @param blockReportRequest the request object containing the report details
+     * @param principal          the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @Operation(
+            summary = "Generate a report for a block in a vineyard",
+            description = "Generate a report for a block in a vineyard with the provided details"
+    )
+    @PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE, value = "{blockId}/_report")
+    public ResponseEntity<byte[]> generateBlockReport(
+            @PathVariable Integer vineyardId,
+            @PathVariable Integer blockId,
+            @RequestBody @Valid BlockReportRequest blockReportRequest,
+            Principal principal
+    ) {
+        byte[] csvContent = blockService.generateBlockReport(blockReportRequest, vineyardId, blockId, principal);
+
+        HttpHeaders headers = new HttpHeaders();
+        String reportName = "report-block-" + blockId + ".csv";
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + reportName);
+        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE));
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csvContent);
     }
 
 }

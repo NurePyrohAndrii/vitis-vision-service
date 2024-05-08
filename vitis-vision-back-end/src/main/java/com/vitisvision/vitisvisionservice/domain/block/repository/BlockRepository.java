@@ -1,13 +1,18 @@
 package com.vitisvision.vitisvisionservice.domain.block.repository;
 
-
 import com.vitisvision.vitisvisionservice.domain.block.entity.Block;
+import com.vitisvision.vitisvisionservice.domain.device.entity.DeviceData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository class for handling block details in the database.
+ */
 public interface BlockRepository extends JpaRepository<Block, Integer> {
 
     /**
