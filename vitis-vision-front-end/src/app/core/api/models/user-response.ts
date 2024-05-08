@@ -11,4 +11,5 @@ export interface UserResponse {
   lastUpdatedBy?: string;
   role?: string;
   vineyardId?: string;
+  isBlocked?: boolean;
 }

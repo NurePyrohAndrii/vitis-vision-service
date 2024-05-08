@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-6">
+
+      <h4 class="mb-3">Vitis Vision Users</h4>
+      <p *ngIf="users.length == 0">No users there</p>
+      <div *ngFor="let user of users; index as i">
+        <hr>
+        <p>First name: {{ user.firstName }}</p>
+        <p>Last name: {{ user.lastName }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Role: {{ user.role }}</p>
+        <p>Blocked: {{ user.isBlocked ? 'Yes' : 'No'}}</p>
+        <button [disabled]="user.isBlocked" class="btn btn-warning" (click)="blockUser(user.id)" >Block</button>
+        <button [disabled]="!user.isBlocked" class="btn btn-warning mx-3" (click)="unblockUser(user.id)" >Unblock</button>
+        <button class="btn btn-outline-danger" (click)="deleteUser(user.id)" >Delete</button>
+      </div>
+
+    </div>
+
+    <div class="col-md-6">
+      <h4>Backups</h4>
+      <p *ngIf="dbBackups.length == 0">No backups there</p>
+      <div *ngFor="let backup of dbBackups; index as i">
+        <hr>
+        <p>Backup name: {{ backup.fileName }}</p>
+      </div>
+      <button class="btn btn-outline-dark mt-3" (click)="createBackup()">Create backup</button>
+    </div>
+
+  </div>
+</div>

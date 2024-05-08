@@ -58,14 +58,30 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  changePassword() {
+    this.errorMessages = [];
+    this.userService.changePassword({
+      body: this.passwordChangeRequest
+    }).subscribe({
+      next: () => {
+        this.changePasswordMode = false;
+      },
+      error: (err) => {
+        this.errorMessages = err.error.errors;
+      }
+    });
+  }
+
   toggleEditProfile(): void {
     this.editProfileMode = !this.editProfileMode;
     this.changePasswordMode = false;
+    this.errorMessages = [];
   }
 
   toggleChangePassword(): void {
     this.changePasswordMode = !this.changePasswordMode;
     this.editProfileMode = false;
+    this.errorMessages = [];
   }
 
   private getVineyard(id: number): void {
@@ -77,5 +93,4 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-
 }

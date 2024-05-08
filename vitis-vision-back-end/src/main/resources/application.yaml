@@ -28,7 +28,7 @@ spring:
 
 # Server configuration
 server:
-  port: 8182
+  port: 8181
 
 # JWT configuration
 application:
@@ -43,7 +43,7 @@ application:
     script:
       path: ./infrastructure/db/backup/db-backup.lnk
     result:
-      path: C:\Projects\vitis-vision-service\app\backups\
+      path: C:\Projects\vitis-vision-service\vitis-vision-back-end\app\backups\
       name: db-backup
       extension: .sql
     command: cmd /c start /wait

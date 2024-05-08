@@ -29,6 +29,7 @@ public class UserResponseMapper implements Function<User, UserResponse> {
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .vineyardId(userVineyard != null ? userVineyard.getId().toString() : null)
+                .isBlocked(user.isBlocked())
                 .build();
     }
 }

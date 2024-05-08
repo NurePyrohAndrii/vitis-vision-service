@@ -38,4 +38,10 @@ public class UserResponse extends BaseResponse {
      */
     private String vineyardId;
 
+    /**
+     * The vineyard name of the user.
+     */
+    private boolean isBlocked;
+
+
 }

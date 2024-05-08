@@ -1,6 +1,8 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
+
+
       <h1 class="mb-4">Profile</h1>
       <div class="row">
         <div class="col-md-6">
@@ -21,8 +23,9 @@
         <div class="col-md-6">
           <h3>Vineyard info</h3>
           <ng-container *ngIf="vineyard">
-            <p>Vineyard DBA: <a [routerLink]="['/vineyard', user.vineyardId]" class="link-dark">{{ vineyard.dbaName }}</a></p>
-            <p>Company: {{vineyard.companyName}}</p>
+            <p>Vineyard DBA: <a [routerLink]="['/vineyard', user.vineyardId]"
+                                class="link-dark">{{ vineyard.dbaName }}</a></p>
+            <p>Company: {{ vineyard.companyName }}</p>
             <p>Role: {{ user.role }}</p>
           </ng-container>
           <ng-container *ngIf="!vineyard">
@@ -32,30 +35,65 @@
         </div>
       </div>
 
+
       <div class="row">
         <div class="col-md-12">
           <h3>Actions</h3>
 
-          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">Edit profile</button>
+          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">Edit
+            profile
+          </button>
           <button *ngIf="editProfileMode" (click)="toggleEditProfile()" class="btn btn-dark mb-3">Hide</button>
 
-          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Change password</button>
-          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Hide</button>
+          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Change
+            password
+          </button>
+          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Hide
+          </button>
+
+          <div class="alert alert-danger" role="alert" *ngIf="errorMessages.length">
+            <p *ngFor="let msg of errorMessages">{{msg.message}}</p>
+          </div>
 
           <div *ngIf="editProfileMode">
             <h4>Edit profile</h4>
             <div class="mb-3">
               <label for="firstName" class="form-label">First name</label>
-              <input [(ngModel)]="updateProfileRequest.firstName" type="text" class="form-control" id="firstName" placeholder="First name">
+              <input [(ngModel)]="updateProfileRequest.firstName" type="text" class="form-control" id="firstName"
+                     placeholder="First name">
             </div>
             <div class="mb-3">
               <label for="lastName" class="form-label">Last name</label>
-              <input [(ngModel)]="updateProfileRequest.lastName" type="text" class="form-control" id="lastName" placeholder="Last name">
+              <input [(ngModel)]="updateProfileRequest.lastName" type="text" class="form-control" id="lastName"
+                     placeholder="Last name">
             </div>
             <button (click)="updateProfile()" class="btn btn-dark">Update</button>
           </div>
 
+          <div *ngIf="changePasswordMode">
+            <h4>Change password</h4>
+            <div class="mb-3">
+              <label for="oldPassword" class="form-label">Old password</label>
+              <input [(ngModel)]="passwordChangeRequest.currentPassword" type="password" class="form-control"
+                     id="oldPassword" placeholder="Old password">
+            </div>
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New password</label>
+              <input [(ngModel)]="passwordChangeRequest.newPassword" type="password" class="form-control"
+                     id="newPassword" placeholder="New password">
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm password</label>
+              <input [(ngModel)]="passwordChangeRequest.confirmPassword" type="password" class="form-control"
+                     id="confirmPassword" placeholder="Confirm password">
+            </div>
+            <button (click)="changePassword()" class="btn btn-dark">Change</button>
+          </div>
+
         </div>
+      </div>
+
+
     </div>
   </div>
 </div>

@@ -43,7 +43,7 @@ export class TokenService {
   }
 
   isUserAdmin() {
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("access_token");
     if (token) {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
