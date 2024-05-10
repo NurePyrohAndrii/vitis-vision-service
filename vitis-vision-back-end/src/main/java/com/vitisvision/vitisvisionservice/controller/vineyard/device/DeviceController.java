@@ -53,11 +53,10 @@ public class DeviceController {
                 .body(ApiResponse.success(response, HttpStatus.CREATED.value()));
     }
 
-    /**
+        /**
      * Get the device details by id
      *
      * @param vineId    the vine id
-     * @param deviceId  the device id
      * @param principal the principal object containing the user details
      * @return the response object containing the device details
      */
@@ -65,13 +64,12 @@ public class DeviceController {
             summary = "Get the device details by id",
             description = "Get the device details by id in a vineyard with the provided details"
     )
-    @GetMapping("/{deviceId}")
+    @GetMapping
     public ResponseEntity<ApiResponse<DeviceResponse>> getDevice(
             @PathVariable Integer vineId,
-            @PathVariable Integer deviceId,
             Principal principal
     ) {
-        return ResponseEntity.ok(ApiResponse.success(deviceService.getDevice(deviceId, vineId, principal), HttpStatus.OK.value()));
+        return ResponseEntity.ok(ApiResponse.success(deviceService.getDevice(vineId, principal), HttpStatus.OK.value()));
     }
 
     /**

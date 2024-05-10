@@ -4,9 +4,9 @@
   </a>
 
   <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-    <li><a routerLink="/organization" class="nav-link px-3 link-dark">My Organization</a></li>
+    <li *ngIf="isUserAuthenticated()"><a routerLink="/vineyard" class="nav-link px-3 link-dark">Vineyard</a></li>
     <li *ngIf="isUserAuthenticated()" ><a routerLink="/profile" class="nav-link px-3 link-dark">Profile</a></li>
-    <li><a routerLink="/userplays" class="nav-link px-3 link-dark">Plays</a></li>
+<!--    <li><a routerLink="/userplays" class="nav-link px-3 link-dark">Plays</a></li>-->
   </ul>
 
   <div class="col-md-3 text-end">

@@ -47,6 +47,10 @@
       "description": "Endpoints for managing vineyards details"
     },
     {
+      "name": "Database Backup",
+      "description": "APIs to perform database backup operations"
+    },
+    {
       "name": "User",
       "description": "Endpoints for user management"
     },
@@ -590,46 +594,6 @@
       }
     },
     "/api/v1/vines/{vineId}/devices/{deviceId}": {
-      "get": {
-        "tags": [
-          "Device"
-        ],
-        "summary": "Get the device details by id",
-        "description": "Get the device details by id in a vineyard with the provided details",
-        "operationId": "getDevice",
-        "parameters": [
-          {
-            "name": "vineId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "deviceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseDeviceResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "put": {
         "tags": [
           "Device"
@@ -1305,7 +1269,7 @@
         ],
         "summary": "Create a new block in a vineyard",
         "description": "Create a new block in a vineyard with the provided details",
-        "operationId": "createVineyard_1",
+        "operationId": "creteBlock",
         "parameters": [
           {
             "name": "vineyardId",
@@ -1398,6 +1362,37 @@
       }
     },
     "/api/v1/vines/{vineId}/devices": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Get the device details by id",
+        "description": "Get the device details by id in a vineyard with the provided details",
+        "operationId": "getDevice",
+        "parameters": [
+          {
+            "name": "vineId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseDeviceResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Device"
@@ -1600,7 +1595,7 @@
     "/api/v1/db-backups": {
       "get": {
         "tags": [
-          "db-backup-controller"
+          "Database Backup"
         ],
         "summary": "Get backups",
         "description": "Get a list of file names of available backups in the configured folder",
@@ -1620,7 +1615,7 @@
       },
       "post": {
         "tags": [
-          "db-backup-controller"
+          "Database Backup"
         ],
         "summary": "Backup database",
         "description": "Backup database and store the result in the configured folder",
@@ -1714,6 +1709,54 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseVineResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/blocks/{blockId}/vines/without-certain-group/{groupId}": {
+      "post": {
+        "tags": [
+          "Vine"
+        ],
+        "operationId": "getVinesWithoutCertainGroup",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponsePageableResponseListVineResponse"
                 }
               }
             }
@@ -2265,17 +2308,17 @@
             "type": "string"
           },
           "rowSpacing": {
-            "maximum": 1000.0,
+            "maximum": 1000,
             "exclusiveMaximum": false,
-            "minimum": 0.0,
+            "minimum": 0,
             "exclusiveMinimum": false,
             "type": "number",
             "format": "double"
           },
           "vineSpacing": {
-            "maximum": 1000.0,
+            "maximum": 1000,
             "exclusiveMaximum": false,
-            "minimum": 0.0,
+            "minimum": 0,
             "exclusiveMinimum": false,
             "type": "number",
             "format": "double"
@@ -2509,6 +2552,9 @@
           },
           "vineyardId": {
             "type": "string"
+          },
+          "blocked": {
+            "type": "boolean"
           }
         }
       },
@@ -2709,6 +2755,83 @@
           }
         }
       },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ApiResponsePageableResponseListVineResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageableResponseListVineResponse"
+          }
+        }
+      },
+      "PageMetadata": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageableResponseListVineResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VineResponse"
+            }
+          },
+          "pageMetadata": {
+            "$ref": "#/components/schemas/PageMetadata"
+          }
+        }
+      },
       "RegisterRequest": {
         "required": [
           "email",
@@ -2816,27 +2939,6 @@
           }
         }
       },
-      "Pageable": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
       "ApiResponsePageableResponseListVineyardResponse": {
         "type": "object",
         "properties": {
@@ -2855,27 +2957,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/PageableResponseListVineyardResponse"
-          }
-        }
-      },
-      "PageMetadata": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -3130,41 +3211,6 @@
         "properties": {
           "fileName": {
             "type": "string"
-          }
-        }
-      },
-      "ApiResponsePageableResponseListVineResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            }
-          },
-          "data": {
-            "$ref": "#/components/schemas/PageableResponseListVineResponse"
-          }
-        }
-      },
-      "PageableResponseListVineResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VineResponse"
-            }
-          },
-          "pageMetadata": {
-            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       }

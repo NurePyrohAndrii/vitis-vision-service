@@ -19,6 +19,11 @@ const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'vineyard',
+    loadChildren: () => import('./modules/vineyard/vineyard.module').then(m => m.VineyardModule),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     loadChildren: () => import('./modules/common/common.module').then(m => m.CommonModule)
   },

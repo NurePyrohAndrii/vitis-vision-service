@@ -31,7 +31,9 @@ public class PaginationUtils {
         }
 
         headers.add("Link", generatePageLinkHeader(Pageable.ofSize(pageable.getPageSize()), "first"));
-        headers.add("Link", generatePageLinkHeader(pageable.withPage(page.getTotalPages() - 1), "last"));
+
+        if (page.getTotalPages() > 0)
+            headers.add("Link", generatePageLinkHeader(pageable.withPage(page.getTotalPages() - 1), "last"));
 
         return headers;
     }

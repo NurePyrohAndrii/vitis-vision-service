@@ -110,6 +110,27 @@ public class VineService {
     }
 
     /**
+     * Get all vines in a block without a certain group
+     *
+     * @param pageable  the pageable object containing the pagination details
+     * @param blockId   the block id
+     * @param groupId   the group id
+     * @param principal the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @PreAuthorize("hasAuthority('vine:read')")
+    @Transactional
+    public Page<VineResponse> getVinesWithoutCertainGroup(
+            Pageable pageable, Integer blockId,
+            Integer groupId, Principal principal
+    ) {
+        // Ensure that the user has access to the block
+        blockService.ensureBlockAccess(blockId, principal);
+        return vineRepository.findAllByBlock_IdAndGroupsNotContaining(groupId, pageable)
+                .map(vineResponseMapper);
+    }
+
+    /**
      * Update the vine details in a block with the provided details
      *
      * @param vineRequest the request object containing the vine details

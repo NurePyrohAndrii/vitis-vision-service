@@ -1,12 +1,15 @@
 package com.vitisvision.vitisvisionservice.domain.device.entity;
 
 import com.vitisvision.vitisvisionservice.common.entity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Device entity class.
@@ -57,4 +60,11 @@ public class Device extends BaseEntity {
      */
     @Column(nullable = false)
     private boolean isActive;
+
+    /**
+     * Represents the device data.
+     */
+    @OneToMany(mappedBy = "device", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<DeviceData> deviceData;
 }

@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TokenService} from "../../api/token/token.service";
 import {Router} from "@angular/router";
+import {UserService} from "../../api/services/user.service";
+import {UserResponse} from "../../api/models/user-response";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+
+  user: UserResponse = {};
 
   constructor(
     private tokenService: TokenService,
     private router: Router,
-
+    private userService: UserService
   ) {}
 
   isUserAuthenticated = (): boolean => {
@@ -27,6 +31,16 @@ export class HeaderComponent {
 
   checkIsUserAdmin() {
     return this.tokenService.isUserAdmin();
+  }
+
+  ngOnInit(): void {
+    if (this.isUserAuthenticated()) {
+      this.userService.getMe().subscribe({
+        next: user => {
+          this.user = user.data as UserResponse;
+        }
+      });
+    }
   }
 
 }

@@ -166,20 +166,26 @@ public class DeviceService {
     }
 
     /**
-     * Get the device details
+     * Get the device details by vine
      *
      * @param vineId    the vine id
-     * @param deviceId  the device id
      * @param principal the principal object containing the user details
      * @return the response object containing the device details
      */
     @PreAuthorize("hasAuthority('device:read')")
     @Transactional
-    public DeviceResponse getDevice(Integer vineId, Integer deviceId, Principal principal) {
+    public DeviceResponse getDevice(Integer vineId, Principal principal) {
         // Ensure the vine exists and the user has access to it
-        Map<Vine, Device> accessedDetails = ensureOperationAccess(vineId, deviceId, principal);
+        Vine upgradedVine = vineService.ensureVineAccess(vineId, principal);
+
+        Device device = upgradedVine.getDevice();
+
+        if (device == null) {
+            throw new DeviceNotFoundException("device.not.found.error");
+        }
+
         // Return the device details
-        return deviceResponseMapper.apply(accessedDetails.values().iterator().next());
+        return deviceResponseMapper.apply(device);
     }
 
     /**
@@ -290,5 +296,6 @@ public class DeviceService {
 
         return Map.of(upgradedVine, operateddDevice);
     }
+
 }
 

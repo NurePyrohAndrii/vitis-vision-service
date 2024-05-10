@@ -1,0 +1,212 @@
+<div class="container">
+  <div class="row">
+
+    <!--Vine Operations-->
+    <div class="col-5">
+      <!--Vine details-->
+      <div>
+        <h3>Vine details</h3>
+        <p><b>Vine number:</b> {{ vine.vineNumber }}</p>
+        <p><b>Row number:</b> {{ vine.rowNumber }}</p>
+        <p><b>Variety:</b> {{ vine.variety }}</p>
+        <p><b>Boles count:</b> {{ vine.bolesCount }}</p>
+        <p><b>Planting date:</b> {{ vine.plantingDate }}</p>
+        <p><b>Formation type:</b> {{ vine.formationType }}</p>
+        <p><b>Creation Date:</b> {{ vine.createdAt | date:'long' }}</p>
+        <p><b>Creator Name:</b> {{ vine.createdBy }}</p>
+        <p><b>Last Modified
+          Date:</b> {{ vine.lastUpdatedAt != null ? vine.lastUpdatedAt : 'No modifications yet' }}</p>
+        <p><b>Last Modified
+          By:</b> {{ vine.lastUpdatedBy != null ? vine.lastUpdatedBy : 'No modifications yet' }}</p>
+      </div>
+      <!--Edit, delete vine-->
+      <div>
+        <a *ngIf="!editVineMode" (click)="toggleEditVineMode()">
+          <button type="button" class="btn btn-dark mb-4">Edit Vine Info</button>
+        </a>
+        <a *ngIf="editVineMode" (click)="toggleEditVineMode()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
+
+        <a *ngIf="!deleteVineMode" (click)="toggleDeleteVineMode()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Delete Vine</button>
+        </a>
+        <a *ngIf="deleteVineMode" (click)="toggleDeleteVineMode()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+        </a>
+        <a *ngIf="deleteVineMode" (click)="deleteVine()">
+          <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+        </a>
+
+        <div *ngIf="editVineMode">
+          <h3 class="form-signin-heading">Edit Vine Info</h3>
+
+          <div class="alert alert-danger" role="alert" *ngIf="editVineErrorMessages.length">
+            <p *ngFor="let msg of editVineErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <br/>
+          <label for="vineNumber" class="sr-only">Vine number</label>
+          <input type="text" id="vineNumber" name="vineNumber" [(ngModel)]="editVineRequest.vineNumber"
+                 class="form-control mb-4" placeholder="enter vine number here" required>
+
+          <label for="rowNumber" class="sr-only">Row number</label>
+          <input type="text" id="rowNumber" name="rowNumber" [(ngModel)]="editVineRequest.rowNumber"
+                 class="form-control mb-4" placeholder="enter row number here" required>
+
+          <label for="variety" class="sr-only">Variety</label>
+          <input type="text" id="variety" name="variety" [(ngModel)]="editVineRequest.variety"
+                 class="form-control mb-4" placeholder="enter variety here" required>
+
+          <label for="bolesCount" class="sr-only">Boles count</label>
+          <input type="text" id="bolesCount" name="bolesCount" [(ngModel)]="editVineRequest.bolesCount"
+                 class="form-control mb-4" placeholder="enter boles count here" required>
+
+          <label for="plantingDate" class="sr-only">Planting date</label>
+          <input type="date" id="plantingDate" name="plantingDate" [(ngModel)]="editVineRequest.plantingDate"
+                 class="form-control mb-4" placeholder="enter planting date here" required>
+
+          <label for="formationType" class="sr-only">Formation type</label>
+          <input type="text" id="formationType" name="formationType" [(ngModel)]="editVineRequest.formationType"
+                 class="form-control mb-4" placeholder="enter formation type here" required>
+
+          <button class="btn btn-dark mb-4" (click)="editVine()" [disabled]="!editVineRequest.vineNumber
+        || !editVineRequest.rowNumber || !editVineRequest.variety || !editVineRequest.bolesCount
+        || !editVineRequest.plantingDate || !editVineRequest.formationType">Edit
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-1"></div>
+
+    <!--Device Operations-->
+    <div class="col-5" *ngIf="device.id">
+      <!--Device details-->
+      <div>
+        <h3>Vine device details</h3>
+        <p><b>Device name:</b> {{ device.name }}</p>
+        <p><b>Installation date:</b> {{ device.installationDate }}</p>
+        <p><b>Description:</b> {{ device.description }}</p>
+        <p><b>Device type:</b> {{ device.deviceType }}</p>
+        <p><b>Manufacturer:</b> {{ device.manufacturer }}</p>
+        <p><b>Active:</b> {{ device.active }}</p>
+        <p><b>Creation Date:</b> {{ device.createdAt | date:'long' }}</p>
+        <p><b>Creator Name:</b> {{ device.createdBy }}</p>
+        <p><b>Last Modified Date:</b> {{ device.lastUpdatedAt != null ? device.lastUpdatedAt : 'No modifications yet' }}
+        </p>
+        <p><b>Last Modified By:</b> {{ device.lastUpdatedBy != null ? device.lastUpdatedBy : 'No modifications yet' }}
+        </p>
+      </div>
+      <!--Edit, delete device-->
+      <div>
+        <a *ngIf="!editDeviceMode" (click)="toggleEditDeviceMode()">
+          <button type="button" class="btn btn-dark mb-4">Edit Device Info</button>
+        </a>
+        <a *ngIf="editDeviceMode" (click)="toggleEditDeviceMode()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
+
+        <a *ngIf="!deleteDeviceMode" (click)="toggleDeleteDeviceMode()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Delete Device</button>
+        </a>
+
+        <a *ngIf="deleteDeviceMode" (click)="toggleDeleteDeviceMode()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+        </a>
+
+        <a *ngIf="deleteDeviceMode" (click)="deleteDevice()">
+          <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+        </a>
+
+        <div *ngIf="editDeviceMode">
+          <h3 class="form-signin-heading">Edit Device Info</h3>
+
+          <div class="alert alert-danger" role="alert" *ngIf="editDeviceErrorMessages.length">
+            <p *ngFor="let msg of editDeviceErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <br/>
+          <label for="editName" class="sr-only">Device name</label>
+          <input type="text" id="editName" name="editName" [(ngModel)]="deviceRequest.name"
+                 class="form-control mb-4" placeholder="enter name of the device here" required>
+
+          <label for="editDescription" class="sr-only">Description</label>
+          <input type="text" id="editDescription" name="editDescription" [(ngModel)]="deviceRequest.description"
+                 class="form-control mb-4" placeholder="enter description of the device here" required>
+
+          <label for="editInstallationDate" class="sr-only">Installation date</label>
+          <input type="date" id="editInstallationDate" name="editInstallationDate"
+                 [(ngModel)]="deviceRequest.installationDate"
+                 class="form-control mb-4" placeholder="enter installation date of the device here" required>
+
+          <label for="editDeviceType" class="sr-only">Device type</label>
+          <input type="text" id="editDeviceType" name="editDeviceType" [(ngModel)]="deviceRequest.deviceType"
+                 class="form-control mb-4" placeholder="enter device type here" required>
+
+          <label for="editManufacturer" class="sr-only">Manufacturer</label>
+          <input type="text" id="editManufacturer" name="editManufacturer" [(ngModel)]="deviceRequest.manufacturer"
+                 class="form-control mb-4" placeholder="enter manufacturer of the device here" required>
+
+          <button class="btn btn-dark mb-4" (click)="editDevice()" [disabled]="!deviceRequest.name
+        || !deviceRequest.description || !deviceRequest.installationDate || !deviceRequest.deviceType
+        || !deviceRequest.manufacturer">Edit
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+      <!--Create a device if no device assigned-->
+    <div class="col-5" *ngIf="!device.id">
+        <h3>Vine device details</h3>
+        <h5>No device assigned to this vine</h5>
+        <h5>You can create a new device for this vine</h5>
+        <a *ngIf="!createDeviceMode" (click)="toggleCreateDeviceMode()">
+          <button type="button" class="btn btn-dark mb-4">Create a Device</button>
+        </a>
+        <a *ngIf="createDeviceMode" (click)="toggleCreateDeviceMode()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
+
+        <div *ngIf="createDeviceMode">
+          <h5 class="form-signin-heading">Create a Device</h5>
+
+          <div class="alert alert-danger" role="alert" *ngIf="createDeviceErrorMessages.length">
+            <p *ngFor="let msg of createDeviceErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <br/>
+          <label for="name" class="sr-only">Device name</label>
+          <input type="text" id="name" name="name" [(ngModel)]="deviceRequest.name"
+                 class="form-control mb-4" placeholder="enter name of the device here" required>
+
+          <label for="description" class="sr-only">Description</label>
+          <input type="text" id="description" name="description" [(ngModel)]="deviceRequest.description"
+                 class="form-control mb-4" placeholder="enter description of the device here" required>
+
+          <label for="installationDate" class="sr-only">Installation date</label>
+          <input type="date" id="installationDate" name="installationDate" [(ngModel)]="deviceRequest.installationDate"
+                 class="form-control mb-4" placeholder="enter installation date of the device here" required>
+
+          <label for="deviceType" class="sr-only">Device type</label>
+          <input type="text" id="deviceType" name="deviceType" [(ngModel)]="deviceRequest.deviceType"
+                 class="form-control mb-4" placeholder="enter device type here" required>
+
+          <label for="manufacturer" class="sr-only">Manufacturer</label>
+          <input type="text" id="manufacturer" name="manufacturer" [(ngModel)]="deviceRequest.manufacturer"
+                 class="form-control mb-4" placeholder="enter manufacturer of the device here" required>
+
+          <button class="btn btn-dark mb-4" (click)="createDevice()" [disabled]="!deviceRequest.name
+        || !deviceRequest.description || !deviceRequest.installationDate || !deviceRequest.deviceType
+        || !deviceRequest.manufacturer">Create</button>
+        </div>
+    </div>
+
+
+<!--    TODO: Device activation-->
+
+  </div>
+</div>

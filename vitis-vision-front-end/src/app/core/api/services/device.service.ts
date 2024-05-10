@@ -36,7 +36,7 @@ export class DeviceService extends BaseService {
   }
 
   /** Path part for operation `getDevice()` */
-  static readonly GetDevicePath = '/api/v1/vines/{vineId}/devices/{deviceId}';
+  static readonly GetDevicePath = '/api/v1/vines/{vineId}/devices';
 
   /**
    * Get the device details by id.

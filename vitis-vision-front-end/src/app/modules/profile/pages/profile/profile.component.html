@@ -2,35 +2,35 @@
   <div class="row">
     <div class="col-md-12">
 
-
       <h1 class="mb-4">Profile</h1>
       <div class="row">
         <div class="col-md-6">
           <div class="row">
             <h3>User Info</h3>
-            <p>First Name: {{ user.firstName }}</p>
-            <p>Last Name: {{ user.lastName }}</p>
-            <p>Email: {{ user.email }}</p>
+            <p><b>ID:</b> {{user.id}}</p>
+            <p><b>First Name:</b> {{ user.firstName }}</p>
+            <p><b>Last Name:</b> {{ user.lastName }}</p>
+            <p><b>Email:</b> {{ user.email }}</p>
           </div>
           <div class="row">
             <h3>Account Info</h3>
-            <p>Create time: {{ user.createdAt }}</p>
-            <p>Created by: {{ user.createdBy }}</p>
-            <p>Last update time: {{ user.lastUpdatedAt != null ? user.lastUpdatedAt : "Ain`t updated yet!" }}</p>
-            <p>Last updated by: {{ user.lastUpdatedBy != null ? user.lastUpdatedBy : "Ain`t updated yet!" }}</p>
+            <p><b>Create time:</b> {{ user.createdAt }}</p>
+            <p><b>Created by:</b> {{ user.createdBy }}</p>
+            <p><b>Last update time:</b> {{ user.lastUpdatedAt != null ? user.lastUpdatedAt : "Ain`t updated yet!" }}</p>
+            <p><b>Last updated by:</b> {{ user.lastUpdatedBy != null ? user.lastUpdatedBy : "Ain`t updated yet!" }}</p>
           </div>
         </div>
         <div class="col-md-6">
           <h3>Vineyard info</h3>
-          <ng-container *ngIf="vineyard">
-            <p>Vineyard DBA: <a [routerLink]="['/vineyard', user.vineyardId]"
+          <ng-container *ngIf="vineyard.id">
+            <p><b>Vineyard DBA: </b> <a [routerLink]="['/vineyard']"
                                 class="link-dark">{{ vineyard.dbaName }}</a></p>
-            <p>Company: {{ vineyard.companyName }}</p>
-            <p>Role: {{ user.role }}</p>
+            <p><b>Company:</b> {{ vineyard.companyName }}</p>
+            <p><b>Role:</b> {{ user.role }}</p>
           </ng-container>
-          <ng-container *ngIf="!vineyard">
+          <ng-container *ngIf="!vineyard.id">
             <p>Ain`t applied yet!</p>
-            <p>Role: {{ user.role }}</p>
+            <p><b>Role:</b> {{ user.role }}</p>
           </ng-container>
         </div>
       </div>
@@ -40,16 +40,15 @@
         <div class="col-md-12">
           <h3>Actions</h3>
 
-          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">Edit
-            profile
-          </button>
+          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">Edit profile</button>
           <button *ngIf="editProfileMode" (click)="toggleEditProfile()" class="btn btn-dark mb-3">Hide</button>
 
-          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Change
-            password
-          </button>
-          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Hide
-          </button>
+          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Change password</button>
+          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Hide</button>
+
+          <button *ngIf="!deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3">Delete account</button>
+          <button *ngIf="deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3 mx-3">Hide</button>
+          <button *ngIf="deleteAccountMode" (click)="deleteAccount()" class="btn btn-outline-danger mb-3">Confirm</button>
 
           <div class="alert alert-danger" role="alert" *ngIf="errorMessages.length">
             <p *ngFor="let msg of errorMessages">{{msg.message}}</p>

@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row">
+    <div class="col-5">
+      <h3>Group details</h3>
+      <p><b>Group name:</b> {{ group.name }}</p>
+      <p><b>Description:</b> {{ group.description }}</p>
+      <p><b>Formation Reason:</b> {{ group.formationReason }}</p>
+      <p><b>Creation Date:</b> {{ group.createdAt | date:'long' }}</p>
+      <p><b>Creator Name:</b> {{ group.createdBy }}</p>
+      <p><b>Last Modified
+        Date:</b> {{ group.lastUpdatedAt != null ? group.lastUpdatedAt : 'No modifications yet' }}</p>
+      <p><b>Last Modified
+        By:</b> {{ group.lastUpdatedBy != null ? group.lastUpdatedBy : 'No modifications yet' }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4" *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
+      <a *ngIf="!editGroupMode" (click)="toggleEditGroup()">
+        <button type="button" class="btn btn-dark mb-4">Edit Group Info</button>
+      </a>
+      <a *ngIf="editGroupMode" (click)="toggleEditGroup()">
+        <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+      </a>
+
+      <a *ngIf="!deleteGroupMode" (click)="toggleDeleteGroup()">
+        <button type="button" class="btn btn-danger mx-3 mb-4">Group Block</button>
+      </a>
+      <a *ngIf="deleteGroupMode" (click)="toggleDeleteGroup()">
+        <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+      </a>
+      <a *ngIf="deleteGroupMode" (click)="deleteGroup()">
+        <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+      </a>
+
+      <div *ngIf="editGroupMode">
+        <h3 class="form-signin-heading">Edit Group Info</h3>
+
+        <div class="alert alert-danger" role="alert" *ngIf="editGroupErrorMessages.length">
+          <p *ngFor="let msg of editGroupErrorMessages">{{ msg.message }}</p>
+        </div>
+
+        <br/>
+        <label for="name" class="sr-only">Block name</label>
+        <input type="text" id="name" name="name" [(ngModel)]="editGroupRequest.name"
+               class="form-control mb-4" placeholder="enter name of the block here" required>
+
+        <label for="description" class="sr-only">Description</label>
+        <input type="text" id="description" name="description" [(ngModel)]="editGroupRequest.description"
+               class="form-control mb-4" placeholder="enter description here" required>
+
+        <label for="formationReason" class="sr-only">Formation Reason</label>
+        <input type="text" id="formationReason" name="formationReason" [(ngModel)]="editGroupRequest.formationReason"
+               class="form-control mb-4" placeholder="enter formation reason here" required>
+
+        <button class="btn btn-dark mb-4"
+                (click)="editGroup()"
+                [disabled]="!editGroupRequest.name || !editGroupRequest.description || !editGroupRequest.formationReason">Edit
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

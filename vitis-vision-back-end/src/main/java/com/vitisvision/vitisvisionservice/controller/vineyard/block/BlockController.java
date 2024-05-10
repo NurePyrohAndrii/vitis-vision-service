@@ -55,7 +55,7 @@ public class BlockController {
             description = "Create a new block in a vineyard with the provided details"
     )
     @PostMapping
-    public ResponseEntity<ApiResponse<BlockResponse>> createVineyard(
+    public ResponseEntity<ApiResponse<BlockResponse>> creteBlock(
             @PathVariable Integer vineyardId,
             @RequestBody @Valid BlockRequest vineyardRequest,
             Principal principal

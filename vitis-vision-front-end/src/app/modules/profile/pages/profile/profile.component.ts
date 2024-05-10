@@ -6,6 +6,8 @@ import {VineyardResponse} from "../../../../core/api/models/vineyard-response";
 import {VineyardService} from "../../../../core/api/services/vineyard.service";
 import {ChangePasswordRequest} from "../../../../core/api/models/change-password-request";
 import {UserRequest} from "../../../../core/api/models/user-request";
+import {Router} from "@angular/router";
+import {TokenService} from "../../../../core/api/token/token.service";
 
 @Component({
   selector: 'app-profile',
@@ -23,10 +25,13 @@ export class ProfileComponent implements OnInit {
 
   editProfileMode = false;
   changePasswordMode = false;
+  deleteAccountMode = false;
 
   constructor(
     private userService: UserService,
-    private vineyardService: VineyardService
+    private vineyardService: VineyardService,
+    private tokenService: TokenService,
+    private router: Router
   ) {
   }
 
@@ -72,6 +77,20 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  deleteAccount() {
+    this.errorMessages = [];
+    this.userService.deleteUser().subscribe({
+      next: () => {
+        this.tokenService.accessToken = '';
+        this.tokenService.refreshToken = '';
+        this.router.navigate(['auth/login']).then(r => r);
+      },
+      error: (err) => {
+        this.errorMessages = err.error.errors;
+      }
+    });
+  }
+
   toggleEditProfile(): void {
     this.editProfileMode = !this.editProfileMode;
     this.changePasswordMode = false;
@@ -82,6 +101,10 @@ export class ProfileComponent implements OnInit {
     this.changePasswordMode = !this.changePasswordMode;
     this.editProfileMode = false;
     this.errorMessages = [];
+  }
+
+  toggleDeleteAccount(): void {
+    this.deleteAccountMode = !this.deleteAccountMode;
   }
 
   private getVineyard(id: number): void {

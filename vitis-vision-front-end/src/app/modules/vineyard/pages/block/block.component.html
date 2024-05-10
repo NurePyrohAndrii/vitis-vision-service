@@ -1,0 +1,154 @@
+<div class="container">
+  <div class="row">
+    <div class="col-5">
+      <h3>Block details</h3>
+      <p><b>Block name:</b> {{ block.name }}</p>
+      <p><b>Partitioning type:</b> {{ block.partitioningType }}</p>
+      <p><b>Row spacing:</b> {{ block.rowSpacing }}</p>
+      <p><b>Vine spacing:</b> {{ block.vineSpacing }}</p>
+      <p><b>Row orientation:</b> {{ block.rowOrientation }}</p>
+      <p><b>Trellis system type:</b> {{ block.trellisSystemType }}</p>
+      <p><b>Creation Date:</b> {{ block.createdAt | date:'long' }}</p>
+      <p><b>Creator Name:</b> {{ block.createdBy }}</p>
+      <p><b>Last Modified
+        Date:</b> {{ block.lastUpdatedAt != null ? block.lastUpdatedAt : 'No modifications yet' }}</p>
+      <p><b>Last Modified
+        By:</b> {{ block.lastUpdatedBy != null ? block.lastUpdatedBy : 'No modifications yet' }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4" *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
+      <a *ngIf="!editBlockMode" (click)="toggleEditBlock()">
+        <button type="button" class="btn btn-dark mb-4">Edit Block Info</button>
+      </a>
+      <a *ngIf="editBlockMode" (click)="toggleEditBlock()">
+        <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+      </a>
+
+      <a *ngIf="!deleteBlockMode" (click)="toggleDeleteBlock()">
+        <button type="button" class="btn btn-danger mx-3 mb-4">Delete Block</button>
+      </a>
+      <a *ngIf="deleteBlockMode" (click)="toggleDeleteBlock()">
+        <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+      </a>
+      <a *ngIf="deleteBlockMode" (click)="deleteBlock()">
+        <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+      </a>
+
+      <div *ngIf="editBlockMode">
+        <h3 class="form-signin-heading">Edit Block Info</h3>
+
+        <div class="alert alert-danger" role="alert" *ngIf="editBlockErrorMessages.length">
+          <p *ngFor="let msg of editBlockErrorMessages">{{ msg.message }}</p>
+        </div>
+
+        <br/>
+        <label for="name" class="sr-only">Block name</label>
+        <input type="text" id="name" name="name" [(ngModel)]="editBlockRequest.name"
+               class="form-control mb-4" placeholder="enter name of the block here" required>
+
+        <label for="partitioningType" class="sr-only">Partitioning type</label>
+        <input type="text" id="partitioningType" name="partitioningType" [(ngModel)]="editBlockRequest.partitioningType"
+               class="form-control mb-4" placeholder="enter partitioning type here" required>
+
+        <label for="rowSpacing" class="sr-only">Row spacing</label>
+        <input type="text" id="rowSpacing" name="rowSpacing" [(ngModel)]="editBlockRequest.rowSpacing"
+               class="form-control mb-4" placeholder="enter row spacing here" required>
+
+        <label for="vineSpacing" class="sr-only">Vine spacing</label>
+        <input type="text" id="vineSpacing" name="vineSpacing" [(ngModel)]="editBlockRequest.vineSpacing"
+               class="form-control mb-4" placeholder="enter vine spacing here" required>
+
+        <label for="rowOrientation" class="sr-only">Row orientation</label>
+        <input type="text" id="rowOrientation" name="rowOrientation" [(ngModel)]="editBlockRequest.rowOrientation"
+               class="form-control mb-4" placeholder="enter row orientation here" required>
+
+        <label for="trellisSystemType" class="sr-only">Trellis system type</label>
+        <input type="text" id="trellisSystemType" name="trellisSystemType" [(ngModel)]="editBlockRequest.trellisSystemType"
+               class="form-control mb-4" placeholder="enter trellis system type here" required>
+
+        <button class="btn btn-dark mb-4"
+                (click)="editBlock()"
+                [disabled]="!editBlockRequest.name || !editBlockRequest.partitioningType ||
+                  !editBlockRequest.rowSpacing || !editBlockRequest.vineSpacing || !editBlockRequest.rowOrientation
+                  || !editBlockRequest.trellisSystemType">Edit
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <div>
+
+    <div class="col-4">
+      <ng-container *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER' || user.role == 'VINEYARD_WORKER'">
+        <h4>You can create a new vine within {{block.name}}.</h4>
+
+        <div *ngIf="vineCreateErrorMessages.length">
+          <div class="alert alert-danger" role="alert">
+            <p *ngFor="let msg of vineCreateErrorMessages">{{ msg.message }}</p>
+          </div>
+        </div>
+
+        <a *ngIf="!createVineMode" (click)="toggleVineCreate()">
+          <button type="button" class="btn btn-dark mb-4">Create Vine</button>
+        </a>
+        <a *ngIf="createVineMode" (click)="toggleVineCreate()">
+          <button type="button" class="btn btn-outline-dark">Hide</button>
+        </a>
+
+        <div *ngIf="createVineMode">
+          <br/>
+          <label for="vineNumber" class="sr-only">Vine Number</label>
+          <input type="number" id="vineNumber" name="vineNumber" [(ngModel)]="createVineRequest.vineNumber"
+                 class="form-control mb-4" placeholder="enter vine number here" required>
+
+          <label for="rowNumber" class="sr-only">Row Number</label>
+          <input type="number" id="rowNumber" name="rowNumber" [(ngModel)]="createVineRequest.rowNumber"
+                 class="form-control mb-4" placeholder="enter row number here" required>
+
+          <label for="variety" class="sr-only">Variety</label>
+          <input type="text" id="variety" name="variety" [(ngModel)]="createVineRequest.variety"
+                 class="form-control mb-4" placeholder="enter variety here" required>
+
+          <label for="bolesCount" class="sr-only">Boles Count</label>
+          <input type="number" id="bolesCount" name="bolesCount" [(ngModel)]="createVineRequest.bolesCount"
+          class="form-control mb-4" placeholder="enter boles count here" required>
+
+          <label for="plantingDate" class="sr-only">Planting Date</label>
+          <input type="date" id="plantingDate" name="plantingDate" [(ngModel)]="createVineRequest.plantingDate"
+                 class="form-control mb-4" placeholder="enter planting date here" required>
+
+          <label for="formationType" class="sr-only">Formation Type</label>
+          <input type="text" id="formationType" name="formationType" [(ngModel)]="createVineRequest.formationType"
+          class="form-control mb-4" placeholder="enter formation type here" required>
+
+          <button class="btn btn-dark mb-4" type="submit" [disabled]="
+          !createVineRequest.bolesCount || !createVineRequest.formationType || !createVineRequest.plantingDate
+          || !createVineRequest.rowNumber || !createVineRequest.variety || !createVineRequest.vineNumber"
+                  (click)="createVine()">Create
+          </button>
+        </div>
+      </ng-container>
+
+      <div>
+        <h4>{{ block.name }} Vines:</h4>
+        <hr/>
+        <div *ngIf="!vines.length"><p>There isn`t any vine created yet.</p></div>
+        <div *ngFor="let vine of vines">
+          <p><b>Vine number:</b> {{ vine.vineNumber }}</p>
+          <p><b>Row number:</b> {{ vine.rowNumber }}</p>
+          <p><b>Variety:</b> {{ vine.variety }}</p>
+          <p><b>Boles count:</b> {{ vine.bolesCount }}</p>
+          <p><b>Planting date:</b> {{ vine.plantingDate }}</p>
+          <p><b>Formation type:</b> {{ vine.formationType }}</p>
+          <a [routerLink]="['vine', vine.id]">
+            <button type="button" class="btn btn-dark">Go to Vine</button>
+          </a>
+          <hr>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

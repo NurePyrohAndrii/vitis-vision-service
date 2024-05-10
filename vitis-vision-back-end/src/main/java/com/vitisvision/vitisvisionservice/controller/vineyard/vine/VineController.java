@@ -108,6 +108,19 @@ public class VineController {
                 .body(ApiResponse.success(PageableResponse.of(vines), HttpStatus.OK.value()));
     }
 
+    @PostMapping("/without-certain-group/{groupId}")
+    public ResponseEntity<ApiResponse<PageableResponse<List<VineResponse>>>> getVinesWithoutCertainGroup(
+            @PageableDefault(size = 20, sort = "rowNumber") Pageable pageable,
+            @PathVariable Integer blockId,
+            @PathVariable Integer groupId,
+            Principal principal
+    ) {
+        Page<VineResponse> vines = vineService.getVinesWithoutCertainGroup(pageable, groupId, blockId, principal);
+        return ResponseEntity.ok()
+                .headers(paginationUtils.createPaginationHeaders(vines, pageable))
+                .body(ApiResponse.success(PageableResponse.of(vines), HttpStatus.OK.value()));
+    }
+
     /**
      * Update the vine details in a block with the provided details
      *

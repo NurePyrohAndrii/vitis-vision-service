@@ -19,8 +19,8 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
      * Check if a vine exists by vine number, row number and block id.
      *
      * @param vineNumber the vine number
-     * @param rowNumber the row number
-     * @param blockId the block id
+     * @param rowNumber  the row number
+     * @param blockId    the block id
      * @return true if the vine exists, false otherwise
      */
     boolean existsByVineNumberAndRowNumberAndBlock_Id(Integer vineNumber, Integer rowNumber, Integer blockId);
@@ -29,8 +29,8 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
      * Find a vine by vine number, row number and block id.
      *
      * @param vineNumber the vine number
-     * @param rowNumber the row number
-     * @param blockId the block id
+     * @param rowNumber  the row number
+     * @param blockId    the block id
      * @return the vine object if found, null otherwise
      */
     Optional<Vine> findByVineNumberAndRowNumberAndBlock_Id(Integer vineNumber, Integer rowNumber, Integer blockId);
@@ -38,7 +38,7 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
     /**
      * Find a vine by vine id and block id.
      *
-     * @param vineId the vine id
+     * @param vineId  the vine id
      * @param blockId the block id
      * @return the vine object if found, null otherwise
      */
@@ -47,7 +47,7 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
     /**
      * Find all vines by block id.
      *
-     * @param blockId the block id
+     * @param blockId  the block id
      * @param pageable the pageable object containing the pagination details
      * @return the page object containing the vine objects
      */
@@ -56,7 +56,7 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
     /**
      * Check if a vine exists by vine id and block id.
      *
-     * @param vineId the vine id
+     * @param vineId  the vine id
      * @param blockId the block id
      * @return true if the vine exists, false otherwise
      */
@@ -66,10 +66,22 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
      * Find all vines by block id and vine ids.
      *
      * @param pageable the pageable object containing the pagination details
-     * @param ids the list of vine ids
+     * @param ids      the list of vine ids
      * @return the page object containing the vine objects
      */
     @Query("SELECT v FROM Vine v WHERE v.id IN :ids")
     Page<Vine> findAllByIds(Pageable pageable, @Param("ids") List<Integer> ids);
 
+    /**
+     * Find all vines not containing the provided group id.
+     *
+     * @param groupId  the group id
+     * @param pageable the pageable object containing the pagination details
+     * @return the page object containing the vine objects
+     */
+    @Query("""
+            SELECT v FROM Vine v
+            WHERE v.groups IS EMPTY OR :groupId NOT MEMBER OF v.groups
+            """)
+    Page<Vine> findAllByBlock_IdAndGroupsNotContaining(Integer groupId, Pageable pageable);
 }

@@ -12,8 +12,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { ApiResponseBlockResponse } from '../models/api-response-block-response';
 import { ApiResponsePageableResponseListBlockResponse } from '../models/api-response-pageable-response-list-block-response';
 import { ApiResponseVoid } from '../models/api-response-void';
-import { createVineyard1 } from '../fn/block/create-vineyard-1';
-import { CreateVineyard1$Params } from '../fn/block/create-vineyard-1';
+import {CreateBlock$Params, createBlock} from '../fn/block/create-vineyard-1';
 import { deleteBlock } from '../fn/block/delete-block';
 import { DeleteBlock$Params } from '../fn/block/delete-block';
 import { generateBlockReport } from '../fn/block/generate-block-report';
@@ -167,8 +166,8 @@ export class BlockService extends BaseService {
     );
   }
 
-  /** Path part for operation `createVineyard1()` */
-  static readonly CreateVineyard1Path = '/api/v1/vineyards/{vineyardId}/blocks';
+  /** Path part for operation `CreateBlock()` */
+  static readonly CreateBlockPath = '/api/v1/vineyards/{vineyardId}/blocks';
 
   /**
    * Create a new block in a vineyard.
@@ -180,8 +179,8 @@ export class BlockService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createVineyard1$Response(params: CreateVineyard1$Params, context?: HttpContext): Observable<StrictHttpResponse<ApiResponseBlockResponse>> {
-    return createVineyard1(this.http, this.rootUrl, params, context);
+  createVineyard1$Response(params: CreateBlock$Params, context?: HttpContext): Observable<StrictHttpResponse<ApiResponseBlockResponse>> {
+    return createBlock(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -192,9 +191,9 @@ export class BlockService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `createVineyard1$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `application/json` and handles the request body of type `application/json`.
    */
-  createVineyard1(params: CreateVineyard1$Params, context?: HttpContext): Observable<ApiResponseBlockResponse> {
+  createBlock(params: CreateBlock$Params, context?: HttpContext): Observable<ApiResponseBlockResponse> {
     return this.createVineyard1$Response(params, context).pipe(
       map((r: StrictHttpResponse<ApiResponseBlockResponse>): ApiResponseBlockResponse => r.body)
     );

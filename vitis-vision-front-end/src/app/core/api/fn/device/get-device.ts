@@ -10,14 +10,12 @@ import { ApiResponseDeviceResponse } from '../../models/api-response-device-resp
 
 export interface GetDevice$Params {
   vineId: number;
-  deviceId: number;
 }
 
 export function getDevice(http: HttpClient, rootUrl: string, params: GetDevice$Params, context?: HttpContext): Observable<StrictHttpResponse<ApiResponseDeviceResponse>> {
   const rb = new RequestBuilder(rootUrl, getDevice.PATH, 'get');
   if (params) {
     rb.path('vineId', params.vineId, {});
-    rb.path('deviceId', params.deviceId, {});
   }
 
   return http.request(
@@ -30,4 +28,4 @@ export function getDevice(http: HttpClient, rootUrl: string, params: GetDevice$P
   );
 }
 
-getDevice.PATH = '/api/v1/vines/{vineId}/devices/{deviceId}';
+getDevice.PATH = '/api/v1/vines/{vineId}/devices';
