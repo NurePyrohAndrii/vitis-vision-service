@@ -229,4 +229,26 @@ public class GroupController {
                 .headers(paginationUtils.createPaginationHeaders(vines, pageable))
                 .body(ApiResponse.success(PageableResponse.of(vines), HttpStatus.OK.value()));
     }
+
+    /**
+     * Get all vines that can be assigned to a group
+     *
+     * @param vineyardId the id of the vineyard to which the group belongs
+     * @param groupId    the id of the group to which the vines are to be assigned
+     * @param pageable   the pageable object containing the pagination details
+     * @param principal  the principal object containing the user details
+     * @return the response entity containing the response object
+     */
+    @GetMapping("/{groupId}/_vines_to_assign")
+    public ResponseEntity<ApiResponse<PageableResponse<List<GroupVineResponse>>>> getVinesToAssign(
+            @PathVariable Integer vineyardId,
+            @PathVariable Integer groupId,
+            @PageableDefault(size = 5, sort = "block") Pageable pageable,
+            Principal principal
+    ) {
+        Page<GroupVineResponse> vines = groupService.getVinesToAssign(vineyardId, groupId, pageable, principal);
+        return ResponseEntity.ok()
+                .headers(paginationUtils.createPaginationHeaders(vines, pageable))
+                .body(ApiResponse.success(PageableResponse.of(vines), HttpStatus.OK.value()));
+    }
 }

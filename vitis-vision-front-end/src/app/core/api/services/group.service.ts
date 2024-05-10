@@ -29,6 +29,8 @@ import { removeVinesFromGroup } from '../fn/group/remove-vines-from-group';
 import { RemoveVinesFromGroup$Params } from '../fn/group/remove-vines-from-group';
 import { updateGroup } from '../fn/group/update-group';
 import { UpdateGroup$Params } from '../fn/group/update-group';
+import { getVinesToAssign } from '../fn/group/get-vines-to-assign';
+import {GetVinesToAssign$Params} from "../fn/group/get-vines-to-assign";
 
 
 /**
@@ -301,6 +303,31 @@ export class GroupService extends BaseService {
   removeVinesFromGroup(params: RemoveVinesFromGroup$Params, context?: HttpContext): Observable<ApiResponseVoid> {
     return this.removeVinesFromGroup$Response(params, context).pipe(
       map((r: StrictHttpResponse<ApiResponseVoid>): ApiResponseVoid => r.body)
+    );
+  }
+
+  /** Path part for operation `getVinesToAssign()` */
+  static readonly GetVinesToAssignPath = '/api/v1/vineyards/{vineyardId}/groups/{groupId}/_vines_to_assign';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getVinesToAssign()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getVinesToAssign$Response(params: GetVinesToAssign$Params, context?: HttpContext): Observable<StrictHttpResponse<ApiResponsePageableResponseListGroupVineResponse>> {
+    return getVinesToAssign(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getVinesToAssign$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getVinesToAssign(params: GetVinesToAssign$Params, context?: HttpContext): Observable<ApiResponsePageableResponseListGroupVineResponse> {
+    return this.getVinesToAssign$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ApiResponsePageableResponseListGroupVineResponse>): ApiResponsePageableResponseListGroupVineResponse => r.body)
     );
   }
 

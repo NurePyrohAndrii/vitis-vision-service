@@ -283,6 +283,32 @@ public class GroupService {
     }
 
     /**
+     * Get all vines that can be assigned to a group in a vineyard
+     *
+     * @param vineyardId the id of the vineyard to which the group belongs
+     * @param groupId    the id of the group to which the vines are to be assigned
+     * @param pageable   the pageable object containing the pagination details
+     * @param principal  the principal object containing the user details
+     * @return the page object containing the list of vines that can be assigned to the group
+     */
+    @PreAuthorize("hasAuthority('group:read')")
+    @Transactional
+    public Page<GroupVineResponse> getVinesToAssign(
+            Integer vineyardId, Integer groupId,
+            Pageable pageable, Principal principal
+    ) {
+        vineyardService.ensureVineyardParticipation(vineyardId, principal);
+        ensureGroupExistence(groupId, vineyardId);
+
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupNotFoundException("group.not.found.error"));
+        List<Integer> groupVineIds = group.getVines().stream().map(Vine::getId).toList();
+
+        return vineService.getAllVinesNotInIds(groupVineIds, pageable)
+                .map(groupVineResponseMapper);
+    }
+
+    /**
      * Ensure that the group exists in the vineyard
      *
      * @param groupId    the id of the group to check

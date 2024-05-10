@@ -1,63 +1,120 @@
 <div class="container">
   <div class="row">
     <div class="col-5">
-      <h3>Group details</h3>
-      <p><b>Group name:</b> {{ group.name }}</p>
-      <p><b>Description:</b> {{ group.description }}</p>
-      <p><b>Formation Reason:</b> {{ group.formationReason }}</p>
-      <p><b>Creation Date:</b> {{ group.createdAt | date:'long' }}</p>
-      <p><b>Creator Name:</b> {{ group.createdBy }}</p>
-      <p><b>Last Modified
-        Date:</b> {{ group.lastUpdatedAt != null ? group.lastUpdatedAt : 'No modifications yet' }}</p>
-      <p><b>Last Modified
-        By:</b> {{ group.lastUpdatedBy != null ? group.lastUpdatedBy : 'No modifications yet' }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-4" *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
-      <a *ngIf="!editGroupMode" (click)="toggleEditGroup()">
-        <button type="button" class="btn btn-dark mb-4">Edit Group Info</button>
-      </a>
-      <a *ngIf="editGroupMode" (click)="toggleEditGroup()">
-        <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
-      </a>
 
-      <a *ngIf="!deleteGroupMode" (click)="toggleDeleteGroup()">
-        <button type="button" class="btn btn-danger mx-3 mb-4">Group Block</button>
-      </a>
-      <a *ngIf="deleteGroupMode" (click)="toggleDeleteGroup()">
-        <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
-      </a>
-      <a *ngIf="deleteGroupMode" (click)="deleteGroup()">
-        <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
-      </a>
+      <!-- Group details -->
+      <div>
+        <h3>Group details</h3>
+        <p><b>Group name:</b> {{ group.name }}</p>
+        <p><b>Description:</b> {{ group.description }}</p>
+        <p><b>Formation Reason:</b> {{ group.formationReason }}</p>
+        <p><b>Creation Date:</b> {{ group.createdAt | date:'long' }}</p>
+        <p><b>Creator Name:</b> {{ group.createdBy }}</p>
+        <p><b>Last Modified
+          Date:</b> {{ group.lastUpdatedAt != null ? group.lastUpdatedAt : 'No modifications yet' }}</p>
+        <p><b>Last Modified
+          By:</b> {{ group.lastUpdatedBy != null ? group.lastUpdatedBy : 'No modifications yet' }}</p>
+      </div>
+      <!-- Group Operations -->
+      <div *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
+        <a *ngIf="!editGroupMode" (click)="toggleEditGroup()">
+          <button type="button" class="btn btn-dark mb-4">Edit Group Info</button>
+        </a>
+        <a *ngIf="editGroupMode" (click)="toggleEditGroup()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
 
-      <div *ngIf="editGroupMode">
-        <h3 class="form-signin-heading">Edit Group Info</h3>
+        <a *ngIf="!deleteGroupMode" (click)="toggleDeleteGroup()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Group Block</button>
+        </a>
+        <a *ngIf="deleteGroupMode" (click)="toggleDeleteGroup()">
+          <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+        </a>
+        <a *ngIf="deleteGroupMode" (click)="deleteGroup()">
+          <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+        </a>
 
-        <div class="alert alert-danger" role="alert" *ngIf="editGroupErrorMessages.length">
-          <p *ngFor="let msg of editGroupErrorMessages">{{ msg.message }}</p>
+        <div *ngIf="editGroupMode">
+          <h3 class="form-signin-heading">Edit Group Info</h3>
+
+          <div class="alert alert-danger" role="alert" *ngIf="editGroupErrorMessages.length">
+            <p *ngFor="let msg of editGroupErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <br/>
+          <label for="name" class="sr-only">Block name</label>
+          <input type="text" id="name" name="name" [(ngModel)]="editGroupRequest.name"
+                 class="form-control mb-4" placeholder="enter name of the block here" required>
+
+          <label for="description" class="sr-only">Description</label>
+          <input type="text" id="description" name="description" [(ngModel)]="editGroupRequest.description"
+                 class="form-control mb-4" placeholder="enter description here" required>
+
+          <label for="formationReason" class="sr-only">Formation Reason</label>
+          <input type="text" id="formationReason" name="formationReason" [(ngModel)]="editGroupRequest.formationReason"
+                 class="form-control mb-4" placeholder="enter formation reason here" required>
+
+          <button class="btn btn-dark mb-4"
+                  (click)="editGroup()"
+                  [disabled]="!editGroupRequest.name || !editGroupRequest.description || !editGroupRequest.formationReason">
+            Edit
+          </button>
         </div>
 
-        <br/>
-        <label for="name" class="sr-only">Block name</label>
-        <input type="text" id="name" name="name" [(ngModel)]="editGroupRequest.name"
-               class="form-control mb-4" placeholder="enter name of the block here" required>
+      </div>
 
-        <label for="description" class="sr-only">Description</label>
-        <input type="text" id="description" name="description" [(ngModel)]="editGroupRequest.description"
-               class="form-control mb-4" placeholder="enter description here" required>
+      <!-- Vines in group -->
+      <div>
+        <h4>{{ group.name }} Vines:</h4>
+        <div *ngIf="!vinesInGroup.length"><p>There isn`t any vine assigned yet.</p></div>
+        <button *ngIf="!removeVinesMode && vinesInGroup.length" class="btn btn-danger" (click)="toggleRemoveVines()">Remove Selected</button>
+        <button *ngIf="removeVinesMode" class="btn btn-outline-danger" (click)="toggleRemoveVines()">Hide</button>
+        <button *ngIf="removeVinesMode" class="btn btn-danger mx-3" (click)="removeVinesFromGroup()">Confirm</button>
+        <hr/>
+        <div *ngFor="let vine of vinesInGroup">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" role="switch" [value]="vine.vineId"
+                   (change)="onVineRemovalChange($event, vine.vineId)">
+          </div>
+          <p><b>Vine number:</b> {{ vine.vineNumber }}</p>
+          <p><b>Row number:</b> {{ vine.rowNumber }}</p>
+          <p><b>Variety:</b> {{ vine.variety }}</p>
+          <p><b>Boles count:</b> {{ vine.bolesCount }}</p>
+          <p><b>Planting date:</b> {{ vine.plantingDate }}</p>
+          <p><b>Formation type:</b> {{ vine.formationType }}</p>
+          <hr>
+        </div>
+      </div>
 
-        <label for="formationReason" class="sr-only">Formation Reason</label>
-        <input type="text" id="formationReason" name="formationReason" [(ngModel)]="editGroupRequest.formationReason"
-               class="form-control mb-4" placeholder="enter formation reason here" required>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-5">
+      <div>
+        <h4>Vines can be assigned:</h4>
 
-        <button class="btn btn-dark mb-4"
-                (click)="editGroup()"
-                [disabled]="!editGroupRequest.name || !editGroupRequest.description || !editGroupRequest.formationReason">Edit
-        </button>
+        <button *ngIf="!assignVinesMode && vinesCanBeAssigned.length" class="btn btn-dark" (click)="toggleAssignVines()">Assign Selected</button>
+        <button *ngIf="assignVinesMode" class="btn btn-outline-dark" (click)="toggleAssignVines()">Hide</button>
+        <button *ngIf="assignVinesMode" class="btn btn-dark mx-3" (click)="assignVinesToGroup()">Confirm</button>
+
+        <hr/>
+        <div *ngIf="!vinesCanBeAssigned.length"><p>There isn`t any vine to assign yet.</p></div>
+        <div *ngFor="let vine of vinesCanBeAssigned">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" role="switch" [value]="vine.vineId"
+                   (change)="onVineSelectionChange($event, vine.vineId)">
+          </div>
+          <p><b>Vine number:</b> {{ vine.vineNumber }}</p>
+          <p><b>Row number:</b> {{ vine.rowNumber }}</p>
+          <p><b>Variety:</b> {{ vine.variety }}</p>
+          <p><b>Boles count:</b> {{ vine.bolesCount }}</p>
+          <p><b>Planting date:</b> {{ vine.plantingDate }}</p>
+          <p><b>Formation type:</b> {{ vine.formationType }}</p>
+          <p><b>Block ID:</b> {{ vine.blockId }}</p>
+          <hr>
+        </div>
       </div>
 
     </div>
   </div>
+
 </div>

@@ -6,6 +6,8 @@ import {UserResponse} from "../../../../core/api/models/user-response";
 import {ApiError} from "../../../../core/api/models/api-error";
 import {GroupRequest} from "../../../../core/api/models/group-request";
 import {UserService} from "../../../../core/api/services/user.service";
+import {VineResponse} from "../../../../core/api/models/vine-response";
+import {GroupVineResponse} from "../../../../core/api/models/group-vine-response";
 
 @Component({
   selector: 'app-group',
@@ -15,6 +17,8 @@ import {UserService} from "../../../../core/api/services/user.service";
 export class GroupComponent implements OnInit {
   user: UserResponse = {};
   group: GroupResponse = {}
+  vinesInGroup: Array<GroupVineResponse> = [];
+  vinesCanBeAssigned: Array<GroupVineResponse> = [];
 
   editGroupRequest: GroupRequest = {
     name: '',
@@ -26,6 +30,11 @@ export class GroupComponent implements OnInit {
 
   editGroupMode = false;
   deleteGroupMode = false;
+  assignVinesMode = false;
+  removeVinesMode = false;
+
+  selectedVineIdsToBeAssigned: Array<number> = [];
+  selectedVineIdsToBeRemoved: Array<number> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -57,6 +66,8 @@ export class GroupComponent implements OnInit {
             description: response.description as string,
             formationReason: response.formationReason as string
           }
+          this.getVinesInGroup(vineyardId, groupId);
+          this.getVinesCanBeAssigned(vineyardId, groupId);
           console.log(group.data);
         },
       }
@@ -98,6 +109,46 @@ export class GroupComponent implements OnInit {
     });
   }
 
+  assignVinesToGroup() {
+    const vineyardId = this.route.snapshot.params['vineyardId'];
+    const groupId = this.route.snapshot.params['groupId'];
+    this.groupService.addVinesToGroup({
+      vineyardId: vineyardId,
+      groupId: groupId,
+      body: {
+        vineIds: this.selectedVineIdsToBeAssigned
+      }
+    }).subscribe({
+      next: () => {
+        this.vinesCanBeAssigned = this.vinesCanBeAssigned
+          .filter(vine => !this.selectedVineIdsToBeAssigned.includes(vine.vineId as number));
+        this.selectedVineIdsToBeAssigned = [];
+        this.getVinesInGroup(vineyardId, groupId);
+        this.assignVinesMode = false;
+      }
+    });
+  }
+
+  removeVinesFromGroup() {
+    const vineyardId = this.route.snapshot.params['vineyardId'];
+    const groupId = this.route.snapshot.params['groupId'];
+    this.groupService.removeVinesFromGroup({
+      vineyardId: vineyardId,
+      groupId: groupId,
+      body: {
+        vineIds: this.selectedVineIdsToBeRemoved
+      }
+    }).subscribe({
+      next: () => {
+        this.vinesInGroup = this.vinesInGroup
+          .filter(vine => !this.selectedVineIdsToBeRemoved.includes(vine.vineId as number));
+        this.selectedVineIdsToBeRemoved = [];
+        this.getVinesCanBeAssigned(vineyardId, groupId);
+        this.removeVinesMode = false;
+      }
+    });
+  }
+
   toggleEditGroup() {
     this.editGroupMode = !this.editGroupMode;
     this.editGroupErrorMessages = [];
@@ -105,5 +156,70 @@ export class GroupComponent implements OnInit {
 
   toggleDeleteGroup() {
     this.deleteGroupMode = !this.deleteGroupMode;
+  }
+
+  toggleAssignVines() {
+    this.assignVinesMode = !this.assignVinesMode
+  }
+
+  toggleRemoveVines() {
+    this.removeVinesMode = !this.removeVinesMode;
+  }
+
+  onVineSelectionChange(event: any, vineId: number | undefined): void {
+    const id = vineId as number;
+    if (event.target.checked) {
+      if (!this.selectedVineIdsToBeAssigned.includes(id)) {
+        this.selectedVineIdsToBeAssigned.push(id);
+      }
+    } else {
+      this.selectedVineIdsToBeAssigned = this.selectedVineIdsToBeAssigned.filter(id => id !== vineId);
+    }
+  }
+
+  onVineRemovalChange(event: any, vineId: number | undefined): void {
+    const id = vineId as number;
+    if (event.target.checked) {
+      if (!this.selectedVineIdsToBeRemoved.includes(id)) {
+        this.selectedVineIdsToBeRemoved.push(id);
+      }
+    } else {
+      this.selectedVineIdsToBeRemoved = this.selectedVineIdsToBeRemoved.filter(id => id !== vineId);
+    }
+  }
+
+  private getVinesInGroup(vineyardId: number, groupId: number) {
+    this.groupService.getVinesInGroup({
+      vineyardId: vineyardId,
+      groupId: groupId,
+      pageable: {
+        page: 0,
+        size: 10,
+        sort: ['']
+      }
+    }).subscribe({
+      next: vines => {
+        this.vinesInGroup = vines.data?.content as Array<VineResponse>;
+        console.log(vines.data?.content)
+      },
+    });
+  }
+
+  private getVinesCanBeAssigned(vineyardId: number, groupId: number) {
+    this.groupService.getVinesToAssign({
+      pageable: {
+        page: 0,
+        size: 100,
+        sort: ['']
+      },
+      vineyardId: vineyardId,
+      groupId: groupId,
+    }).subscribe({
+      next: vines => {
+        const response = vines.data?.content as Array<GroupVineResponse>;
+        this.vinesCanBeAssigned = response as Array<GroupVineResponse>;
+        console.log(response)
+      },
+    });
   }
 }

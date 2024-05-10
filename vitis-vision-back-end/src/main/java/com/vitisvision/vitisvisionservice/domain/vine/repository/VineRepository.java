@@ -73,15 +73,11 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
     Page<Vine> findAllByIds(Pageable pageable, @Param("ids") List<Integer> ids);
 
     /**
-     * Find all vines not containing the provided group id.
+     * Find all vines by block id and vine ids.
      *
-     * @param groupId  the group id
-     * @param pageable the pageable object containing the pagination details
-     * @return the page object containing the vine objects
+     * @param groupVineIds the list of vine ids
+     * @return the list of vine objects
      */
-    @Query("""
-            SELECT v FROM Vine v
-            WHERE v.groups IS EMPTY OR :groupId NOT MEMBER OF v.groups
-            """)
-    Page<Vine> findAllByBlock_IdAndGroupsNotContaining(Integer groupId, Pageable pageable);
+    @Query("SELECT v FROM Vine v WHERE v.id NOT IN :groupVineIds")
+    Page<Vine> findAllNotInIds(Pageable pageable, List<Integer> groupVineIds);
 }
