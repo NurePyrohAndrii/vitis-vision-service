@@ -9,6 +9,7 @@ import {ApiError} from "../../../../core/api/models/api-error";
 import {UserService} from "../../../../core/api/services/user.service";
 import {VineRequest} from "../../../../core/api/models/vine-request";
 import {VineResponse} from "../../../../core/api/models/vine-response";
+import {BlockReportRequest} from "../../../../core/api/models/block-report-request";
 
 @Component({
   selector: 'app-block',
@@ -37,9 +38,15 @@ export class BlockComponent implements OnInit {
     variety: '',
     vineNumber: 0
   }
+  generateBlockReportRequest: BlockReportRequest = {
+    startDate: '',
+    endDate: '',
+    aggregationInterval: 0
+  }
 
   editBlockErrorMessages: Array<ApiError> = [];
   vineCreateErrorMessages: Array<ApiError> = [];
+  blockReportErrorMessages: Array<ApiError> = [];
 
   editBlockMode = false;
   deleteBlockMode = false;
@@ -139,6 +146,34 @@ export class BlockComponent implements OnInit {
         },
         error: error => {
           this.vineCreateErrorMessages = error.error.errors;
+        }
+      }
+    );
+  }
+
+  generateBlockReport() {
+    const vineyardId = this.route.snapshot.params['vineyardId'];
+    const blockId = this.route.snapshot.params['blockId'];
+    this.blockService.generateBlockReport(
+      {
+        vineyardId: vineyardId,
+        blockId: blockId,
+        body: this.generateBlockReportRequest
+      }
+    ).subscribe({
+        next: (res: any) => {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob([res], {type: "text/csv"}));
+          let filename = "block-report_" + this.block.name + "_"
+            + this.generateBlockReportRequest.startDate + "_"
+            + this.generateBlockReportRequest.endDate;
+          a.setAttribute("download", filename + ".csv");
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        },
+        error: error => {
+          this.blockReportErrorMessages = error.error.errors;
         }
       }
     );

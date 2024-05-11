@@ -87,6 +87,7 @@
       <!--Device details-->
       <div>
         <h3>Vine device details</h3>
+        <p><b>Device ID:</b> {{ device.id }}</p>
         <p><b>Device name:</b> {{ device.name }}</p>
         <p><b>Installation date:</b> {{ device.installationDate }}</p>
         <p><b>Description:</b> {{ device.description }}</p>
@@ -157,10 +158,52 @@
         </div>
 
       </div>
-    </div>
+
+      <!--Activate device-->
+      <div>
+        <a *ngIf="!activateDeviceMode && !device.active" (click)="toggleActivateDeviceMode()">
+          <button type="button" class="btn btn-dark mb-4">Activate Device</button>
+        </a>
+        <a *ngIf="activateDeviceMode" (click)="toggleActivateDeviceMode()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
+
+        <div *ngIf="activateDeviceMode">
+          <h3 class="form-signin-heading">Activate Device</h3>
+
+          <div class="alert alert-danger" role="alert" *ngIf="activateDeviceErrorMessages.length">
+            <p *ngFor="let msg of activateDeviceErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <label for="frequency" class="sr-only">Frequency in seconds</label>
+          <input type="number" id="frequency" name="frequency" [(ngModel)]="frequency"
+                 class="form-control mb-4" placeholder="enter frequency in seconds" required>
+
+          <button class="btn btn-dark mb-4" (click)="activateDevice()">Activate</button>
+        </div>
+      </div>
+
+      <!--Deactivate device-->
+      <div>
+        <a *ngIf="!deactivateDeviceMode && device.active" (click)="toggleDeactivateDeviceMode()">
+          <button type="button" class="btn btn-dark mb-4">Deactivate Device</button>
+        </a>
+        <a *ngIf="deactivateDeviceMode" (click)="toggleDeactivateDeviceMode()">
+          <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+        </a>
+
+        <div *ngIf="deactivateDeviceMode">
+          <h3 class="form-signin-heading">Deactivate Device</h3>
+
+          <div class="alert alert-danger" role="alert" *ngIf="deactivateDeviceErrorMessages.length">
+            <p *ngFor="let msg of deactivateDeviceErrorMessages">{{ msg.message }}</p>
+          </div>
+
+          <button class="btn btn-dark mb-4" (click)="deactivateDevice()">Deactivate</button>
+        </div>
 
       <!--Create a device if no device assigned-->
-    <div class="col-5" *ngIf="!device.id">
+      <div class="col-5" *ngIf="!device.id">
         <h3>Vine device details</h3>
         <h5>No device assigned to this vine</h5>
         <h5>You can create a new device for this vine</h5>
@@ -201,12 +244,13 @@
 
           <button class="btn btn-dark mb-4" (click)="createDevice()" [disabled]="!deviceRequest.name
         || !deviceRequest.description || !deviceRequest.installationDate || !deviceRequest.deviceType
-        || !deviceRequest.manufacturer">Create</button>
+        || !deviceRequest.manufacturer">Create
+          </button>
         </div>
+      </div>
+
     </div>
-
-
-<!--    TODO: Device activation-->
+    </div>
 
   </div>
 </div>

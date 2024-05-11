@@ -13,7 +13,7 @@
 #include <ArduinoJson.h>
 
 
-const int id = 1; // Device ID
+int id = 1; // Device ID
 
 // DHT sensors properties
 #define DHT_AIR_PIN 13
@@ -107,6 +107,16 @@ void determineBaudRate() { // Function to determine the baud rate that the user 
 
   Serial.print("Baud rate set to ");
   Serial.println(serialBaudRate);
+}
+
+void askDeviceId() { // Function to ask the user for the device ID
+  Serial.println("Enter the device ID:");
+  while (!Serial.available()) { // Wait for user input
+  }
+
+  id = Serial.parseInt(); // Read the user input and set the device ID
+  Serial.print("Device ID set to ");
+  Serial.println(id);
 }
 
 void initializeLCD() { // Function to initialize the LCD display
@@ -221,6 +231,7 @@ void setup() { // Main setup function
   delay(1000);
   determineBaudRate();
   Serial.begin(serialBaudRate);
+  askDeviceId();
 
   // Initialize the DHT sensors and the photoresistor
   dht_air.begin();

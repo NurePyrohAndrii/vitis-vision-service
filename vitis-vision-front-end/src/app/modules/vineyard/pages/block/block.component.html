@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-5">
+    <div class="col-6">
       <h3>Block details</h3>
       <p><b>Block name:</b> {{ block.name }}</p>
       <p><b>Partitioning type:</b> {{ block.partitioningType }}</p>
@@ -15,9 +15,44 @@
       <p><b>Last Modified
         By:</b> {{ block.lastUpdatedBy != null ? block.lastUpdatedBy : 'No modifications yet' }}</p>
     </div>
+    <div class="col-6">
+      <h3>Get Block Device Report</h3>
+
+<!--      generateBlockReportRequest: BlockReportRequest = {-->
+<!--      startDate: '',-->
+<!--      endDate: '',-->
+<!--      aggregationInterval: 0-->
+<!--      }-->
+
+      <div *ngIf="blockReportErrorMessages.length">
+        <div class="alert alert-danger" role="alert">
+          <p *ngFor="let msg of blockReportErrorMessages">{{ msg.message }}</p>
+        </div>
+      </div>
+
+      <label for="startDate" class="sr-only">Start Date</label>
+      <input type="date" id="startDate" name="startDate" [(ngModel)]="generateBlockReportRequest.startDate"
+             class="form-control mb-4" placeholder="enter start date here" required>
+
+      <label for="endDate" class="sr-only">End Date</label>
+      <input type="date" id="endDate" name="endDate" [(ngModel)]="generateBlockReportRequest.endDate"
+             class="form-control mb-4" placeholder="enter end date here" required>
+
+      <label for="aggregationInterval" class="sr-only">Aggregation Interval</label>
+      <input type="number" id="aggregationInterval" name="aggregationInterval"
+             [(ngModel)]="generateBlockReportRequest.aggregationInterval"
+             class="form-control mb-4" placeholder="enter aggregation interval here" required>
+
+      <button class="btn btn-dark mb-4" type="submit" [disabled]="!generateBlockReportRequest.startDate ||
+      !generateBlockReportRequest.endDate || !generateBlockReportRequest.aggregationInterval"
+              (click)="generateBlockReport()">Generate
+      </button>
+
+    </div>
+
   </div>
   <div class="row">
-    <div class="col-4" *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
+    <div class="" *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
       <a *ngIf="!editBlockMode" (click)="toggleEditBlock()">
         <button type="button" class="btn btn-dark mb-4">Edit Block Info</button>
       </a>
@@ -64,7 +99,8 @@
                class="form-control mb-4" placeholder="enter row orientation here" required>
 
         <label for="trellisSystemType" class="sr-only">Trellis system type</label>
-        <input type="text" id="trellisSystemType" name="trellisSystemType" [(ngModel)]="editBlockRequest.trellisSystemType"
+        <input type="text" id="trellisSystemType" name="trellisSystemType"
+               [(ngModel)]="editBlockRequest.trellisSystemType"
                class="form-control mb-4" placeholder="enter trellis system type here" required>
 
         <button class="btn btn-dark mb-4"
@@ -77,11 +113,11 @@
 
     </div>
   </div>
-  <div>
-
-    <div class="col-4">
-      <ng-container *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER' || user.role == 'VINEYARD_WORKER'">
-        <h4>You can create a new vine within {{block.name}}.</h4>
+  <div class="row">
+    <div class="">
+      <ng-container
+        *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER' || user.role == 'VINEYARD_WORKER'">
+        <h4>You can create a new vine within {{ block.name }}.</h4>
 
         <div *ngIf="vineCreateErrorMessages.length">
           <div class="alert alert-danger" role="alert">
@@ -112,7 +148,7 @@
 
           <label for="bolesCount" class="sr-only">Boles Count</label>
           <input type="number" id="bolesCount" name="bolesCount" [(ngModel)]="createVineRequest.bolesCount"
-          class="form-control mb-4" placeholder="enter boles count here" required>
+                 class="form-control mb-4" placeholder="enter boles count here" required>
 
           <label for="plantingDate" class="sr-only">Planting Date</label>
           <input type="date" id="plantingDate" name="plantingDate" [(ngModel)]="createVineRequest.plantingDate"
@@ -120,7 +156,7 @@
 
           <label for="formationType" class="sr-only">Formation Type</label>
           <input type="text" id="formationType" name="formationType" [(ngModel)]="createVineRequest.formationType"
-          class="form-control mb-4" placeholder="enter formation type here" required>
+                 class="form-control mb-4" placeholder="enter formation type here" required>
 
           <button class="btn btn-dark mb-4" type="submit" [disabled]="
           !createVineRequest.bolesCount || !createVineRequest.formationType || !createVineRequest.plantingDate
@@ -149,6 +185,5 @@
       </div>
 
     </div>
-
   </div>
 </div>

@@ -33,16 +33,21 @@ export class VineComponent implements OnInit {
     manufacturer: '',
     name: ''
   }
+  frequency: number = 0
 
   editVineErrorMessages: Array<ApiError> = [];
   createDeviceErrorMessages: Array<ApiError> = [];
   editDeviceErrorMessages: Array<ApiError> = [];
+  activateDeviceErrorMessages: Array<ApiError> = [];
+  deactivateDeviceErrorMessages: Array<ApiError> = [];
 
   editVineMode = false;
   deleteVineMode = false;
   createDeviceMode = false;
   editDeviceMode = false;
   deleteDeviceMode = false;
+  activateDeviceMode = false;
+  deactivateDeviceMode = false;
 
   constructor(
     private vineService: VineService,
@@ -156,6 +161,37 @@ export class VineComponent implements OnInit {
     })
   }
 
+  activateDevice() {
+    this.deviceService.activateDevice({
+      vineId: this.vine.id as number,
+      deviceId: this.device.id as number,
+      frequency: this.frequency
+    }).subscribe({
+      next: () => {
+        this.toggleActivateDeviceMode()
+        this.device.active = true
+      },
+      error: error => {
+        this.activateDeviceErrorMessages = error.error.errors
+      }
+    })
+  }
+
+  deactivateDevice() {
+    this.deviceService.deactivateDevice({
+      vineId: this.vine.id as number,
+      deviceId: this.device.id as number
+    }).subscribe({
+      next: () => {
+        this.toggleDeactivateDeviceMode()
+        this.device.active = false
+      },
+      error: error => {
+        this.deactivateDeviceErrorMessages = error.error.errors
+      }
+    })
+  }
+
   toggleEditVineMode() {
     this.editVineMode = !this.editVineMode
     this.editVineErrorMessages = []
@@ -177,6 +213,14 @@ export class VineComponent implements OnInit {
 
   toggleDeleteDeviceMode() {
     this.deleteDeviceMode = !this.deleteDeviceMode
+  }
+
+  toggleActivateDeviceMode() {
+    this.activateDeviceMode = !this.activateDeviceMode
+  }
+
+  toggleDeactivateDeviceMode() {
+    this.deactivateDeviceMode = !this.deactivateDeviceMode
   }
 
   private getDevice(id: number) {
