@@ -36,7 +36,7 @@ float calculateLux(float LdrValue){ // Function to calculate the lux value from 
 void readData() { // Function to read data from the DHT sensors and photoresistor
   if (!measuring) return; // Only read data if measuring is true
 
-  // Current time in ISO 8601 format
+  // Current time in ISO 8601 format  
   auto now = std::chrono::system_clock::now();
   auto now_c = std::chrono::system_clock::to_time_t(now);
   std::stringstream ss;

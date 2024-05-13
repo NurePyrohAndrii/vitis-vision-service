@@ -304,7 +304,7 @@ public class GroupService {
                 .orElseThrow(() -> new GroupNotFoundException("group.not.found.error"));
         List<Integer> groupVineIds = group.getVines().stream().map(Vine::getId).toList();
 
-        return vineService.getAllVinesNotInIds(groupVineIds, pageable)
+        return vineService.getAllVinesNotInIds(groupVineIds, pageable, vineyardId)
                 .map(groupVineResponseMapper);
     }
 

@@ -6,7 +6,6 @@
 #include <Adafruit_Sensor.h>
 #include <ArduinoJson.h>
 
-#include "server.h"
 #include "network.h"
 #include "measure.h"
 #include "lcd.h"

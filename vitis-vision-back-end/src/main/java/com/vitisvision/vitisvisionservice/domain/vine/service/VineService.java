@@ -198,8 +198,8 @@ public class VineService {
      * @param pageable     the pageable object containing the pagination details
      * @return the page object containing the vine objects
      */
-    public Page<Vine> getAllVinesNotInIds(List<Integer> groupVineIds, Pageable pageable) {
-        return vineRepository.findAllNotInIds(pageable, groupVineIds);
+    public Page<Vine> getAllVinesNotInIds(List<Integer> groupVineIds, Pageable pageable, Integer vineyardId) {
+        return vineRepository.findAllNotInIds(pageable, groupVineIds, vineyardId);
     }
 
     /**

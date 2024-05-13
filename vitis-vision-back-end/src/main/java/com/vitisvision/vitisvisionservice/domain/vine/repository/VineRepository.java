@@ -78,6 +78,6 @@ public interface VineRepository extends JpaRepository<Vine, Integer> {
      * @param groupVineIds the list of vine ids
      * @return the list of vine objects
      */
-    @Query("SELECT v FROM Vine v WHERE v.id NOT IN :groupVineIds")
-    Page<Vine> findAllNotInIds(Pageable pageable, List<Integer> groupVineIds);
+    @Query("SELECT v FROM Vine v WHERE v.id NOT IN :groupVineIds and v.block.vineyard.id = :vineyardId")
+    Page<Vine> findAllNotInIds(Pageable pageable, List<Integer> groupVineIds, Integer vineyardId);
 }
