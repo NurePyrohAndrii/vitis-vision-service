@@ -3,6 +3,7 @@ import {TokenService} from "../../api/token/token.service";
 import {Router} from "@angular/router";
 import {UserService} from "../../api/services/user.service";
 import {UserResponse} from "../../api/models/user-response";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-header',
@@ -16,8 +17,15 @@ export class HeaderComponent implements OnInit {
   constructor(
     private tokenService: TokenService,
     private router: Router,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    public translate: TranslateService
+  ) {
+    translate.addLangs(['en', 'ua']);
+    translate.setDefaultLang('en');
+
+    const browserLang = translate.getBrowserLang();
+    translate.use(browserLang?.match(/en|ua/) ? browserLang : 'en');
+  }
 
   isUserAuthenticated = (): boolean => {
     return this.tokenService.isTokenValid();

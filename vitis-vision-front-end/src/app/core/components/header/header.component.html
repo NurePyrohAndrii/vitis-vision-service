@@ -4,15 +4,22 @@
   </a>
 
   <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-    <li *ngIf="isUserAuthenticated()"><a routerLink="/vineyard" class="nav-link px-3 link-dark">Vineyard</a></li>
-    <li *ngIf="isUserAuthenticated()" ><a routerLink="/profile" class="nav-link px-3 link-dark">Profile</a></li>
-<!--    <li><a routerLink="/userplays" class="nav-link px-3 link-dark">Plays</a></li>-->
+    <li *ngIf="isUserAuthenticated()"><a routerLink="/vineyard" class="nav-link px-3 link-dark">{{ 'HEADER.VINEYARD' | translate }}</a></li>
+    <li *ngIf="isUserAuthenticated()" ><a routerLink="/profile" class="nav-link px-3 link-dark">{{ 'HEADER.PROFILE' | translate }}</a></li>
+    <li class="p-2 link-dark">
+      <label>
+        {{ 'HEADER.SELECT_LANGUAGE' | translate }}
+        <select #langSelect (change)="translate.use(langSelect.value)">
+          <option *ngFor="let lang of translate.getLangs()" [value]="lang" [selected]="lang === translate.currentLang">{{ lang }}</option>
+        </select>
+      </label>
+    </li>
   </ul>
 
   <div class="col-md-3 text-end">
-    <a *ngIf="!isUserAuthenticated()" routerLink="/auth/login"><button type="button" class="btn btn-outline-dark">Login</button></a>
-    <a *ngIf="!isUserAuthenticated()" routerLink="/auth/register"><button type="button" class="btn btn-dark mx-3">Sign-up</button></a>
-    <a *ngIf="isUserAuthenticated()" (click)="logOut()"><button type="button" class="btn btn-dark">Log-out</button></a>
-    <a *ngIf="checkIsUserAdmin()" routerLink="/admin" ><button type="button" class="btn btn-dark mx-3">Admin</button></a>
+    <a *ngIf="!isUserAuthenticated()" routerLink="/auth/login"><button type="button" class="btn btn-outline-dark">{{ 'HEADER.LOGIN' | translate }}</button></a>
+    <a *ngIf="!isUserAuthenticated()" routerLink="/auth/register"><button type="button" class="btn btn-dark mx-3">{{ 'HEADER.REGISTER' | translate }}</button></a>
+    <a *ngIf="isUserAuthenticated()" (click)="logOut()"><button type="button" class="btn btn-dark">{{ 'HEADER.LOGOUT' | translate }}</button></a>
+    <a *ngIf="checkIsUserAdmin()" routerLink="/admin" ><button type="button" class="btn btn-dark mx-3">{{ 'HEADER.ADMIN' | translate }}</button></a>
   </div>
 </header>

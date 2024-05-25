@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@auth0/angular-jwt": "^5.2.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "bootstrap": "^5.3.3",
     "file-saver": "^2.0.5",
     "ng-openapi-gen": "^0.51.0",

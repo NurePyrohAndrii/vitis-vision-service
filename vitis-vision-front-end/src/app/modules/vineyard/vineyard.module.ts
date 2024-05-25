@@ -7,6 +7,7 @@ import {FormsModule} from "@angular/forms";
 import { GroupComponent } from './pages/group/group.component';
 import { BlockComponent } from './pages/block/block.component';
 import { VineComponent } from './pages/vine/vine.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { VineComponent } from './pages/vine/vine.component';
     imports: [
         CommonModule,
         VineyardRoutingModule,
-        FormsModule
+        FormsModule,
+        TranslateModule
     ]
 })
 export class VineyardModule { }

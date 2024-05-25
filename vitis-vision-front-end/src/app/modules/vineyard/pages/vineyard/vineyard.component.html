@@ -63,76 +63,74 @@
 
       <!--Vineyard Info-->
       <div class="mb-3">
-        <h3 class="mb-3">Vineyard Info</h3>
-        <p><b>DBA name:</b> {{ vineyard.dbaName }}</p>
-        <p><b>Company name:</b> {{ vineyard.companyName }}</p>
-        <p><b>Email:</b> {{ vineyard.email }}</p>
-        <p><b>Phone number:</b> {{ vineyard.phoneNumber }}</p>
-        <p><b>City:</b> {{ vineyard.city }}</p>
-        <p><b>Street Address:</b> {{ vineyard.streetAddress }}</p>
-        <p><b>Zip Code:</b> {{ vineyard.zipCode }}</p>
-        <p><b>Creation Date:</b> {{ vineyard.createdAt | date:'long' }}</p>
-        <p><b>Creator Name:</b> {{ vineyard.createdBy }}</p>
-        <p><b>Last Modified
-          Date:</b> {{ vineyard.lastUpdatedAt != null ? vineyard.lastUpdatedAt : 'No modifications yet' }}</p>
-        <p><b>Last Modified
-          By:</b> {{ vineyard.lastUpdatedBy != null ? vineyard.lastUpdatedBy : 'No modifications yet' }}</p>
+        <h3 class="mb-3">{{ 'VINEYARD.VINEYARD_INFO' | translate }}</h3>
+        <p><b>{{ 'VINEYARD.DBA_NAME' | translate }}</b> {{ vineyard.dbaName }}</p>
+        <p><b>{{ 'VINEYARD.COMPANY_NAME' | translate }}</b> {{ vineyard.companyName }}</p>
+        <p><b>{{ 'VINEYARD.EMAIL' | translate }}</b> {{ vineyard.email }}</p>
+        <p><b>{{ 'VINEYARD.PHONE_NUMBER' | translate }}</b> {{ vineyard.phoneNumber }}</p>
+        <p><b>{{ 'VINEYARD.CITY' | translate }}</b> {{ vineyard.city }}</p>
+        <p><b>{{ 'VINEYARD.STREET_ADDRESS' | translate }}</b> {{ vineyard.streetAddress }}</p>
+        <p><b>{{ 'VINEYARD.ZIP_CODE' | translate }}</b> {{ vineyard.zipCode }}</p>
+        <p><b>{{ 'COMMON.CREATION_DATE' | translate }}</b> {{ vineyard.createdAt | date:'long' }}</p>
+        <p><b>{{ 'COMMON.CREATOR_NAME' | translate }}</b> {{ vineyard.createdBy }}</p>
+        <p><b>{{ 'COMMON.LAST_MODIFIED_DATE' | translate }}</b> {{ vineyard.lastUpdatedAt != null ? vineyard.lastUpdatedAt : 'COMMON.NO_MODIFICATIONS_YET' | translate }}</p>
+        <p><b>{{ 'COMMON.LAST_MODIFIED_BY' | translate }}</b> {{ vineyard.lastUpdatedBy != null ? vineyard.lastUpdatedBy : 'COMMON.NO_MODIFICATIONS_YET' | translate }}</p>
       </div>
 
       <!--Vineyard Director Info-->
       <div class="">
         <ng-container *ngIf="user.role == 'VINEYARD_DIRECTOR'">
           <a *ngIf="!editVineyardMode" (click)="toggleEditVineyard()">
-            <button type="button" class="btn btn-dark mb-4">Edit Vineyard Info</button>
+            <button type="button" class="btn btn-dark mb-4">{{ 'VINEYARD.EDIT_INFO' | translate }}</button>
           </a>
           <a *ngIf="editVineyardMode" (click)="toggleEditVineyard()">
-            <button type="button" class="btn btn-outline-dark mb-4">Hide</button>
+            <button type="button" class="btn btn-outline-dark mb-4">{{ 'COMMON.HIDE' | translate }}</button>
           </a>
 
           <a *ngIf="!deleteVineyardMode" (click)="toggleDeleteVineyard()">
-            <button type="button" class="btn btn-danger mx-3 mb-4">Delete Vineyard</button>
+            <button type="button" class="btn btn-danger mx-3 mb-4">{{ 'VINEYARD.DELETE_VINEYARD' | translate }}</button>
           </a>
           <a *ngIf="deleteVineyardMode" (click)="toggleDeleteVineyard()">
-            <button type="button" class="btn btn-danger mx-3 mb-4">Hide</button>
+            <button type="button" class="btn btn-danger mx-3 mb-4">{{ 'COMMON.HIDE' | translate }}</button>
           </a>
           <a *ngIf="deleteVineyardMode" (click)="deleteVineyard()">
-            <button type="button" class="btn btn-outline-danger mb-4">Confirm</button>
+            <button type="button" class="btn btn-outline-danger mb-4">{{ 'COMMON.CONFIRM' | translate }}</button>
           </a>
 
           <div *ngIf="editVineyardMode">
-            <h3 class="form-signin-heading">Edit Vineyard Info</h3>
+            <h3 class="form-signin-heading">{{ 'VINEYARD.EDIT_INFO' | translate }}</h3>
 
             <div class="alert alert-danger" role="alert" *ngIf="editVineyardErrorMessages.length">
               <p *ngFor="let msg of editVineyardErrorMessages">{{ msg.message }}</p>
             </div>
 
             <br/>
-            <label for="dba" class="sr-only">Vineyard DBA name</label>
+            <label for="dba" class="sr-only">{{ 'VINEYARD.DBA_NAME' | translate }}</label>
             <input type="text" id="editDba" name="dba" [(ngModel)]="editVineyardRequest.dbaName"
                    class="form-control mb-4" placeholder="enter dba name of vineyard here" required>
 
-            <label for="company" class="sr-only">Company name</label>
+            <label for="company" class="sr-only">{{ 'VINEYARD.COMPANY_NAME' | translate }}</label>
             <input type="text" id="editCompany" name="company" [(ngModel)]="editVineyardRequest.companyName"
                    class="form-control mb-4" placeholder="enter company name here" required>
 
-            <label for="email" class="sr-only">Email</label>
+            <label for="email" class="sr-only">{{ 'VINEYARD.EMAIL' | translate }}</label>
             <input type="text" id="editEmail" name="email" [(ngModel)]="editVineyardRequest.email"
                    class="form-control mb-4" placeholder="enter email here" required>
 
-            <label for="phoneNumber" class="sr-only">Phone number</label>
+            <label for="phoneNumber" class="sr-only">{{ 'VINEYARD.PHONE_NUMBER' | translate }}</label>
             <input type="text" id="editPhoneNumber" name="phoneNumber" [(ngModel)]="editVineyardRequest.phoneNumber"
                    class="form-control mb-4" placeholder="enter phone number here" required>
 
-            <label for="city" class="sr-only">City</label>
+            <label for="city" class="sr-only">{{ 'VINEYARD.CITY' | translate }}</label>
             <input type="text" id="editCity" name="city" [(ngModel)]="editVineyardRequest.city"
                    class="form-control mb-4" placeholder="enter city name here" required>
 
-            <label for="streetAddress" class="sr-only">Street address</label>
+            <label for="streetAddress" class="sr-only">{{ 'VINEYARD.STREET_ADDRESS' | translate }}</label>
             <input type="text" id="editStreetAddress" name="streetAddress"
                    [(ngModel)]="editVineyardRequest.streetAddress"
                    class="form-control mb-4" placeholder="enter street address here" required>
 
-            <label for="zipCode" class="sr-only">Zip code</label>
+            <label for="zipCode" class="sr-only">{{ 'VINEYARD.ZIP_CODE' | translate }}</label>
             <input type="text" id="editZipCode" name="zipCode" [(ngModel)]="editVineyardRequest.zipCode"
                    class="form-control mb-4" placeholder="enter zip code here" required>
 
@@ -140,7 +138,7 @@
                     (click)="editVineyard()"
                     [disabled]="!editVineyardRequest.dbaName || !editVineyardRequest.companyName ||
                   !editVineyardRequest.email || !editVineyardRequest.phoneNumber || !editVineyardRequest.city
-                  || !editVineyardRequest.streetAddress || !editVineyardRequest.zipCode">Edit
+                  || !editVineyardRequest.streetAddress || !editVineyardRequest.zipCode">{{ 'COMMON.EDIT' | translate }}
             </button>
           </div>
         </ng-container>
@@ -150,7 +148,7 @@
       <!--Block Info-->
       <div class="">
         <ng-container *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
-          <h4>You can create a new block.</h4>
+          <h4>{{ 'VINEYARD.CREATE_BLOCK' | translate }}</h4>
 
           <div *ngIf="createBlockErrorMessages.length">
             <div class="alert alert-danger" role="alert">
@@ -159,59 +157,59 @@
           </div>
 
           <a *ngIf="!createBlockMode" (click)="toggleCreateBlock()">
-            <button type="button" class="btn btn-dark mb-4">Create Block</button>
+            <button type="button" class="btn btn-dark mb-4">{{ 'BLOCK.CREATE_BLOCK' | translate }}</button>
           </a>
           <a *ngIf="createBlockMode" (click)="toggleCreateBlock()">
-            <button type="button" class="btn btn-outline-dark">Hide</button>
+            <button type="button" class="btn btn-outline-dark">{{ 'COMMON.HIDE' | translate }}</button>
           </a>
 
           <div *ngIf="createBlockMode">
             <br/>
-            <label for="blockName" class="sr-only">Block Name</label>
+            <label for="blockName" class="sr-only">{{ 'BLOCK.BLOCK_NAME' | translate }}</label>
             <input type="text" id="blockName" name="blockName" [(ngModel)]="createBlockRequest.name"
                    class="form-control mb-4" placeholder="enter name of block here" required>
 
-            <label for="partitioningType" class="sr-only">Partitioning Type</label>
+            <label for="partitioningType" class="sr-only">{{ 'BLOCK.PARTITION_TYPE' | translate }}</label>
             <input type="text" id="partitioningType" name="partitioningType"
                    [(ngModel)]="createBlockRequest.partitioningType"
                    class="form-control mb-4" placeholder="enter partitioning type here" required>
 
-            <label for="rowOrientation" class="sr-only">Row Orientation</label>
+            <label for="rowOrientation" class="sr-only">{{ 'BLOCK.ROW_ORIENTATION' | translate }}</label>
             <input type="text" id="rowOrientation" name="rowOrientation"
                    [(ngModel)]="createBlockRequest.rowOrientation"
                    class="form-control mb-4" placeholder="enter row orientation here" required>
 
-            <label for="rowSpacing" class="sr-only">Row Spacing</label>
+            <label for="rowSpacing" class="sr-only">{{ 'BLOCK.TRELLIS_SYSTEM' | translate }}</label>
             <input type="number" id="rowSpacing" name="rowSpacing" [(ngModel)]="createBlockRequest.rowSpacing"
                    class="form-control mb-4" placeholder="enter row spacing here" required>
 
-            <label for="trellisSystemType" class="sr-only">Trellis System Type</label>
+            <label for="trellisSystemType" class="sr-only">{{ 'BLOCK.TRELLIS_SYSTEM' | translate }}</label>
             <input type="text" id="trellisSystemType" name="trellisSystemType"
                    [(ngModel)]="createBlockRequest.trellisSystemType"
                    class="form-control mb-4" placeholder="enter trellis system type here" required>
 
-            <label for="vineSpacing" class="sr-only">Vine Spacing</label>
+            <label for="vineSpacing" class="sr-only">{{ 'BLOCK.VINE_SPACING' | translate }}</label>
             <input type="number" id="vineSpacing" name="vineSpacing" [(ngModel)]="createBlockRequest.vineSpacing"
                    class="form-control mb-4" placeholder="enter vine spacing here" required>
 
             <button class="btn btn-dark mb-4" type="submit" [disabled]="
           !createBlockRequest.name || !createBlockRequest.partitioningType || !createBlockRequest.rowOrientation
           || !createBlockRequest.rowSpacing || !createBlockRequest.trellisSystemType || !createBlockRequest.vineSpacing"
-                    (click)="createBlock()">Create
+                    (click)="createBlock()">{{ 'COMMON.CREATE' | translate }}
             </button>
           </div>
         </ng-container>
         <div>
-          <h4>{{ vineyard.dbaName }} Blocks:</h4>
+          <h4>{{ vineyard.dbaName }} {{ 'VINEYARD.BLOCKS' | translate }}</h4>
           <hr/>
-          <div *ngIf="!blocks.length"><p>There isn`t any block created yet.</p></div>
+          <div *ngIf="!blocks.length"><p>{{ 'VINEYARD.NO_BLOCKS' | translate }}</p></div>
           <div *ngFor="let block of blocks">
-            <p><b>Name:</b> {{ block.name }}</p>
-            <p><b>Partition type:</b> {{ block.partitioningType }}</p>
-            <p><b>Row orientation:</b> {{ block.rowOrientation }}</p>
-            <p><b>Trellis system:</b> {{ block.trellisSystemType }}</p>
+            <p><b>{{ 'COMMON.NAME' | translate }}</b> {{ block.name }}</p>
+            <p><b>{{ 'BLOCK.PARTITION_TYPE' | translate }}</b> {{ block.partitioningType }}</p>
+            <p><b>{{ 'BLOCK.ROW_ORIENTATION' | translate }}</b> {{ block.rowOrientation }}</p>
+            <p><b>{{ 'BLOCK.TRELLIS_SYSTEM' | translate }}</b> {{ block.trellisSystemType }}</p>
             <a [routerLink]="['/vineyard', vineyard.id, 'block', block.id]">
-              <button type="button" class="btn btn-dark">Go to block</button>
+              <button type="button" class="btn btn-dark">{{ 'BLOCK.GO_TO_BLOCK' | translate }}</button>
             </a>
             <hr>
           </div>
@@ -226,7 +224,7 @@
 
       <!--Vineyard Employees Management-->
       <div class="">
-        <h3 class="mb-3"> {{ vineyard.dbaName }} Employees:</h3>
+        <h3 class="mb-3"> {{ vineyard.dbaName }} {{ "VINEYARD.EMPLOYEES" | translate }}</h3>
         <!-- Error Messages -->
         <div *ngIf="hireEmployeeErrorMessages.length">
           <div class="alert alert-danger" role="alert">
@@ -235,51 +233,51 @@
         </div>
 
         <div *ngIf="user.role == 'VINEYARD_DIRECTOR'">
-          <h5>You can hire a new employee.</h5>
+          <h5>{{ "EMPLOYEE.HIRE_EMPLOYEE" | translate }}</h5>
           <a *ngIf="!hireEmployeeMode" (click)="toggleHireEmployee()">
-            <button type="button" class="btn btn-dark mb-4">Hire Employee</button>
+            <button type="button" class="btn btn-dark mb-4">{{ "EMPLOYEE.HIRE" | translate }}</button>
           </a>
           <a *ngIf="hireEmployeeMode" (click)="toggleHireEmployee()">
-            <button type="button" class="btn btn-outline-dark">Hide</button>
+            <button type="button" class="btn btn-outline-dark">{{ "COMMON.HIDE" | translate }}</button>
           </a>
         </div>
 
         <!-- Hire Employee Form -->
         <div *ngIf="hireEmployeeMode">
           <br/>
-          <label for="firstName" class="sr-only">User ID</label>
+          <label for="firstName" class="sr-only">{{ "EMPLOYEE.EMPLOYEE_ID" | translate }}</label>
           <input type="text" id="firstName" name="firstName" [(ngModel)]="hireEmployeeRequest.staffId"
                  class="form-control mb-4" placeholder="enter first name of employee here" required>
 
-          <label for="role" class="sr-only">Role</label>
+          <label for="role" class="sr-only">{{ "EMPLOYEE.ROLE" | translate }}</label>
           <select id="role" name="role" [(ngModel)]="hireEmployeeRequest.vineyardRole" class="form-control mb-4"
                   required>
-            <option value="VINEYARD_MANAGER">Vineyard Manager</option>
-            <option value="VINEYARD_WORKER">Vineyard Worker</option>
+            <option value="VINEYARD_MANAGER">{{ "EMPLOYEE.VINEYARD_MANAGER" | translate }}</option>
+            <option value="VINEYARD_WORKER">{{ "EMPLOYEE.VINEYARD_WORKER" | translate }}</option>
           </select>
 
           <button class="btn btn-dark mb-4" type="submit" [disabled]="
             !hireEmployeeRequest.staffId || !hireEmployeeRequest.vineyardRole"
-                  (click)="hireStaff()">Hire
+                  (click)="hireStaff()">{{ "COMMON.HIRE" | translate }}
           </button>
         </div>
 
         <!-- Employees List -->
         <div>
           <hr>
-          <div *ngIf="!staff.length"><p>There isn`t any employee in this vineyard yet.</p></div>
+          <div *ngIf="!staff.length"><p>{{ "EMPLOYEE.EMPTY_EMPLOYEES" | translate }}</p></div>
           <div *ngFor="let employee of staff">
-            <p><b>First name:</b> {{ employee.firstName }} </p>
-            <p><b>Last name:</b> {{ employee.lastName }}</p>
-            <p><b>Email:</b> {{ employee.email }}</p>
-            <p><b>Role:</b> {{ employee.role }}</p>
+            <p><b>{{ "PROFILE.FIRST_NAME" | translate }}</b> {{ employee.firstName }} </p>
+            <p><b>{{ "PROFILE.LAST_NAME" | translate }}</b> {{ employee.lastName }}</p>
+            <p><b>{{ "PROFILE.EMAIL" | translate }}</b> {{ employee.email }}</p>
+            <p><b>{{ "PROFILE.ROLE" | translate }}</b> {{ employee.role }}</p>
             <button *ngIf="employee.role != 'VINEYARD_DIRECTOR' && user.role == 'VINEYARD_DIRECTOR'"
                     type="button" class="btn btn-danger"
-                    (click)="fireStaff(employee.id)">Fire
+                    (click)="fireStaff(employee.id)">{{ "COMMON.FIRE" | translate}}
             </button>
             <button *ngIf="employee.role != 'VINEYARD_DIRECTOR' && user.role == 'VINEYARD_DIRECTOR'"
                     type="button" class="btn btn-dark mx-3"
-                    (click)="toggleEditStaff(employee.id)">Edit
+                    (click)="toggleEditStaff(employee.id)">{{ "COMMON.EDIT" | translate}}
             </button>
 
             <div *ngIf="editStaffMode && editStaffId == employee.id">
@@ -287,12 +285,12 @@
               <select id="vineyardRole" name="vineyardRole" [(ngModel)]="editStaffRequest.vineyardRole"
                       class="form-control mb-4"
                       required>
-                <option value="VINEYARD_MANAGER">Vineyard Manager</option>
-                <option value="VINEYARD_WORKER">Vineyard Worker</option>
+                <option value="VINEYARD_MANAGER">{{ "EMPLOYEE.VINEYARD_MANAGER" | translate }}</option>
+                <option value="VINEYARD_WORKER">{{ "EMPLOYEE.VINEYARD_WORKER" | translate }}</option>
               </select>
 
               <button class="btn btn-dark mb-4" type="submit" [disabled]="!editStaffRequest.vineyardRole"
-                      (click)="editStaff()">Confirm
+                      (click)="editStaff()">{{ "COMMON.CONFIRM" | translate}}
               </button>
             </div>
             <hr>
@@ -305,7 +303,7 @@
       <!--Group Info-->
       <div class="">
         <ng-container *ngIf="user.role == 'VINEYARD_DIRECTOR' || user.role == 'VINEYARD_MANAGER'">
-          <h4>You can create a new group.</h4>
+          <h4>{{  "GROUP.CREATE_GROUP" | translate }}</h4>
           <div *ngIf="createGroupErrorMessages.length">
             <div class="alert alert-danger" role="alert">
               <p *ngFor="let msg of createGroupErrorMessages">{{ msg.message }}</p>
@@ -313,44 +311,44 @@
           </div>
 
           <a *ngIf="!createGroupMode" (click)="toggleCreateGroup()">
-            <button type="button" class="btn btn-dark mb-4">Create Group</button>
+            <button type="button" class="btn btn-dark mb-4">{{ "COMMON.CREATE" | translate }}</button>
           </a>
           <a *ngIf="createGroupMode" (click)="toggleCreateGroup()">
-            <button type="button" class="btn btn-outline-dark">Hide</button>
+            <button type="button" class="btn btn-outline-dark">{{ "COMMON.HIDE" | translate }}</button>
           </a>
 
           <div *ngIf="createGroupMode">
             <br/>
-            <label for="groupName" class="sr-only">Group Name</label>
+            <label for="groupName" class="sr-only">{{ "COMMON.NAME" | translate }}</label>
             <input type="text" id="groupName" name="groupName" [(ngModel)]="createGroupRequest.name"
                    class="form-control mb-4" placeholder="enter name of group here" required>
 
-            <label for="groupDescription" class="sr-only">Group Description</label>
+            <label for="groupDescription" class="sr-only">{{ "COMMON.DESCRIPTION" | translate }}</label>
             <input type="text" id="groupDescription" name="groupDescription"
                    [(ngModel)]="createGroupRequest.description"
                    class="form-control mb-4" placeholder="enter description of group here" required>
 
-            <label for="formationReason" class="sr-only">Formation Reason</label>
+            <label for="formationReason" class="sr-only">{{ "GROUP.FORMATION_REASON" | translate }}</label>
             <input type="text" id="formationReason" name="formationReason"
                    [(ngModel)]="createGroupRequest.formationReason"
                    class="form-control mb-4" placeholder="enter formation reason here" required>
 
             <button class="btn btn-dark mb-4" type="submit" [disabled]="
           !createGroupRequest.name || !createGroupRequest.description || !createGroupRequest.formationReason"
-                    (click)="createGroup()">Create
+                    (click)="createGroup()"> {{ "COMMON.CREATE" | translate }}
             </button>
           </div>
         </ng-container>
         <div>
-          <h4>{{ vineyard.dbaName }} Groups:</h4>
+          <h4>{{ vineyard.dbaName }} {{ "GROUP.GROUPS" | translate }}</h4>
           <hr>
-          <div *ngIf="!groups.length"><p>There isn`t any group created yet.</p></div>
+          <div *ngIf="!groups.length"><p>{{ "GROUP.EMPTY_GROUPS" | translate }}</p></div>
           <div *ngFor="let group of groups">
-            <p><b>Name:</b> {{ group.name }}</p>
-            <p><b>Description:</b> {{ group.description }}</p>
-            <p><b>Formation reason:</b> {{ group.formationReason }}</p>
+            <p><b>{{ "COMMON.NAME" | translate }}</b> {{ group.name }}</p>
+            <p><b>{{ "COMMON.DESCRIPTION" | translate }}</b> {{ group.description }}</p>
+            <p><b>{{ "GROUP.FORMATION_REASON" | translate }}</b> {{ group.formationReason }}</p>
             <a [routerLink]="['/vineyard', vineyard.id, 'group', group.id]">
-              <button type="button" class="btn btn-dark">Go to group</button>
+              <button type="button" class="btn btn-dark">{{ "GROUP.GO_TO_GROUP" | translate }}</button>
             </a>
             <hr>
           </div>

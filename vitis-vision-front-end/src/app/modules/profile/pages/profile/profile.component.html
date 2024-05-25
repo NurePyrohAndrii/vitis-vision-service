@@ -2,35 +2,35 @@
   <div class="row">
     <div class="col-md-12">
 
-      <h1 class="mb-4">Profile</h1>
+      <h1 class="mb-4">{{ "PROFILE.PROFILE_INFO" | translate }}</h1>
       <div class="row">
         <div class="col-md-6">
           <div class="row">
-            <h3>User Info</h3>
+            <h3>{{ "PROFILE.USER_INFO" | translate }}</h3>
             <p><b>ID:</b> {{user.id}}</p>
-            <p><b>First Name:</b> {{ user.firstName }}</p>
-            <p><b>Last Name:</b> {{ user.lastName }}</p>
-            <p><b>Email:</b> {{ user.email }}</p>
+            <p><b>{{ "PROFILE.FIRST_NAME" | translate }}</b> {{ user.firstName }}</p>
+            <p><b>{{ "PROFILE.LAST_NAME" | translate }}</b> {{ user.lastName }}</p>
+            <p><b>{{ "PROFILE.EMAIL" | translate }}</b> {{ user.email }}</p>
           </div>
           <div class="row">
-            <h3>Account Info</h3>
-            <p><b>Create time:</b> {{ user.createdAt }}</p>
-            <p><b>Created by:</b> {{ user.createdBy }}</p>
-            <p><b>Last update time:</b> {{ user.lastUpdatedAt != null ? user.lastUpdatedAt : "Ain`t updated yet!" }}</p>
-            <p><b>Last updated by:</b> {{ user.lastUpdatedBy != null ? user.lastUpdatedBy : "Ain`t updated yet!" }}</p>
+            <h3>{{ "PROFILE.ACCOUNT_INFO" | translate }}</h3>
+            <p><b>{{ "COMMON.CREATION_DATE" | translate }}</b> {{ user.createdAt }}</p>
+            <p><b>{{ "COMMON.CREATOR_NAME" | translate }}</b> {{ user.createdBy }}</p>
+            <p><b>{{ "COMMON.LAST_MODIFIED_DATE" | translate }}</b> {{ user.lastUpdatedAt != null ? user.lastUpdatedAt : "Ain`t updated yet!" }}</p>
+            <p><b>{{ "COMMON.LAST_MODIFIED_BY" | translate }}</b> {{ user.lastUpdatedBy != null ? user.lastUpdatedBy : "Ain`t updated yet!" }}</p>
           </div>
         </div>
         <div class="col-md-6">
-          <h3>Vineyard info</h3>
+          <h3>{{ "VINEYARD.VINEYARD_INFO" | translate }}</h3>
           <ng-container *ngIf="vineyard.id">
-            <p><b>Vineyard DBA: </b> <a [routerLink]="['/vineyard']"
+            <p><b>{{ "VINEYARD.DBA_NAME" | translate }}</b> <a [routerLink]="['/vineyard']"
                                 class="link-dark">{{ vineyard.dbaName }}</a></p>
-            <p><b>Company:</b> {{ vineyard.companyName }}</p>
-            <p><b>Role:</b> {{ user.role }}</p>
+            <p><b>{{ "VINEYARD.COMPANY_NAME" | translate }}</b> {{ vineyard.companyName }}</p>
+            <p><b>{{ "EMPLOYEE.ROLE" | translate }}</b> {{ user.role }}</p>
           </ng-container>
           <ng-container *ngIf="!vineyard.id">
-            <p>Ain`t applied yet!</p>
-            <p><b>Role:</b> {{ user.role }}</p>
+            <p>{{ "PROFILE.NOT_APPLIED" | translate }}</p>
+            <p><b>{{ "EMPLOYEE.ROLE" | translate }}</b> {{ user.role }}</p>
           </ng-container>
         </div>
       </div>
@@ -38,55 +38,57 @@
 
       <div class="row">
         <div class="col-md-12">
-          <h3>Actions</h3>
+          <h3>{{ "COMMON.ACTIONS" | translate }}</h3>
 
-          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">Edit profile</button>
-          <button *ngIf="editProfileMode" (click)="toggleEditProfile()" class="btn btn-dark mb-3">Hide</button>
+          <button *ngIf="!editProfileMode" (click)="toggleEditProfile()" class="btn btn-outline-dark mb-3">{{ "PROFILE.EDIT_INFO" | translate }}</button>
+          <button *ngIf="editProfileMode" (click)="toggleEditProfile()" class="btn btn-dark mb-3">{{ "COMMON.HIDE" | translate }}</button>
 
-          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Change password</button>
-          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">Hide</button>
+          <button *ngIf="!changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">{{ "PROFILE.CHANGE_PASSWORD" | translate }}</button>
+          <button *ngIf="changePasswordMode" (click)="toggleChangePassword()" class="btn btn-dark mx-4 mb-3">{{ "COMMON.HIDE" | translate }}</button>
 
-          <button *ngIf="!deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3">Delete account</button>
-          <button *ngIf="deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3 mx-3">Hide</button>
-          <button *ngIf="deleteAccountMode" (click)="deleteAccount()" class="btn btn-outline-danger mb-3">Confirm</button>
+          <button *ngIf="!deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3">{{ "COMMON.DELETE" | translate }}</button>
+          <button *ngIf="deleteAccountMode" (click)="toggleDeleteAccount()" class="btn btn-danger mb-3 mx-3">{{ "COMMON.HIDE" | translate }}</button>
+          <button *ngIf="deleteAccountMode" (click)="deleteAccount()" class="btn btn-outline-danger mb-3">{{ "COMMON.CONFIRM" | translate }}</button>
 
           <div class="alert alert-danger" role="alert" *ngIf="errorMessages.length">
             <p *ngFor="let msg of errorMessages">{{msg.message}}</p>
           </div>
 
           <div *ngIf="editProfileMode">
-            <h4>Edit profile</h4>
+            <h4>{{ "PROFILE.EDIT_INFO" | translate }}</h4>
             <div class="mb-3">
-              <label for="firstName" class="form-label">First name</label>
+              <label for="firstName" class="form-label">{{ "PROFILE.FIRST_NAME" | translate }}</label>
               <input [(ngModel)]="updateProfileRequest.firstName" type="text" class="form-control" id="firstName"
                      placeholder="First name">
             </div>
             <div class="mb-3">
-              <label for="lastName" class="form-label">Last name</label>
+              <label for="lastName" class="form-label">{{ "PROFILE.LAST_NAME" | translate }}</label>
               <input [(ngModel)]="updateProfileRequest.lastName" type="text" class="form-control" id="lastName"
                      placeholder="Last name">
             </div>
-            <button (click)="updateProfile()" class="btn btn-dark">Update</button>
+            <button (click)="updateProfile()" class="btn btn-dark">{{ "COMMON.EDIT" | translate }}</button>
           </div>
 
           <div *ngIf="changePasswordMode">
-            <h4>Change password</h4>
+            <h4>{{ "PROFILE.CHANGE_PASSWORD" | translate }}</h4>
             <div class="mb-3">
-              <label for="oldPassword" class="form-label">Old password</label>
+              <label for="oldPassword" class="form-label">{{ "PROFILE.OLD_PASSWORD" | translate }}</label>
               <input [(ngModel)]="passwordChangeRequest.currentPassword" type="password" class="form-control"
                      id="oldPassword" placeholder="Old password">
             </div>
             <div class="mb-3">
-              <label for="newPassword" class="form-label">New password</label>
+              <label for="newPassword" class="form-label">{{ "PROFILE.NEW_PASSWORD" | translate }}</label>
               <input [(ngModel)]="passwordChangeRequest.newPassword" type="password" class="form-control"
                      id="newPassword" placeholder="New password">
             </div>
             <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirm password</label>
+              <label for="confirmPassword" class="form-label">{{ "PROFILE.CONFIRM_PASSWORD" | translate }}</label>
               <input [(ngModel)]="passwordChangeRequest.confirmPassword" type="password" class="form-control"
                      id="confirmPassword" placeholder="Confirm password">
             </div>
-            <button (click)="changePassword()" class="btn btn-dark">Change</button>
+            <button (click)="changePassword()" class="btn btn-dark">
+              {{ "COMMON.CONFIRM" | translate }}
+            </button>
           </div>
 
         </div>
